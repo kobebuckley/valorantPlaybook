@@ -11,14 +11,24 @@ import { createSlice } from '@reduxjs/toolkit'
 
 
 const initialState = [
-  { id: '1', title: 'First Post!', content: 'Hello!' },
-  { id: '2', title: 'Second Post', content: 'More text' }
-]
+  { 
+    id: '1', 
+    title: 'First Post!', 
+    content: 'Hello!', 
+    videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g' 
+  },
+  { 
+    id: '2', 
+    title: 'Second Post', 
+    content: 'More text', 
+    videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg' 
+  }
+];
 
 const postsSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {}
-})
+});
 
-export default postsSlice.reducer
+export default postsSlice.reducer;
