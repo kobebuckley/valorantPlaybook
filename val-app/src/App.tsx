@@ -5,16 +5,19 @@ import { PostsList } from './features/posts/PostsList'
 
 import "./App.css"
 import React from "react"
+import { AddPostForm } from "./features/posts/AddPostForm"
 
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        {/* <img src={logo} className="App-logo" alt="logo" /> */}
-        {/* <Counter /> */}
-        <AgentsList />
-        <PostsList />
+        {/* <Navbar /> */}
+        <React.Fragment>
+          <AgentsList />
+          <AddPostForm />
+          <PostsList />
+        </React.Fragment>
       </header>
     </div>
   )
