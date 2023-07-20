@@ -18,13 +18,13 @@ const initialState = [
   { 
     id: '1', 
     title: 'First Post!', 
-    content: 'Hello!', 
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd', 
     videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g' 
   },
   { 
     id: '2', 
     title: 'Second Post', 
-    content: 'More text', 
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd', 
     videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg' 
   }
 ];

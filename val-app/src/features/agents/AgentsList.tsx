@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 library.add(faSpinner);
 
@@ -15,7 +15,7 @@ interface Character {
 export const AgentsList: React.FC = () => {
   const [allCharacters, setAllCharacters] = useState<Character[]>([]);
   const [filteredCharacters, setFilteredCharacters] = useState<Character[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     fetchCharacterData();
@@ -85,7 +85,6 @@ export const AgentsList: React.FC = () => {
   ));
 
   return (
-    <Router>
       <section className="container mx-auto bg-gray-900 py-10">
         <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">Choose an Agent</h2>
         <div className="flex justify-center mb-6">
@@ -101,6 +100,5 @@ export const AgentsList: React.FC = () => {
           {renderedPosts}
         </div>
       </section>
-    </Router>
   );
 };
