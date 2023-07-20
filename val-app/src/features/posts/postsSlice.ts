@@ -35,6 +35,15 @@ const postsSlice = createSlice({
   reducers: {
     postAdded(state, action) {
       state.push(action.payload)
+    },
+    postUpdated(state, action) {
+      const { id, title, content, videoUrl } = action.payload
+      const existingPost = state.find(post => post.id === id)
+      if (existingPost) {
+        existingPost.title = title
+        existingPost.content = content
+        existingPost.videoUrl = videoUrl
+      }
     }
   }
 });
