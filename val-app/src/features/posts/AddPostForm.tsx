@@ -30,7 +30,7 @@ export const AddPostForm: React.FC = () => {
         videoUrl,
       };
 
-      dispatch(postAdded(newPost));
+      dispatch(postAdded(title,content,videoUrl));
 
       setTitle('');
       setContent('');

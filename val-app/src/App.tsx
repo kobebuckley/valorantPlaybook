@@ -2,11 +2,12 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes, Link, RouteProps } from "react-router-dom";
 import { AgentsList } from "./features/agents/AgentsList";
 import { AddPostForm } from "./features/posts/AddPostForm";
-import { SinglePostPage } from "./features/posts/SinglePostPage";
+import SinglePostPage from "./features/posts/SinglePostPage"; // Update this import
 import { PostsList } from "./features/posts/PostsList";
+import { EditPostForm } from './features/posts/EditPostForm'
+import { Navbar } from "./app/Navbar";
 
 import "./App.css";
-import { Navbar } from "./app/Navbar";
 
 function App() {
   return (
@@ -15,10 +16,8 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route
-            path="/posts/:postId"
-            element={<SinglePostPage match={{ params: { postId: "" } }} />}
-          />
+          <Route path="/posts/:postId" element={<SinglePostPage />} /> {/* Update the import here */}
+          <Route path="/editPost/:postId" element={<EditPostForm />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
@@ -31,7 +30,7 @@ function Home() {
     <React.Fragment>
       <AddPostForm />
       <PostsList />
-      <AgentsList/>
+      <AgentsList />
     </React.Fragment>
   );
 }
