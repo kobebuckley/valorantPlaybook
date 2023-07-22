@@ -13,7 +13,7 @@ export const EditPostForm: React.FC = () => {
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
-  const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
+  const [videoUrl, setVideoUrl] = useState(post?.videoUrl || ''); // Initialize with an empty string
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,8 +23,10 @@ export const EditPostForm: React.FC = () => {
   const onVideoUrlChanged = (e: React.ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
 
   const onSavePostClicked = () => {
-    if (title && content && videoUrl) {
-      dispatch(postUpdated({ id: postId, title, content, videoUrl }));
+    if (title && content) {
+      dispatch(
+        postUpdated({ id: postId!, title, content, videoUrl: videoUrl || '' }) 
+      );
       navigate(`/posts/${postId}`);
     }
   };

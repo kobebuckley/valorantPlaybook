@@ -28,10 +28,9 @@ export const PostsList: React.FC = () => {
 
 
 
-    
+
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
-        {/* Center the video */}
         <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
         {videoId && (
           <div className="flex justify-center mb-6">
