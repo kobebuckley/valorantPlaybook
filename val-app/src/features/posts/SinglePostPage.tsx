@@ -29,20 +29,21 @@ export const SinglePostPage: React.FC = () => {
   const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-md rounded p-6 mb-4">
-      <h2 className="text-2xl font-bold mb-2">{post.title}</h2>
-      {videoId && (
-        <div className="flex justify-center mb-6">
-          <YouTube videoId={videoId} />
-        </div>
-      )}
-      <p className="text-gray-700">{post.content}</p>
-      <div className="flex justify-between mt-4">
-        <Link to={`/editPost/${post.id}`} className="text-blue-500 hover:text-blue-700">
+<article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
+        {/* Center the video */}
+        <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+        {videoId && (
+          <div className="flex justify-center mb-6">
+            <YouTube videoId={videoId} />
+          </div>
+        )}
+      <p className="post-content">{post.content.substring(0, 100)}</p>
+        
+      <Link to={`/editPost/${post.id}`} className="text-blue-500 hover:text-blue-700">
           Edit Post
-        </Link>
-      </div>
-    </div>
+      </Link>
+      </article>
+
   );
 };
 
