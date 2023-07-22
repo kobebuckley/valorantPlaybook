@@ -22,7 +22,7 @@ export const AddPostForm: React.FC = () => {
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
 
   const onSavePostClicked = () => {
-    if (title && content) {
+    if (title && content && videoUrl) {
       const newPost: Post = {
         id: nanoid(),
         title,
@@ -73,7 +73,7 @@ export const AddPostForm: React.FC = () => {
         />
 
         <label htmlFor="postVideo" className="block font-semibold mb-2 text-xl">
-          Video URL (Optional):
+          Video URL:
         </label>
         <input
           type="text"
