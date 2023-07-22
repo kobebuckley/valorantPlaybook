@@ -21,6 +21,14 @@ export const PostsList: React.FC = () => {
   const renderedPosts = posts.map((post: Post) => {
     const videoId = extractVideoId(post.videoUrl);
 
+
+
+
+
+
+
+
+    
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
         {/* Center the video */}
@@ -34,37 +42,6 @@ export const PostsList: React.FC = () => {
         <Link to={`/posts/${post.id}`} className="button muted-button">
         View Post
       </Link>
-
-
-        {/* Area 1 */}
-        {/* <section className="mb-6">
-          <h3 className="text-2xl font-bold mb-2">Excerpt</h3>
-          <p className="mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
-          </p>
-        </section> */}
-
-        {/* <section className="mb-6">
-          <h3 className="text-2xl font-bold mb-2">Area 2: The Middle</h3>
-          <p className="mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
-          </p>
-        </section>
-
-        <section className="mb-6">
-          <h3 className="text-2xl font-bold mb-2">Area 3: The Climax</h3>
-          <p className="mb-4">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
-          </p>
-        </section>
-
-        <section className="mb-6">
-          <h3 className="text-2xl font-bold mb-2">Conclusion</h3>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed nisi.
-          </p>
-          
-        </section> */}
 
       </article>
     );
