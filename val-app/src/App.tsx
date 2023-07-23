@@ -13,7 +13,7 @@ import './App.css';
 function App() {
   return (
     <Router>
-      <Navbar title={'THE NAV IS HERE'} />
+      <Navbar title={'Agents'} />
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />

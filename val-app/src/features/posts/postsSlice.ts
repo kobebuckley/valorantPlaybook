@@ -22,6 +22,34 @@ const initialState: Post[] = [
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
     videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
     agent: 'gekko'
+  },
+  {
+    id: '3',
+    title: 'Third Post!',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
+    videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
+    agent: 'gekko'
+  },
+  {
+    id: '4',
+    title: 'Fourth Post',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
+    videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
+    agent: 'gekko'
+  },
+  {
+    id: '5',
+    title: 'First Post!',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
+    videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
+    agent: 'fade'
+  },
+  {
+    id: '6',
+    title: 'Second Post',
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
+    videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
+    agent: 'fade'
   }
 ];
 
