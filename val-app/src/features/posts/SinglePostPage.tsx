@@ -8,10 +8,11 @@ interface Post {
   title: string;
   content: string;
   videoUrl?: string;
+  agent: string; // Add the 'agent' property to the Post interface
 }
 
 export const SinglePostPage: React.FC = () => {
-  const { postId } = useParams<{ postId: string }>();
+  const { agent, postId } = useParams<{ agent: string; postId: string }>();
   const posts: Post[] = useSelector((state: { posts: Post[] }) => state.posts);
 
   const extractVideoId = (url: string): string | undefined => {
@@ -20,7 +21,7 @@ export const SinglePostPage: React.FC = () => {
     return match?.[1];
   };
 
-  const post: Post | undefined = posts.find((post) => post.id === postId);
+  const post: Post | undefined = posts.find((post) => post.id === postId && post.agent === agent);
 
   if (!post) {
     return <h1>Post not found</h1>;
@@ -29,20 +30,23 @@ export const SinglePostPage: React.FC = () => {
   const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 
   return (
-<article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
-        <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-        {videoId && (
-          <div className="flex justify-center mb-6">
-            <YouTube videoId={videoId} />
-          </div>
-        )}
-      <p className="post-content">{post.content.substring(0, 100)}</p>
-        
-      <Link to={`/editPost/${post.id}`} className="text-blue-500 hover:text-blue-700">
-          Edit Post
-      </Link>
-      </article>
+    <section className="bg-gray-900 min-h-screen py-10">
+      <div className="container mx-auto">
+        <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
+          <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+          {videoId && (
+            <div className="flex justify-center mb-6">
+              <YouTube videoId={videoId} />
+            </div>
+          )}
+          <p className="post-content">{post.content.substring(0, 100)}</p>
 
+          <Link to={`/editPost/${agent}/${post.id}`} className="text-blue-500 hover:text-blue-700">
+            Edit Post
+          </Link>
+        </article>
+      </div>
+    </section>
   );
 };
 
