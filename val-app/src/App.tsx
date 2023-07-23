@@ -1,10 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom'; // Updated import
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import { AgentsList } from './features/agents/AgentsList';
 import { AddPostForm } from './features/posts/AddPostForm';
 import SinglePostPage from './features/posts/SinglePostPage';
 import { EditPostForm } from './features/posts/EditPostForm';
 import { Navbar } from './app/Navbar';
+import { PostsList } from './features/posts/PostsList';
 import { AgentPostsPage } from './features/posts/AgentPostsPage';
 
 import './App.css';
@@ -19,6 +20,9 @@ function App() {
           <Route path="/posts/:agent/:postId" element={<SinglePostPage />} />
           <Route path="/editPost/:agent/:postId" element={<EditPostForm />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
+          <Route path="/agents/" element={<PostsList posts={[]} />} />
+          <Route path="/addPost" element={<AddPostForm />} /> 
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -60,9 +60,9 @@ export const AgentPostsPage: React.FC = () => {
         <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
           Posts for {agent}
         </h2>
-        <div className="mt-8">
-          <AddPostForm agent={agent} /> {/* Include the AddPostForm component here */}
-        </div>
+        {/* <div className="mt-8">
+          <AddPostForm agent={agent} /> 
+        </div> */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           {renderedPosts}
         </div>

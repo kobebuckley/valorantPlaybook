@@ -1,11 +1,5 @@
-// src/features/agents/AgentsList.tsx
-
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { library } from '@fortawesome/fontawesome-svg-core';
-
-library.add(faSpinner);
 
 interface Character {
   uuid: string;
@@ -80,7 +74,15 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
 
   return (
     <section className="container mx-auto bg-gray-900 py-10">
-      <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">Choose an Agent</h2>
+      <div className="max-w-3xl mx-auto mb-4">
+        <input
+          type="text"
+          placeholder="Search agents..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full px-4 py-2 bg-gray-800 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
+        />
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
         {filteredCharacters.map(({ uuid, displayName, description, fullPortrait }) => (
           <article

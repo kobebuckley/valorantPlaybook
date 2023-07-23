@@ -66,7 +66,7 @@ export const AddPostForm: React.FC = () => {
         >
           <option value="">Select an agent</option>
           <option value="gekko">Gekko</option>
-          {/* Add other agent options here */}
+          <option value="fade">Fade</option>
         </select>
 
         <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl">

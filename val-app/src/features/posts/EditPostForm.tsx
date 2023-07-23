@@ -27,30 +27,33 @@ export const EditPostForm: React.FC = () => {
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
+  const [selectedAgent, setSelectedAgent] = useState(post?.agent || ''); // State for the selected agent
 
   useEffect(() => {
     // Update the form fields when the post changes
     setTitle(post?.title || '');
     setContent(post?.content || '');
     setVideoUrl(post?.videoUrl || '');
+    setSelectedAgent(post?.agent || '');
   }, [post]);
 
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onContentChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
   const onVideoUrlChanged = (e: React.ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
+  const onAgentChanged = (e: React.ChangeEvent<HTMLSelectElement>) => setSelectedAgent(e.target.value); // Event handler for the agent dropdown
 
   const onSavePostClicked = () => {
-    if (title && content && videoUrl && agent) {
+    if (title && content && videoUrl && selectedAgent) {
       const updatedPost: Post = {
         id: postId!,
         title,
         content,
         videoUrl,
-        agent,
+        agent: selectedAgent, // Use the selectedAgent state instead of 'agent'
       };
 
       dispatch(postUpdated(updatedPost));
-      navigate(`/posts/${agent}/${postId}`);
+      navigate(`/posts/${selectedAgent}/${postId}`); // Use the selectedAgent state instead of 'agent'
     }
   };
 
@@ -63,6 +66,21 @@ export const EditPostForm: React.FC = () => {
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold mb-4 text-white">Edit Post</h2>
         <form className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
+            <label htmlFor="agentSelect" className="text-lg text-white">
+              Agent:
+            </label>
+            <select
+              id="agentSelect"
+              name="agentSelect"
+              value={selectedAgent}
+              onChange={onAgentChanged}
+              className="border border-gray-300 rounded-md p-2"
+            >
+          <option value="gekko">Gekko</option>
+          <option value="fade">Fade</option>
+            </select>
+          </div>
           <div className="flex flex-col gap-1">
             <label htmlFor="postTitle" className="text-lg text-white">
               Post Title:
@@ -111,7 +129,7 @@ export const EditPostForm: React.FC = () => {
             >
               Save Post
             </button>
-            <Link to={`/posts/${agent}/${postId}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
+            <Link to={`/posts/${selectedAgent}/${postId}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
               Cancel
             </Link>
           </div>
