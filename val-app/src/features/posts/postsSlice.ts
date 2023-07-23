@@ -11,9 +11,9 @@ interface Post {
 const initialState: Post[] = [
   {
     id: '1',
-    title: 'First Post!',
+    title: 'Liquid Nats!',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
-    videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
+    videoUrl: 'https://www.youtube.com/watch?v=0t-A41qBGmg&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
     agent: 'gekko'
   },
   {
@@ -32,23 +32,23 @@ const initialState: Post[] = [
   },
   {
     id: '4',
-    title: 'Fourth Post',
+    title: 'Liquid Nats Again!',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
-    videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
+    videoUrl: 'https://www.youtube.com/watch?v=aVgkN9dMXCY&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
     agent: 'gekko'
   },
   {
     id: '5',
-    title: 'First Post!',
+    title: 'Sen Sick!',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
-    videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
+    videoUrl: 'https://www.youtube.com/watch?v=i7OsvSE4MEU&pp=ygUJZmFkZSBwcm8g',
     agent: 'fade'
   },
   {
     id: '6',
-    title: 'Second Post',
+    title: '100T Asuna',
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
-    videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
+    videoUrl: 'https://www.youtube.com/watch?v=AptQ7AXVXmw&pp=ygUSZmFkZSB2YWxvcmFudCBwcm8g',
     agent: 'fade'
   }
 ];
