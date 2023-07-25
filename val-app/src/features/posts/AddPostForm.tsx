@@ -84,28 +84,41 @@ export const AddPostForm: React.FC = () => {
     <section className="p-4 bg-gray-900 text-white rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Share Your Gaming Experience</h2>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl">
-          Select Agent:
-        </label>
-        <select
-          id="agentSelect"
-          name="agentSelect"
-          value={agent}
-          onChange={onAgentChanged}
-          className="border border-gray-800 rounded p-2 mb-4 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Select an agent</option>
-          <option value="gekko">Gekko</option>
-          <option value="fade">Fade</option>
-        </select>
+        {/* Rest of the code */}
+        
+        {/* Style the Agent and Author inputs */}
+        <div className="mb-4">
+          <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl">
+            Select Agent:
+          </label>
+          <select
+            id="agentSelect"
+            name="agentSelect"
+            value={agent}
+            onChange={onAgentChanged}
+            className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select an agent</option>
+            <option value="gekko">Gekko</option>
+            <option value="fade">Fade</option>
+          </select>
+        </div>
 
+        <div className="mb-4">
+          <label htmlFor="postAuthor" className="block font-semibold mb-2 text-xl">
+            Select Author:
+          </label>
+          <select
+            id="postAuthor"
+            value={userId}
+            onChange={onAuthorChanged}
+            className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select an Author (placeholder)</option>
+            {usersOptions}
+          </select>
+        </div>
 
-
-        <label htmlFor="postAuthor">Author:</label>
-        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
-          <option value=""></option>
-          {usersOptions}
-        </select>
 
 
 
