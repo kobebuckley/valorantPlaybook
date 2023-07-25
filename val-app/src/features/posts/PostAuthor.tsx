@@ -16,8 +16,8 @@ interface PostAuthorProps {
 
 export const PostAuthor: React.FC<PostAuthorProps> = ({ userId }) => {
   const author = useSelector((state: RootState) =>
-    state.users.find((user) => user.id === userId)
+  state.users.find((user) => user.id === userId)
   );
-
+  
   return <span>by {author ? author.name : 'Unknown author'}</span>;
 };

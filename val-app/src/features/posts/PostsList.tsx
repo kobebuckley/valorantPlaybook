@@ -9,7 +9,7 @@ export interface Post {
   content: string;
   videoUrl: string;
   agent: string;
-  user: string
+  userId: string
 }
 
 interface Props {
@@ -30,7 +30,7 @@ export const PostsList: React.FC<Props> = ({ posts }) => {
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
         <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-        <PostAuthor userId={post.user} />
+        <PostAuthor userId={post.userId} />
         {videoId && (
           <div className="flex justify-center mb-6">
             <YouTube videoId={videoId} />
