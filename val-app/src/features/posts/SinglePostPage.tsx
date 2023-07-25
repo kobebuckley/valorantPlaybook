@@ -2,13 +2,15 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
+import { PostAuthor } from './PostAuthor';
 
 interface Post {
   id: string;
   title: string;
   content: string;
   videoUrl?: string;
-  agent: string; // Add the 'agent' property to the Post interface
+  agent: string; 
+  user: string
 }
 
 export const SinglePostPage: React.FC = () => {
@@ -34,6 +36,7 @@ export const SinglePostPage: React.FC = () => {
       <div className="container mx-auto">
         <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+          <PostAuthor userId={post.user} />
           {videoId && (
             <div className="flex justify-center mb-6">
               <YouTube videoId={videoId} />

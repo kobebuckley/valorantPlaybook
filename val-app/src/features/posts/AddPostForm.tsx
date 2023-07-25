@@ -1,5 +1,5 @@
 import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 import { postAdded } from './postsSlice';
 
@@ -9,6 +9,12 @@ interface Post {
   content: string;
   videoUrl: string;
   agent: string;
+  userId: string;
+}
+
+interface User {
+  id: string;
+  name: string;
 }
 
 export const AddPostForm: React.FC = () => {
@@ -16,30 +22,42 @@ export const AddPostForm: React.FC = () => {
   const [content, setContent] = useState<string>('');
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [agent, setAgent] = useState<string>('');
+  const [userId, setUserId] = useState<string>('')
+
 
   const dispatch = useDispatch();
+
+  // const users = useSelector((state: { users: string; }) => state.users)
+  const users = useSelector((state: { users: User[] }) => state.users);
+
+
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onContentChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
+  const onAuthorChanged = (e: ChangeEvent<HTMLSelectElement>) => setUserId(e.target.value)
+
+
 
   const onSavePostClicked = () => {
-    if (title && content && videoUrl && agent) {
+    if (title && content && videoUrl && agent && userId) {
       const newPost: Post = {
         id: nanoid(),
         title,
         content,
         videoUrl,
         agent,
+        userId
       };
 
-      dispatch(postAdded(title, content, videoUrl,agent));
+      dispatch(postAdded(title, content, videoUrl,agent,userId));
 
       setTitle('');
       setContent('');
       setVideoUrl('');
       setAgent('');
+      // setUserId('')
     }
   };
 
@@ -50,6 +68,18 @@ export const AddPostForm: React.FC = () => {
 
   const isSaveButtonDisabled = !agent; // Disable the button if agent is not selected
 
+
+  const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
+
+  const usersOptions = users.map(user => (
+    <option key={user.id} value={user.id}>
+      {user.name}
+    </option>
+  ))
+
+
+
+  
   return (
     <section className="p-4 bg-gray-900 text-white rounded shadow-lg">
       <h2 className="text-2xl font-bold mb-4">Share Your Gaming Experience</h2>
@@ -68,6 +98,16 @@ export const AddPostForm: React.FC = () => {
           <option value="gekko">Gekko</option>
           <option value="fade">Fade</option>
         </select>
+
+
+
+        <label htmlFor="postAuthor">Author:</label>
+        <select id="postAuthor" value={userId} onChange={onAuthorChanged}>
+          <option value=""></option>
+          {usersOptions}
+        </select>
+
+
 
         <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl">
           Game Title:
@@ -109,7 +149,7 @@ export const AddPostForm: React.FC = () => {
 
         <button
           type="submit"
-          disabled={isSaveButtonDisabled} // Disable the button when agent is not selected
+          disabled={isSaveButtonDisabled && !canSave} // Disable the button when agent and author is not selected
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
         >
           Save Post

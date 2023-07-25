@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
+import {PostAuthor} from './PostAuthor'
 
 export interface Post {
   id: string;
@@ -8,6 +9,7 @@ export interface Post {
   content: string;
   videoUrl: string;
   agent: string;
+  user: string
 }
 
 interface Props {
@@ -28,6 +30,7 @@ export const PostsList: React.FC<Props> = ({ posts }) => {
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
         <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+        <PostAuthor userId={post.user} />
         {videoId && (
           <div className="flex justify-center mb-6">
             <YouTube videoId={videoId} />
