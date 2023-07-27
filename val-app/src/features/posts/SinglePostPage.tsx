@@ -3,9 +3,11 @@ import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
 import { PostAuthor } from './PostAuthor';
+import { TimeAgo } from './TimeAgo';
 
 interface Post {
   id: string;
+  date: string;
   title: string;
   content: string;
   videoUrl?: string;
@@ -23,7 +25,10 @@ export const SinglePostPage: React.FC = () => {
     return match?.[1];
   };
 
-  const post: Post | undefined = posts.find((post) => post.id === postId && post.agent === agent);
+  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+
+
+  const post: Post | undefined = orderedPosts.find((post) => post.id === postId && post.agent === agent);
 
   if (!post) {
     return <h1>Post not found</h1>;
@@ -37,6 +42,7 @@ export const SinglePostPage: React.FC = () => {
         <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
           <PostAuthor userId={post.userId} />
+          <TimeAgo timestamp={post.date}/>
           {videoId && (
             <div className="flex justify-center mb-6">
               <YouTube videoId={videoId} />
