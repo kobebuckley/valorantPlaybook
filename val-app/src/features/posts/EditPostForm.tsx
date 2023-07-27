@@ -3,34 +3,31 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../app/store';
 import { postUpdated } from './postsSlice';
+import { parseISO, formatDistanceToNow } from 'date-fns';
 
 interface Post {
   id: string;
+  date: string;
   title: string;
   content: string;
   videoUrl: string;
   agent: string;
+  userId: string;
 }
 
 export const EditPostForm: React.FC = () => {
   const { agent, postId } = useParams<{ agent: string; postId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // Retrieve the posts array from the Redux store
   const posts = useSelector((state: RootState) => state.posts);
-
-  // Find the post with matching postId and agent in the posts array
   const post = posts.find((post) => post.id === postId && post.agent === agent);
 
-  // State for form fields
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
-  const [selectedAgent, setSelectedAgent] = useState(post?.agent || ''); // State for the selected agent
+  const [selectedAgent, setSelectedAgent] = useState(post?.agent || '');
 
   useEffect(() => {
-    // Update the form fields when the post changes
     setTitle(post?.title || '');
     setContent(post?.content || '');
     setVideoUrl(post?.videoUrl || '');
@@ -40,22 +37,25 @@ export const EditPostForm: React.FC = () => {
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onContentChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
   const onVideoUrlChanged = (e: React.ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
-  const onAgentChanged = (e: React.ChangeEvent<HTMLSelectElement>) => setSelectedAgent(e.target.value); // Event handler for the agent dropdown
+  const onAgentChanged = (e: React.ChangeEvent<HTMLSelectElement>) => setSelectedAgent(e.target.value);
 
-  const onSavePostClicked = () => {
-    if (title && content && videoUrl && selectedAgent) {
-      const updatedPost: Post = {
-        id: postId!,
-        title,
-        content,
-        videoUrl,
-        agent: selectedAgent, // Use the selectedAgent state instead of 'agent'
-      };
+const onSavePostClicked = () => {
+  if (title && content && videoUrl && selectedAgent) {
+    const updatedPost: Post = {
+      id: postId!,
+      date: new Date().toISOString(), // Use the current date-time when saving
+      title,
+      content,
+      videoUrl,
+      agent: selectedAgent,
+      userId: '' // Add the userId if necessary
+    };
 
-      dispatch(postUpdated(updatedPost));
-      navigate(`/posts/${selectedAgent}/${postId}`); // Use the selectedAgent state instead of 'agent'
-    }
-  };
+    dispatch(postUpdated(updatedPost));
+    navigate(`/posts/${selectedAgent}/${postId}`);
+  }
+};
+
 
   if (!post) {
     return <h2>Loading...</h2>;
@@ -77,8 +77,8 @@ export const EditPostForm: React.FC = () => {
               onChange={onAgentChanged}
               className="border border-gray-300 rounded-md p-2"
             >
-          <option value="gekko">Gekko</option>
-          <option value="fade">Fade</option>
+              <option value="gekko">Gekko</option>
+              <option value="fade">Fade</option>
             </select>
           </div>
           <div className="flex flex-col gap-1">
