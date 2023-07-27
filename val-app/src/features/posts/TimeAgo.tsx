@@ -14,8 +14,10 @@ export const TimeAgo: React.FC<TimeAgoProps> = ({ timestamp }) => {
   }
 
   return (
-    <span title={timestamp}>
-      &nbsp; <i>{timeAgo}</i>
-    </span>
+    <div>
+        <span title={timestamp}>
+        &nbsp; <i>{timeAgo}</i>
+        </span>
+    </div>
   );
 };
