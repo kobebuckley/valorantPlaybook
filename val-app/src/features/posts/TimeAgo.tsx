@@ -10,7 +10,7 @@ export const TimeAgo: React.FC<TimeAgoProps> = ({ timestamp }) => {
   if (timestamp) {
     const date = parseISO(timestamp);
     const timePeriod = formatDistanceToNow(date);
-    timeAgo = `${timePeriod} ago `;
+    timeAgo = `Posted ${timePeriod} ago `;
   }
 
   return (

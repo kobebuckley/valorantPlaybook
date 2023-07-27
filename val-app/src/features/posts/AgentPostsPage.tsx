@@ -2,23 +2,25 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
-import { AddPostForm } from './AddPostForm'; // Import the AddPostForm component
+// import { AddPostForm } from './AddPostForm';
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
+import { ReactionButtons } from './ReactButton';
 
-interface Post {
+interface AgentPost {
   id: string;
   date: string;
   title: string;
   content: string;
-  videoUrl?: string;
+  videoUrl: string; 
   agent: string;
   userId: string;
+  reactions: { [key: string]: number }; 
 }
 
 export const AgentPostsPage: React.FC = () => {
   const { agent } = useParams<{ agent: string }>();
-  const posts: Post[] = useSelector((state: { posts: Post[] }) => state.posts);
+  const posts: AgentPost[] = useSelector((state: { posts: AgentPost[] }) => state.posts);
 
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
@@ -37,13 +39,16 @@ export const AgentPostsPage: React.FC = () => {
         <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
           <PostAuthor userId={post.userId} />
-        <TimeAgo timestamp={post.date}/>
+          <TimeAgo timestamp={post.date}/>
           {videoId && (
             <div className="flex justify-center mb-6">
               <YouTube videoId={videoId} />
             </div>
           )}
           <p className="post-content">{post.content.substring(0, 100)}</p>
+          <div className="mt-4"> {/* New div to create a new line */}
+            <ReactionButtons post={post} />
+          </div>
           <div className="flex justify-center mt-4">
             <Link
               to={`/posts/${post.agent}/${post.id}`}

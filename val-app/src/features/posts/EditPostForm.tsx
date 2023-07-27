@@ -13,6 +13,7 @@ interface Post {
   videoUrl: string;
   agent: string;
   userId: string;
+  reactions: { [key: string]: number };
 }
 
 export const EditPostForm: React.FC = () => {
@@ -43,12 +44,13 @@ const onSavePostClicked = () => {
   if (title && content && videoUrl && selectedAgent) {
     const updatedPost: Post = {
       id: postId!,
-      date: new Date().toISOString(), // Use the current date-time when saving
+      date: new Date().toISOString(), 
       title,
       content,
       videoUrl,
       agent: selectedAgent,
-      userId: '' // Add the userId if necessary
+      userId: '',
+      reactions: {}
     };
 
     dispatch(postUpdated(updatedPost));
