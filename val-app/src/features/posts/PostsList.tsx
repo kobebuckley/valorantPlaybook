@@ -5,6 +5,7 @@ import {PostAuthor} from './PostAuthor'
 
 export interface Post {
   id: string;
+  date: string;
   title: string;
   content: string;
   videoUrl: string;
@@ -16,6 +17,8 @@ interface Props {
   posts: Post[];
 }
 
+
+
 export const PostsList: React.FC<Props> = ({ posts }) => {
   const extractVideoId = (url: string): string | undefined => {
     const match = url.match(
@@ -24,7 +27,10 @@ export const PostsList: React.FC<Props> = ({ posts }) => {
     return match?.[1];
   };
 
-  const renderedPosts = posts.map((post: Post) => {
+
+  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+
+  const renderedPosts = orderedPosts.map((post: Post) => {
     const videoId = extractVideoId(post.videoUrl);
 
     return (
