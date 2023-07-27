@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import YouTube from 'react-youtube';
 import {PostAuthor} from './PostAuthor'
+import { TimeAgo } from './TimeAgo';
 
 export interface Post {
   id: string;
@@ -36,6 +37,7 @@ export const PostsList: React.FC<Props> = ({ posts }) => {
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
         <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+        <TimeAgo timestamp={post.date}/>
         <PostAuthor userId={post.userId} />
         {videoId && (
           <div className="flex justify-center mb-6">

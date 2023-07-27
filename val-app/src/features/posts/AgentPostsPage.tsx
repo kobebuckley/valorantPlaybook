@@ -4,9 +4,11 @@ import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
 import { AddPostForm } from './AddPostForm'; // Import the AddPostForm component
 import { PostAuthor } from './PostAuthor';
+import { TimeAgo } from './TimeAgo';
 
 interface Post {
   id: string;
+  date: string;
   title: string;
   content: string;
   videoUrl?: string;
@@ -23,8 +25,10 @@ export const AgentPostsPage: React.FC = () => {
     const match = url.match(videoIdRegex);
     return match?.[1];
   };
+  
+  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
-  const renderedPosts = posts
+  const renderedPosts = orderedPosts
     .filter((post) => post.agent === agent)
     .map((post) => {
       const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
@@ -32,6 +36,7 @@ export const AgentPostsPage: React.FC = () => {
       return (
         <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+        <TimeAgo timestamp={post.date}/>
           <PostAuthor userId={post.userId} />
           {videoId && (
             <div className="flex justify-center mb-6">
