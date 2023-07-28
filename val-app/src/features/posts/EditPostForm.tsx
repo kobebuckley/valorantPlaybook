@@ -2,26 +2,30 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../app/store';
-import { postUpdated } from './postsSlice';
-import { parseISO, formatDistanceToNow } from 'date-fns';
+// import { postUpdated } from './postsSlice';
+// import { parseISO, formatDistanceToNow } from 'date-fns';
+import { Post, postUpdated, selectPostById } from './postsSlice'
 
-interface Post {
-  id: string;
-  date: string;
-  title: string;
-  content: string;
-  videoUrl: string;
-  agent: string;
-  userId: string;
-  reactions: { [key: string]: number };
-}
+
+// interface Post {
+//   id: string;
+//   date: string;
+//   title: string;
+//   content: string;
+//   videoUrl: string;
+//   agent: string;
+//   userId: string;
+//   reactions: { [key: string]: number };
+// }
 
 export const EditPostForm: React.FC = () => {
   const { agent, postId } = useParams<{ agent: string; postId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const posts = useSelector((state: RootState) => state.posts);
-  const post = posts.find((post) => post.id === postId && post.agent === agent);
+  const post: Post | undefined = useSelector((state: RootState) =>
+  postId ? selectPostById(state, postId) : undefined
+);
+  // const post = posts.find((post) => post.id === postId && post.agent === agent);
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
