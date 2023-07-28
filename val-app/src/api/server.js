@@ -4,10 +4,11 @@ import bodyParser from 'body-parser';
 import { sub } from 'date-fns';
 
 const app = express();
-const port = 3000; // Change this to the desired port number
+const port = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+
 const posts = [
 {
   id: '1',
@@ -15,7 +16,7 @@ const posts = [
   title: 'Liquid Nats!',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=0t-A41qBGmg&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
-  agent: 'gekko',
+  agent: 'breach',
   userId: '0',
   reactions: {thumbsUp: 23, hooray: 2, heart: 254, rocket: 3, eyes: 5}
 
@@ -26,7 +27,7 @@ const posts = [
   title: 'Second Post',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
-  agent: 'gekko',
+  agent: 'fade',
   userId: '0',
   reactions: {thumbsUp: 324, hooray: 2, heart: 200, rocket: 2, eyes: 5}
 
@@ -37,7 +38,7 @@ const posts = [
   title: 'Third Post!',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
-  agent: 'gekko',
+  agent: 'fade',
   userId: '1',
   reactions: {thumbsUp: 5, hooray: 23, heart: 4, rocket: 23, eyes: 59}
 
@@ -48,7 +49,7 @@ const posts = [
   title: 'Liquid Nats Again!',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=aVgkN9dMXCY&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
-  agent: 'gekko',
+  agent: 'fade',
   userId: '2',
   reactions: {thumbsUp: 30, hooray: 345, heart: 4, rocket: 342, eyes: 23}
 
@@ -79,7 +80,16 @@ const posts = [
 
 
 app.get('/api/posts', (req, res) => {
-    res.json(posts);
+    const { agent } = req.query;
+  
+    if (agent) {
+      // Filter posts by agent if 'agent' query parameter is provided
+      const filteredPosts = posts.filter((post) => post.agent === agent);
+      res.json(filteredPosts);
+    } else {
+      // If 'agent' query parameter is not provided, return all posts
+      res.json(posts);
+    }
   });
   
   app.listen(port, () => {

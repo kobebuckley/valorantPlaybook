@@ -27,10 +27,10 @@ const initialState: PostsState = {
   error: null,
 };
 
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (agent: string) => {
   try {
     // Use the new client function to make the API request to your Express server
-    const response: FetchResult = await client.get('http://localhost:3000/api/posts'); // Change the URL to match your API endpoint
+    const response: FetchResult = await client.get(`http://localhost:3000/api/posts?agent=${agent}`);
     console.log('API Response:', response.data);
     return response.data;
   } catch (error) {
@@ -103,9 +103,10 @@ const postsSlice = createSlice({
 
 export const { postAdded, postUpdated, reactionAdded, postRejected } = postsSlice.actions;
 
-export default postsSlice.reducer;
 
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 
 export const selectPostById = (state: RootState, postId: string) =>
-  state.posts.posts.find((post: Post) => post.id === postId);
+state.posts.posts.find((post: Post) => post.id === postId);
+
+export default postsSlice.reducer;

@@ -1,30 +1,33 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux'; // Import TypedUseSelectorHook
+import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux';
 import YouTube from 'react-youtube';
-import { RootState, AppDispatch } from '../../app/store'; // Import RootState and AppDispatch
+import { RootState, AppDispatch } from '../../app/store';
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 
-import { selectAllPosts, fetchPosts } from './postsSlice';
+import { fetchPosts, selectAllPosts } from './postsSlice';
 
-// Use the TypedUseSelectorHook with RootState to infer the correct types for useSelector
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const AgentPostsPage: React.FC = () => {
-  const { agent } = useParams<{ agent: string }>();
-  const dispatch: AppDispatch = useDispatch(); // Provide the correct type for dispatch
-  const posts = useTypedSelector(selectAllPosts); // Use the TypedUseSelectorHook with RootState
+  const { agent } = useParams<{ agent?: string }>(); // Make agent parameter optional
+  console.log("Selected Agent:", agent);
 
-  const postStatus = useTypedSelector((state) => state.posts.status); // Use TypedUseSelectorHook for state
+  const dispatch: AppDispatch = useDispatch();
+  const posts = useTypedSelector(selectAllPosts);
+  const postStatus = useTypedSelector((state) => state.posts.status);
 
   useEffect(() => {
     if (postStatus === 'idle') {
-      dispatch(fetchPosts());
+      // Ensure agent is provided before dispatching the fetchPosts action
+      if (agent) {
+        dispatch(fetchPosts(agent));
+      }
+      return
     }
-  }, [postStatus, dispatch]);
-
+  }, [postStatus, dispatch, agent]); // Add agent to the dependency array
 
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
@@ -35,12 +38,12 @@ export const AgentPostsPage: React.FC = () => {
   const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
   const renderedPosts = orderedPosts
-    .filter((post) => post.agent === agent)
-    .map((post) => {
-      const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
+  .filter((post) => post.agent === agent)
+  .map((post) => {
+    const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 
       return (
-        <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
+      <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> {/* Use post.id as the key */}
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
           <PostAuthor userId={post.userId} />
           <TimeAgo timestamp={post.date}/>
