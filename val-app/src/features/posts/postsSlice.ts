@@ -1,7 +1,14 @@
-import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit';
-import { sub } from 'date-fns'
+import { PayloadAction, createSlice, nanoid, createAsyncThunk} from '@reduxjs/toolkit';
+// import { sub } from 'date-fns'
 import { RootState } from '../../app/store';
 
+
+import { client } from '../../api/client'
+
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+  const response = await client.get('/fakeApi/posts')
+  return response.data
+})
 export interface Post {
   id: string;
   date: string;
