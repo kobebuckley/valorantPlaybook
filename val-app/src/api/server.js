@@ -27,7 +27,7 @@ const posts = [
   title: 'Second Post',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
-  agent: 'fade',
+  agent: 'gekko',
   userId: '0',
   reactions: {thumbsUp: 324, hooray: 2, heart: 200, rocket: 2, eyes: 5}
 

@@ -1,11 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
 import { AgentsList } from './features/agents/AgentsList';
 import { AddPostForm } from './features/posts/AddPostForm';
 import SinglePostPage from './features/posts/SinglePostPage';
 import { EditPostForm } from './features/posts/EditPostForm';
 import { Navbar } from './app/Navbar';
-// import { PostsList } from './features/posts/PostsList';
 import { AgentPostsPage } from './features/posts/AgentPostsPage';
 
 import './App.css';
@@ -31,16 +30,12 @@ function App() {
 }
 
 function Home() {
-  // Function to handle agent selection and navigate to the AgentPostsPage
-  const handleAgentSelect = (selectedAgent: string) => {
-    // Use the imported 'navigate' function directly to navigate to the AgentPostsPage with the selected agent
-    return <Navigate to={`/agents/${selectedAgent}`} />;
-  };
-
   return (
     <React.Fragment>
-      {/* Pass the handleAgentSelect function as a prop to AgentsList */}
-      <AgentsList onSelectAgent={handleAgentSelect} />
+      {/* Render the AgentsList component */}
+      <AgentsList onSelectAgent={function (selectedAgent: string): void {
+        throw new Error('Function not implemented.');
+      } } />
     </React.Fragment>
   );
 }

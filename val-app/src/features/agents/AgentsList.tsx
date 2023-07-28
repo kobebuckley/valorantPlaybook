@@ -66,10 +66,10 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
 
   const navigate = useNavigate(); // Get the navigate function from useNavigate
 
-  // Function to handle agent selection and navigate to the AgentPostsPage
   const handleAgentSelect = (selectedAgent: string) => {
-    onSelectAgent(selectedAgent); // Call the onSelectAgent function passed as a prop
-    navigate(`/agents/${selectedAgent}`); // Navigate to the AgentPostsPage with the selected agent
+    const lowercasedAgent = selectedAgent.toLowerCase(); // Convert the selectedAgent to lowercase
+    onSelectAgent(lowercasedAgent); // Call the onSelectAgent function with the lowercase agent name
+    navigate(`/agents/${lowercasedAgent}`); // Navigate to the AgentPostsPage with the lowercase agent name
   };
 
   return (

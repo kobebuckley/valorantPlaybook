@@ -12,7 +12,6 @@ import { fetchPosts, selectAllPosts } from './postsSlice';
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const AgentPostsPage: React.FC = () => {
-  
   const { agent } = useParams<{ agent?: string }>(); // Make agent parameter optional
   console.log("Selected Agent:", agent);
 
@@ -22,28 +21,35 @@ export const AgentPostsPage: React.FC = () => {
   const postStatus = useTypedSelector((state) => state.posts.status);
   console.log("Post Status:", postStatus);
 
-  const agentPosts = posts.filter((post) => post.agent === agent);
-
-  
-  
   useEffect(() => {
     const fetchAgentPosts = async () => {
-      console.log('postStatus:', postStatus);
-      if (postStatus === 'idle') {
-        if (agent) {
-          try {
-            await dispatch(fetchPosts(agent));
-          } catch (error) {
-            // Handle the error if needed
-          }
+      if (postStatus === 'idle' && agent) {
+        try {
+          await dispatch(fetchPosts(agent));
+        } catch (error) {
+          // Handle the error if needed
         }
       }
     };
-    
+
     fetchAgentPosts();
   }, [postStatus, dispatch, agent]);
-  
-  // Display a message if there are no posts for the selected agent
+
+
+ const agentPosts = posts.filter((post) => post.agent === agent);
+
+  if (postStatus === 'loading' || postStatus === 'idle') {
+    return (
+      <section className="bg-gray-900 min-h-screen py-10">
+        <div className="container mx-auto">
+          <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
+            Loading...
+          </h2>
+        </div>
+      </section>
+    );
+  }
+
   if (agentPosts.length === 0) {
     return (
       <section className="bg-gray-900 min-h-screen py-10">
@@ -56,6 +62,26 @@ export const AgentPostsPage: React.FC = () => {
     );
   }
 
+  
+  // useEffect(() => {
+  //   const fetchAgentPosts = async () => {
+  //     console.log('postStatus:', postStatus);
+  //     if (postStatus === 'idle') {
+  //       if (agent) {
+  //         try {
+  //           await dispatch(fetchPosts(agent));
+  //         } catch (error) {
+  //           // Handle the error if needed
+  //         }
+  //       }
+  //     }
+  //   };
+    
+  //   fetchAgentPosts();
+  // }, [postStatus, dispatch, agent]);
+  
+  // Display a message if there are no posts for the selected agent
+ 
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
     const match = url.match(videoIdRegex);
