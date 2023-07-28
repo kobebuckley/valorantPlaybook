@@ -1,29 +1,30 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux'; // Import TypedUseSelectorHook
 import YouTube from 'react-youtube';
-// import { AddPostForm } from './AddPostForm';
+import { RootState, AppDispatch } from '../../app/store'; // Import RootState and AppDispatch
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 
-import { selectAllPosts } from './postsSlice'
+import { selectAllPosts, fetchPosts } from './postsSlice';
 
-
-// interface AgentPost {
-//   id: string;
-//   date: string;
-//   title: string;
-//   content: string;
-//   videoUrl: string; 
-//   agent: string;
-//   userId: string;
-//   reactions: { [key: string]: number }; 
-// }
+// Use the TypedUseSelectorHook with RootState to infer the correct types for useSelector
+const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const AgentPostsPage: React.FC = () => {
   const { agent } = useParams<{ agent: string }>();
-  const posts = useSelector(selectAllPosts);
+  const dispatch: AppDispatch = useDispatch(); // Provide the correct type for dispatch
+  const posts = useTypedSelector(selectAllPosts); // Use the TypedUseSelectorHook with RootState
+
+  const postStatus = useTypedSelector((state) => state.posts.status); // Use TypedUseSelectorHook for state
+
+  useEffect(() => {
+    if (postStatus === 'idle') {
+      dispatch(fetchPosts());
+    }
+  }, [postStatus, dispatch]);
+
 
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
