@@ -1,14 +1,7 @@
-import { PayloadAction, createSlice, nanoid, createAsyncThunk} from '@reduxjs/toolkit';
-// import { sub } from 'date-fns'
+import { createSlice, PayloadAction, nanoid, createAsyncThunk, ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { FetchResult, client } from '../../api/client';
 
-
-import { client } from '../../api/client'
-
-export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response = await client.get('/fakeApi/posts')
-  return response.data
-})
 export interface Post {
   id: string;
   date: string;
@@ -23,7 +16,7 @@ export interface Post {
 interface PostsState {
   posts: Post[];
   status: string;
-  error: null | string;
+  error: string | null | undefined;
 }
 
 const initialState: PostsState = {
@@ -31,6 +24,12 @@ const initialState: PostsState = {
   status: 'idle',
   error: null,
 };
+
+export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
+  const response: FetchResult = await client.get('https://jsonplaceholder.typicode.com/posts');
+  console.log('API Response:', response.data);
+  return response.data;
+});
 
 const postsSlice = createSlice({
   name: 'posts',
@@ -73,10 +72,28 @@ const postsSlice = createSlice({
         existingPost.agent = agent;
       }
     },
+    postRejected(state, action: PayloadAction<{ error: { message: string } }>) {
+      state.status = 'failed';
+      state.error = action.payload.error.message;
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchPosts.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPosts.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.posts = state.posts.concat(action.payload);
+      })
+      .addCase(fetchPosts.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.error.message;
+      });
   },
 });
 
-export const { postAdded, postUpdated, reactionAdded  } = postsSlice.actions;
+export const { postAdded, postUpdated, reactionAdded, postRejected } = postsSlice.actions;
 
 export default postsSlice.reducer;
 
