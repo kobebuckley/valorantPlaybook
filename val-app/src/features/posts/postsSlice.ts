@@ -3,7 +3,7 @@ import { sub } from 'date-fns'
 import { RootState } from '../../app/store';
 
 
-interface Post {
+export interface Post {
   id: string;
   date: string;
   title: string;

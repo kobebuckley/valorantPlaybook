@@ -10,16 +10,16 @@ import { ReactionButtons } from './ReactButton';
 import { selectAllPosts } from './postsSlice'
 
 
-interface AgentPost {
-  id: string;
-  date: string;
-  title: string;
-  content: string;
-  videoUrl: string; 
-  agent: string;
-  userId: string;
-  reactions: { [key: string]: number }; 
-}
+// interface AgentPost {
+//   id: string;
+//   date: string;
+//   title: string;
+//   content: string;
+//   videoUrl: string; 
+//   agent: string;
+//   userId: string;
+//   reactions: { [key: string]: number }; 
+// }
 
 export const AgentPostsPage: React.FC = () => {
   const { agent } = useParams<{ agent: string }>();
