@@ -5,7 +5,7 @@ export interface FetchResult {
   url: string;
 }
 
-export async function client(endpoint: string, { body, ...customConfig }: RequestInit = {}): Promise<FetchResult> {
+export async function client(endpoint: string, { body, baseURL, ...customConfig }: RequestInit & { baseURL?: string } = {}): Promise<FetchResult> {
   const headers: HeadersInit = { 'Content-Type': 'application/json' };
 
   const config: RequestInit = {
@@ -21,8 +21,11 @@ export async function client(endpoint: string, { body, ...customConfig }: Reques
     config.body = JSON.stringify(body);
   }
 
+  // Update the base URL to the provided baseURL or the default localhost URL
+  const url = baseURL ? `${baseURL}${endpoint}` : endpoint;
+
   try {
-    const response = await window.fetch(endpoint, config);
+    const response = await window.fetch(url, config);
 
     if (!response.ok) {
       // If the response status is not OK, throw an error with the response status text
@@ -52,10 +55,10 @@ export async function client(endpoint: string, { body, ...customConfig }: Reques
 }
 
 // Helper functions for GET and POST requests
-client.get = function (endpoint: string, customConfig: RequestInit = {}): Promise<FetchResult> {
-  return client(endpoint, { ...customConfig, method: 'GET' });
+client.get = function (endpoint: string, baseURL?: string, customConfig: RequestInit = {}): Promise<FetchResult> {
+  return client(endpoint, { ...customConfig, method: 'GET', baseURL });
 };
 
-client.post = function (endpoint: string, body: any, customConfig: RequestInit = {}): Promise<FetchResult> {
-  return client(endpoint, { ...customConfig, body });
+client.post = function (endpoint: string, body: any, baseURL?: string, customConfig: RequestInit = {}): Promise<FetchResult> {
+  return client(endpoint, { ...customConfig, body, baseURL });
 };
