@@ -7,6 +7,9 @@ import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 
+import { selectAllPosts } from './postsSlice'
+
+
 interface AgentPost {
   id: string;
   date: string;
@@ -20,7 +23,7 @@ interface AgentPost {
 
 export const AgentPostsPage: React.FC = () => {
   const { agent } = useParams<{ agent: string }>();
-  const posts: AgentPost[] = useSelector((state: { posts: AgentPost[] }) => state.posts);
+  const posts = useSelector(selectAllPosts);
 
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
