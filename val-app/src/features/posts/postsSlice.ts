@@ -2,6 +2,8 @@ import { createSlice, PayloadAction, nanoid, createAsyncThunk, ActionReducerMapB
 import { RootState } from '../../app/store';
 import { FetchResult, client } from '../../api/client';
 
+
+
 export interface Post {
   id: string;
   date: string;
@@ -26,9 +28,15 @@ const initialState: PostsState = {
 };
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
-  const response: FetchResult = await client.get('https://jsonplaceholder.typicode.com/posts');
-  console.log('API Response:', response.data);
-  return response.data;
+  try {
+    // Use the new client function to make the API request to your Express server
+    const response: FetchResult = await client.get('http://localhost:3000/api/posts'); // Change the URL to match your API endpoint
+    console.log('API Response:', response.data);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    throw error; // Rethrow the error to be caught in the rejected case
+  }
 });
 
 const postsSlice = createSlice({
