@@ -8,6 +8,7 @@ import { Navbar } from './app/Navbar';
 import { AgentPostsPage } from './features/posts/AgentPostsPage';
 
 import './App.css';
+import LoginPage from './features/login';
 
 function App() {
   return (
@@ -33,6 +34,8 @@ function Home() {
   return (
     <React.Fragment>
       {/* Render the AgentsList component */}
+      <LoginPage />
+
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
         throw new Error('Function not implemented.');
       } } />

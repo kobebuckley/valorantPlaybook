@@ -16,8 +16,8 @@ const initialState = [
 ];
 
 // Function to authenticate a user
-async function authenticateUser(username: string, password: string) {
-  const user = initialState.find(user => user.username === username);
+export async function authenticateUser(username: string, password: string) {
+  const user = initialState.find((user) => user.username === username);
 
   if (!user) {
     console.log(`User ${username} not found`);
@@ -39,26 +39,38 @@ async function authenticateUser(username: string, password: string) {
 }
 
 // Testing the authentication function
-async function testAuthentication() {
-  const username = 'tpn'; // Use the correct username from your initial state
-  const password = 'noob'; // Use the actual password for the user 'at'
+// async function testAuthentication() {
+//   const username = 'tpn'; // Use the correct username from your initial state
+//   const password = 'noob'; // Use the actual password for the user 'at'
 
-  const user = await authenticateUser(username, password);
+//   const user = await authenticateUser(username, password);
 
-  if (user) {
-    console.log('Authentication successful:', user);
-  } else {
-    console.log('Authentication failed');
-  }
-}
+//   if (user) {
+//     console.log('Authentication successful:', user);
+//   } else {
+//     console.log('Authentication failed');
+//   }
+// }
 
-testAuthentication();
+// testAuthentication();
 
 // Create a users slice
 const usersSlice = createSlice({
   name: 'users',
   initialState,
-  reducers: {}
+  reducers: {
+    setUser: (state, action) => {
+      // Update the state with the user data received from action.payload
+      // This assumes your initialState is an array
+      const { id, name, username, password } = action.payload;
+      const userIndex = state.findIndex(user => user.id === id);
+      if (userIndex !== -1) {
+        state[userIndex] = { id, name, username, password };
+      }
+    }
+  }
 });
+
+export const { setUser } = usersSlice.actions; // Export the setUser action
 
 export default usersSlice.reducer;
