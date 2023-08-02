@@ -1,60 +1,64 @@
-// import { createSlice } from '@reduxjs/toolkit';
-// import bcrypt from 'bcrypt';
+import { createSlice } from '@reduxjs/toolkit';
+import bcrypt from 'bcryptjs';
 
-// const initialState = [
-//   { id: '0', name: 'Actually Toxic', role: 'admin', password: '' },
-//   { id: '1', name: 'TooPro Noob', role: 'user',  password: '' },
-//   { id: '2', name: 'CrispyAppleSlice', role: 'user', password: '' }
-// ];
+// Function to generate a hashed password
+async function generateHashedPassword(plainPassword: string) {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
+  return hashedPassword;
+}
 
-// // Function to authenticate a user
-// async function authenticateUser(name: string, password: string | Buffer) {
-//   const user = initialState.find(user => user.name === name);
-
-//   if (user && await bcrypt.compare(password, user.password)) {
-//     return user;
-//   } else {
-//     return null;
-//   }
-// }
-
-// // Testing the authentication function
-// async function testAuthentication() {
-//   const username = 'atc'; // Use the correct username from your initial state
-//   const password = 'your_password_here'; // Use the intended password for the user
-
-//   const user = await authenticateUser(username, password);
-
-//   if (user) {
-//     console.log('Authentication successful:', user);
-//   } else {
-//     console.log('Authentication failed');
-//   }
-// }
-
-// testAuthentication();
-// const usersSlice = createSlice({
-//   name: 'users',
-//   initialState,
-//   reducers: {}
-// })
-
-// export default usersSlice.reducer
-
-
-
-import { createSlice } from '@reduxjs/toolkit'
-
+// Define the initial state with hashed passwords
 const initialState = [
-  { id: '0', name: 'Actually Toxic ' },
-  { id: '1', name: 'TooPro Noob' },
-  { id: '2', name: 'CrispyAppleSlice' }
-]
+  { id: '0', name: 'Actually Toxic', username: 'at', password: await generateHashedPassword('toxic') },
+  { id: '1', name: 'TooPro Noob', username: 'tpn', password: await generateHashedPassword('noob') },
+  { id: '2', name: 'CrispyAppleSlice', username: 'cas', password: await generateHashedPassword('slice') }
+];
 
+// Function to authenticate a user
+async function authenticateUser(username: string, password: string) {
+  const user = initialState.find(user => user.username === username);
+
+  if (!user) {
+    console.log(`User ${username} not found`);
+    return null;
+  }
+
+  try {
+    if (await bcrypt.compare(password, user.password)) {
+      console.log(`Authentication successful for ${username}`);
+      return user;
+    } else {
+      console.log(`Authentication failed for ${username} using ${password}`);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error during password comparison:', error);
+    return null;
+  }
+}
+
+// Testing the authentication function
+async function testAuthentication() {
+  const username = 'tpn'; // Use the correct username from your initial state
+  const password = 'noob'; // Use the actual password for the user 'at'
+
+  const user = await authenticateUser(username, password);
+
+  if (user) {
+    console.log('Authentication successful:', user);
+  } else {
+    console.log('Authentication failed');
+  }
+}
+
+testAuthentication();
+
+// Create a users slice
 const usersSlice = createSlice({
   name: 'users',
   initialState,
   reducers: {}
-})
+});
 
-export default usersSlice.reducer
+export default usersSlice.reducer;
