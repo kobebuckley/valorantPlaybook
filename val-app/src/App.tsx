@@ -17,12 +17,14 @@ function App() {
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/login" element={<LoginPage onLogin={function (): void {
+        throw new Error('Function not implemented.');
+      } }/>
+} />
           <Route path="/posts/:agent/:postId" element={<SinglePostPage />} />
           <Route path="/editPost/:agent/:postId" element={<EditPostForm />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
-          {/* <Route path="/agents/" element={<PostsList posts={[]} />} /> */}
           <Route path="/addPost" element={<AddPostForm />} /> 
-
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
@@ -33,12 +35,15 @@ function App() {
 function Home() {
   return (
     <React.Fragment>
-      {/* Render the AgentsList component */}
-      <LoginPage />
+
+      <LoginPage onLogin={function (): void {
+        throw new Error('Function not implemented.');
+      } }/>
 
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
         throw new Error('Function not implemented.');
       } } />
+
     </React.Fragment>
   );
 }

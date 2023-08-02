@@ -27,6 +27,7 @@ export async function authenticateUser(username: string, password: string) {
   try {
     if (await bcrypt.compare(password, user.password)) {
       console.log(`Authentication successful for ${username}`);
+      
       return user;
     } else {
       console.log(`Authentication failed for ${username} using ${password}`);
