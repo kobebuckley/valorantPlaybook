@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { authenticateUser } from './users/usersSlice';
-import { setUser } from './users/usersSlice';
+import { User, authenticateUser, setLoggedInUser } from './users/usersSlice';
 import { useNavigate } from 'react-router-dom';
 
 interface LoginPageProps {
-  onLogin: () => void;
+  onLogin: (user: User | null) => void;
 }
 
 function LoginPage({ onLogin }: LoginPageProps) {
@@ -14,22 +13,27 @@ function LoginPage({ onLogin }: LoginPageProps) {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const user = await authenticateUser(username, password);
+    const loggedInUser = await authenticateUser(username, password);
 
-    if (user) {
-      dispatch(setUser(user));
+    if (loggedInUser) {
+      dispatch(setLoggedInUser(loggedInUser));
       setLoginError('');
-      setSuccessMessage('Success! Logging in should do stuff...'); 
-      onLogin();
+      setSuccessMessage('Success! Logging in should do stuff...');
+      console.log('loggedInUser:', loggedInUser);
+
+      onLogin(loggedInUser);
     } else {
       setLoginError('Authentication failed. Please check your credentials.');
-      setSuccessMessage(''); 
-    }
+      console.log('loggedInUser:', loggedInUser);
+      setSuccessMessage('');    }
   };
+
+  
 
   return (
     <div className="bg-gray-900 min-h-screen flex items-center justify-center">

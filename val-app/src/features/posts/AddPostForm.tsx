@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
 import { postAdded } from './postsSlice';
+import { RootState } from '../../app/store';
 
 interface Post {
   id: string;
@@ -36,7 +37,10 @@ export const AddPostForm: React.FC = () => {
   const onContentChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
-  const onAuthorChanged = (e: ChangeEvent<HTMLSelectElement>) => setUserId(e.target.value)
+  const onAuthorChanged = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedUserId = e.target.value;
+    setUserId(selectedUserId || (loggedInUser ? loggedInUser.id : '')); // Set the selected user or logged-in user's id, if available
+  };
 
 
 
@@ -78,6 +82,7 @@ export const AddPostForm: React.FC = () => {
   ))
 
 
+  const loggedInUser = useSelector((state: RootState) => state.users.loggedInUser);
 
   
   return (

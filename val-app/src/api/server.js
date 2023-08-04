@@ -1,21 +1,13 @@
-// AUth in progress
-
-
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser';
+import bodyParser from 'body-parser'; // Import body-parser as a default import
 import { sub } from 'date-fns';
 
 const app = express();
 const port = 3000;
 
 app.use(cors());
-app.use(bodyParser.json());
-
-
-
-
-
+app.use(bodyParser.json()); // Use bodyParser.json() as a default import
 
 const posts = [
 {
@@ -88,18 +80,16 @@ const posts = [
 
 
 app.get('/api/posts', (req, res) => {
-    const { agent } = req.query;
-  
-    if (agent) {
-      // Filter posts by agent if 'agent' query parameter is provided
-      const filteredPosts = posts.filter((post) => post.agent === agent);
-      res.json(filteredPosts);
-    } else {
-      // If 'agent' query parameter is not provided, return all posts
-      res.json(posts);
-    }
-  });
-  
-  app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-  });
+  const { agent } = req.query;
+
+  if (agent) {
+    const filteredPosts = posts.filter((post) => post.agent === agent);
+    res.json(filteredPosts);
+  } else {
+    res.json(posts);
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});

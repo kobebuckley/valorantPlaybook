@@ -1,23 +1,51 @@
 import { createSlice } from '@reduxjs/toolkit';
 import bcrypt from 'bcryptjs';
+import { store } from '../../app/store';
+import { generateHashedPassword } from './passwordUtils';
 
-// Function to generate a hashed password
-async function generateHashedPassword(plainPassword: string) {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
-  return hashedPassword;
+export interface User {
+  id: string;
+  name: string;
+  username: string;
+  hashedPassword: string;
+  isAdmin: boolean;
 }
 
-// Define the initial state with hashed passwords
-const initialState = [
-  { id: '0', name: 'Actually Toxic', username: 'at', password: await generateHashedPassword('toxic') },
-  { id: '1', name: 'TooPro Noob', username: 'tpn', password: await generateHashedPassword('noob') },
-  { id: '2', name: 'CrispyAppleSlice', username: 'cas', password: await generateHashedPassword('slice') }
-];
+interface UsersState {
+  users: User[];
+  loggedInUser: User | null;
+}
 
-// Function to authenticate a user
-export async function authenticateUser(username: string, password: string) {
-  const user = initialState.find((user) => user.username === username);
+const initialState: UsersState = {
+  users: [
+    { id: '0', name: 'Admin', username: 'admin', hashedPassword: await generateHashedPassword('adminBased'), isAdmin: true },
+    { id: '1', name: 'Actually Toxic', username: 'at', hashedPassword: await generateHashedPassword('toxic'), isAdmin: false },
+    { id: '2', name: 'TooPro Noob', username: 'tpn', hashedPassword: await generateHashedPassword('noob'), isAdmin: false },
+    { id: '3', name: 'CrispyAppleSlice', username: 'cas', hashedPassword: await generateHashedPassword('slice'), isAdmin: false }
+  ],
+  loggedInUser: null,
+};
+
+const usersSlice = createSlice({
+  name: 'users',
+  initialState,
+  reducers: {
+    addUser: (state, action) => {
+      state.users.push(action.payload);
+    },
+    setLoggedInUser: (state, action) => {
+      state.loggedInUser = action.payload;
+    },
+  },
+});
+
+export const { addUser, setLoggedInUser } = usersSlice.actions;
+
+export const authenticateUser = async (username: string, password: string) => {
+  const user = store.getState().users.users.find(
+    (user: User) => user.username === username
+  );
+
 
   if (!user) {
     console.log(`User ${username} not found`);
@@ -25,53 +53,17 @@ export async function authenticateUser(username: string, password: string) {
   }
 
   try {
-    if (await bcrypt.compare(password, user.password)) {
+    if (await bcrypt.compare(password, user.hashedPassword)) {
       console.log(`Authentication successful for ${username}`);
-      
       return user;
     } else {
-      console.log(`Authentication failed for ${username} using ${password}`);
+      console.log(`Authentication failed for ${username}`);
       return null;
     }
   } catch (error) {
     console.error('Error during password comparison:', error);
     return null;
   }
-}
-
-// Testing the authentication function
-// async function testAuthentication() {
-//   const username = 'tpn'; // Use the correct username from your initial state
-//   const password = 'noob'; // Use the actual password for the user 'at'
-
-//   const user = await authenticateUser(username, password);
-
-//   if (user) {
-//     console.log('Authentication successful:', user);
-//   } else {
-//     console.log('Authentication failed');
-//   }
-// }
-
-// testAuthentication();
-
-// Create a users slice
-const usersSlice = createSlice({
-  name: 'users',
-  initialState,
-  reducers: {
-    setUser: (state, action) => {
-      // Update the state with the user data received from action.payload
-      // This assumes your initialState is an array
-      const { id, name, username, password } = action.payload;
-      const userIndex = state.findIndex(user => user.id === id);
-      if (userIndex !== -1) {
-        state[userIndex] = { id, name, username, password };
-      }
-    }
-  }
-});
-
-export const { setUser } = usersSlice.actions; // Export the setUser action
+};
 
 export default usersSlice.reducer;
