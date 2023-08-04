@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { User, authenticateUser, setLoggedInUser } from './users/usersSlice';
+import { User, authenticateUser, setLoggedInUser } from './usersSlice';
 
 
 

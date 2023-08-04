@@ -41,6 +41,39 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
         <div className="navContent ml-4 flex items-center space-x-4">
           <div>
             <Link
+              to="/login"
+              className={`text-xl tracking-tight transition-colors duration-300 hover:text-yellow-400`}
+            >
+              Login
+            </Link>
+          </div>
+        </div>
+
+        <div className="navContent ml-4 flex items-center space-x-4">
+          <div>
+            <Link
+              to="/register"
+              className={`text-xl tracking-tight transition-colors duration-300 hover:text-yellow-400`}
+            >
+              Register
+            </Link>
+          </div>
+        </div>
+
+        <div className="navContent ml-4 flex items-center space-x-4">
+          <div>
+            <Link
+              to="/signOut"
+              className={`text-xl tracking-tight transition-colors duration-300 hover:text-yellow-400`}
+            >
+              SignOut
+            </Link>
+          </div>
+        </div>
+
+        <div className="navContent ml-4 flex items-center space-x-4">
+          <div>
+            <Link
               to="/addPost"
               className={`text-xl tracking-tight transition-colors duration-300 hover:text-yellow-400`}
             >
@@ -57,7 +90,6 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
               <option value="">Select an agent</option>
               <option value="gekko">Gekko</option>
               <option value="fade">Fade</option>
-              {/* Rest of the agent options here */}
             </select>
             {selectedAgent && (
               <Link to={`/agents/${selectedAgent}`} className="absolute right-0 top-0 mt-2 mr-3">

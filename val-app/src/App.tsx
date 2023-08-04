@@ -8,7 +8,9 @@ import { Navbar } from './app/Navbar';
 import { AgentPostsPage } from './features/posts/AgentPostsPage';
 
 import './App.css';
-import LoginPage from './features/login';
+import LoginPage from './features/users/login';
+import RegisterPage from './features/users/register';
+import SignoutPage from './features/users/signOut';
 
 function App() {
   return (
@@ -16,11 +18,13 @@ function App() {
       <Navbar title={'Agents'} />
       <div className="App">
         <Routes>
+        <Route path="/login" element={<LoginPage onLogin={()=>{}} />} />
+        <Route path="/register" element={<RegisterPage onRegister={()=>{}} />} />
+        {/* <Route path="/signOut" element={<SignoutPage onSignout={()=>{}} />} /> */}
           <Route path="/" element={<Home />} />
           <Route path="/posts/:agent/:postId" element={<SinglePostPage />} />
           <Route path="/editPost/:agent/:postId" element={<EditPostForm  />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
-          {/* <Route path="/agents/" element={<PostsList posts={[]} />} /> */}
           <Route path="/addPost" element={<AddPostForm />} /> 
 
           <Route path="*" element={<NotFound />} />
@@ -35,7 +39,7 @@ function Home() {
     <React.Fragment>
       {/* Render the AgentsList component */}
       
-      <LoginPage onLogin={() => {}} />
+      {/* <LoginPage onLogin={() => {}} /> */}
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
         throw new Error('Function not implemented.');
       } } />
