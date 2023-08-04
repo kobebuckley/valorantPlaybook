@@ -57,7 +57,7 @@ export const AddPostForm: React.FC = () => {
   const onSavePostClicked = () => {
     // onAuthorChanged
 
-    if (title && content && videoUrl && agent) {
+    if (title && content && videoUrl && agent && userId) {
       const newPost: Post = {
         id: nanoid(),
         title,
@@ -158,7 +158,9 @@ export const AddPostForm: React.FC = () => {
             className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select an Author (placeholder)</option>
-            {}
+    {loggedInUser && (
+      <option value={loggedInUser.id}>{loggedInUser.name}</option>
+    )}
           </select>
         </div>
 
