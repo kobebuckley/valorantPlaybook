@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../app/store';
 import { Post, postUpdated, selectPostById } from './postsSlice';
-import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; // Update with the correct path
+import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
 
 
 export const EditPostForm: React.FC = () => {
@@ -13,7 +13,7 @@ export const EditPostForm: React.FC = () => {
   const post: Post | undefined = useSelector((state: RootState) =>
     postId ? selectPostById(state, postId) : undefined
   );
-  const loggedInUser = useSelector(selectLoggedInUser); // Add this line
+  const loggedInUser = useSelector(selectLoggedInUser); 
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');

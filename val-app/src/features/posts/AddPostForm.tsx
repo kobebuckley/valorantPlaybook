@@ -1,98 +1,136 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import { nanoid } from '@reduxjs/toolkit';
-import { postAdded } from './postsSlice';
+import { FormEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../app/store';
+import { Post, postAdded, postUpdated, selectPostById } from './postsSlice';
+import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
+import ErrorModal from './ErrorModal';
 
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  videoUrl: string;
-  agent: string;
-  userId: string;
-}
 
-interface User {
-  id: string;
-  name: string;
-}
-
+  
 export const AddPostForm: React.FC = () => {
-  const [title, setTitle] = useState<string>('');
-  const [content, setContent] = useState<string>('');
-  const [videoUrl, setVideoUrl] = useState<string>('');
-  const [agent, setAgent] = useState<string>('');
-  const [userId, setUserId] = useState<string>('')
-
-
+  
+  // useEffect(() => {
+    //   const loggedInUserStr = localStorage.getItem('loggedInUser');
+    //   if (loggedInUserStr) {
+      //     const loggedInUser = JSON.parse(loggedInUserStr);
+      //     dispatch(setLoggedInUser(loggedInUser)); 
+      //   }
+      // }, [dispatch]);
+      
+      const [title, setTitle] = useState<string>('');
+      const [content, setContent] = useState<string>('');
+      const [videoUrl, setVideoUrl] = useState<string>('');
+      const [agent, setAgent] = useState<string>(''); 
+      const [userId, setUserId] = useState<string>('');
+      
+      
   const dispatch = useDispatch();
+  const loggedInUser = useSelector(selectLoggedInUser); 
+  //   const loggedInUserStr = localStorage.getItem('loggedInUser');
+    //   if (loggedInUserStr) {
+      //     const loggedInUser = JSON.parse(loggedInUserStr);
+      //     dispatch(setLoggedInUser(loggedInUser)); 
+      //   }
+      // }, [dispatch]);
 
-  // const users = useSelector((state: { users: string; }) => state.users)
-  const users = useSelector((state: { users: User[] }) => state.users);
 
+      const users = useSelector((state: { users: User[] }) => state.users);
 
-
+      
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onContentChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
-  const onAuthorChanged = (e: ChangeEvent<HTMLSelectElement>) => {
-    const selectedUserId = e.target.value;
-    setUserId(selectedUserId || (loggedInUser ? loggedInUser.id : '')); // Set the selected user or logged-in user's id, if available
-  };
+  const onAuthorChanged = (e: ChangeEvent<HTMLSelectElement>) => setUserId(e.target.value)
 
+  // const onAuthorChanged = (e: ChangeEvent<HTMLSelectElement>) => {
+  //   if (loggedInUser) {
+  //     setUserId(loggedInUser.id);
+  //   }
+  // };
 
-
+  
+  
   const onSavePostClicked = () => {
-    if (title && content && videoUrl && agent && userId) {
+    // onAuthorChanged
+
+    if (title && content && videoUrl && agent) {
       const newPost: Post = {
         id: nanoid(),
         title,
         content,
         videoUrl,
+        date: new Date().toISOString(),
         agent,
-        userId
+        userId,
+        reactions: {},
       };
 
-      dispatch(postAdded(title, content, videoUrl,agent,userId));
+      dispatch(postAdded(title, content, videoUrl, agent, userId));
 
       setTitle('');
       setContent('');
       setVideoUrl('');
       setAgent('');
-      // setUserId('')
+      setUserId('');
     }
   };
+
+  console.log('loggedInUser:', loggedInUser);
+
+
+
+  // const [errorModalVisible, setErrorModalVisible] = useState(false);
+  // const [errorMessage, setErrorMessage] = useState('');
+  // const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+
+  //   if (!loggedInUser) {
+  //     setErrorMessage('Please log in.');
+  //     setErrorModalVisible(true);
+  //   } else {
+  //     e.preventDefault();
+  //     onSavePostClicked(); // Call onSavePostClicked here
+  //   }
+    // } else if (!title || !content || !videoUrl || !agent) {
+    //   setErrorMessage('Please fill in all the required fields.');
+    //   setErrorModalVisible(true);
+    // } else {
+    //   onSavePostClicked();
+    // }
+  // };
+  
+  // const closeErrorModal = () => {
+  //   setErrorModalVisible(false);
+  // };
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     onSavePostClicked(); // Call onSavePostClicked here
   };
 
-  const isSaveButtonDisabled = !agent; // Disable the button if agent is not selected
 
 
   const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
+  const isSaveButtonDisabled = !agent; // Disable the button if agent is not selected
 
-  const usersOptions = users.map(user => (
-    <option key={user.id} value={user.id}>
-      {user.name}
-    </option>
-  ))
+  // const usersOptions = users.map(user => (
+  //   <option key={user.id} value={user.id}>
+  //     {user.name}
+  //   </option>
+  // ))
 
-
-  const loggedInUser = useSelector((state: RootState) => state.users.loggedInUser);
-
-  
   return (
     <section className="p-4 bg-gray-900 text-white rounded shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Share Your Gaming Experience</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Rest of the code */}
-        
-        {/* Style the Agent and Author inputs */}
-        <div className="mb-4">
+  <h2 className="text-2xl font-bold mb-4">Share Your Gaming Experience</h2>
+  {/* {loggedInUser === null && (
+    <ErrorModal message={errorMessage} onClose={closeErrorModal} />
+  )} */}
+  <form onSubmit={handleSubmit}>
+  <div className="mb-4">
           <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl">
             Select Agent:
           </label>
@@ -120,7 +158,7 @@ export const AddPostForm: React.FC = () => {
             className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select an Author (placeholder)</option>
-            {usersOptions}
+            {}
           </select>
         </div>
 
@@ -175,4 +213,5 @@ export const AddPostForm: React.FC = () => {
       </form>
     </section>
   );
-};
+  }
+
