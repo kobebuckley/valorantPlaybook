@@ -28,13 +28,13 @@ const initialState: PostsState = {
 };
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (agent: string) => {
   try {
-    // Use the new client function to make the API request to your Express server
+
     const response: FetchResult = await client.get(`http://localhost:3000/api/posts?agent=${agent}`);
     console.log('API Response:', response.data);
     return response.data;
   } catch (error) {
     console.error('Error fetching posts:', error);
-    throw error; // Rethrow the error to be caught in the rejected case
+    throw error; 
   }
 });
 
@@ -93,7 +93,7 @@ const postsSlice = createSlice({
       })
       .addCase(fetchPosts.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.posts = action.payload; // Directly assign the API response to the state.posts
+        state.posts = action.payload; 
       })
       .addCase(fetchPosts.rejected, (state, action) => {
         state.status = 'failed';

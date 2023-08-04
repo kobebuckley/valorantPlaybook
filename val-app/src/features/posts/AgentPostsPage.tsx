@@ -6,31 +6,39 @@ import { RootState, AppDispatch } from '../../app/store';
 import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
-
 import { fetchPosts, selectAllPosts } from './postsSlice';
+import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; // Update with the correct path
 
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const AgentPostsPage: React.FC = () => {
-  const { agent } = useParams<{ agent?: string }>(); // Make agent parameter optional
+  const { agent } = useParams<{ agent?: string }>();
   console.log("Selected Agent:", agent);
 
   const dispatch: AppDispatch = useDispatch();
   const posts = useTypedSelector(selectAllPosts);
-  console.log("Posts :", posts);
   const postStatus = useTypedSelector((state) => state.posts.status);
-  console.log("Post Status:", postStatus);
+
+  // Access logged-in user
+  const loggedInUser = useSelector(selectLoggedInUser);
+  console.log('loggedInUser:', loggedInUser);
 
   useEffect(() => {
+    const loggedInUserStr = localStorage.getItem('loggedInUser');
+  if (loggedInUserStr) {
+    const loggedInUser = JSON.parse(loggedInUserStr);
+    dispatch(setLoggedInUser(loggedInUser));
+  }
     const fetchAgentPosts = async () => {
       if (postStatus === 'idle' && agent) {
         try {
           await dispatch(fetchPosts(agent));
         } catch (error) {
-          // Handle the error if needed
+          // Handle error
         }
       }
     };
+
 
     fetchAgentPosts();
   }, [postStatus, dispatch, agent]);
@@ -62,25 +70,6 @@ export const AgentPostsPage: React.FC = () => {
     );
   }
 
-  
-  // useEffect(() => {
-  //   const fetchAgentPosts = async () => {
-  //     console.log('postStatus:', postStatus);
-  //     if (postStatus === 'idle') {
-  //       if (agent) {
-  //         try {
-  //           await dispatch(fetchPosts(agent));
-  //         } catch (error) {
-  //           // Handle the error if needed
-  //         }
-  //       }
-  //     }
-  //   };
-    
-  //   fetchAgentPosts();
-  // }, [postStatus, dispatch, agent]);
-  
-  // Display a message if there are no posts for the selected agent
  
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
@@ -96,7 +85,7 @@ export const AgentPostsPage: React.FC = () => {
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 
       return (
-      <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> {/* Use post.id as the key */}
+      <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> 
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
           <PostAuthor userId={post.userId} />
           <TimeAgo timestamp={post.date}/>
@@ -106,7 +95,7 @@ export const AgentPostsPage: React.FC = () => {
             </div>
           )}
           <p className="post-content">{post.content.substring(0, 100)}</p>
-          <div className="mt-4"> {/* New div to create a new line */}
+          <div className="mt-4"> 
             <ReactionButtons post={post} />
           </div>
           <div className="flex justify-center mt-4">
@@ -133,9 +122,6 @@ export const AgentPostsPage: React.FC = () => {
         <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
           Posts for {agent}
         </h2>
-        {/* <div className="mt-8">
-          <AddPostForm agent={agent} /> 
-        </div> */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
           {renderedPosts}
         </div>

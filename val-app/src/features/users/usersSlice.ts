@@ -1,6 +1,6 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import bcrypt from 'bcryptjs';
-import { store } from '../../app/store';
+import { RootState, store } from '../../app/store';
 import { generateHashedPassword } from './passwordUtils';
 
 export interface User {
@@ -33,37 +33,40 @@ const usersSlice = createSlice({
     addUser: (state, action) => {
       state.users.push(action.payload);
     },
-    setLoggedInUser: (state, action) => {
+    setLoggedInUser: (state, action: PayloadAction<User | null>) => {
       state.loggedInUser = action.payload;
     },
   },
 });
 
-export const { addUser, setLoggedInUser } = usersSlice.actions;
 
 export const authenticateUser = async (username: string, password: string) => {
   const user = store.getState().users.users.find(
     (user: User) => user.username === username
-  );
-
-
-  if (!user) {
-    console.log(`User ${username} not found`);
-    return null;
-  }
-
-  try {
-    if (await bcrypt.compare(password, user.hashedPassword)) {
-      console.log(`Authentication successful for ${username}`);
-      return user;
-    } else {
-      console.log(`Authentication failed for ${username}`);
+    );
+    
+    
+    if (!user) {
+      console.log(`User ${username} not found`);
       return null;
     }
-  } catch (error) {
-    console.error('Error during password comparison:', error);
-    return null;
-  }
-};
+    
+    try {
+      if (await bcrypt.compare(password, user.hashedPassword)) {
+        console.log(`Authentication successful for ${username}`);
+        return user;
+      } else {
+        console.log(`Authentication failed for ${username}`);
+        return null;
+      }
+    } catch (error) {
+      console.error('Error during password comparison:', error);
+      return null;
+    }
+  };
+  
+  export const selectLoggedInUser = (state: RootState) => state.users.loggedInUser;
 
-export default usersSlice.reducer;
+  // Export other actions and reducer as before
+  export const { addUser, setLoggedInUser } = usersSlice.actions;
+  export default usersSlice.reducer;

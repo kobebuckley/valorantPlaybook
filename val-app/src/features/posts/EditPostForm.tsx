@@ -3,29 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootState } from '../../app/store';
 import { Post, postUpdated, selectPostById } from './postsSlice';
-
-interface User {
-  id: string;
-  name: string;
-  username: string;
-  hashedPassword: string;
-  isAdmin: boolean;
-}
-interface EditPostFormProps {
-  loggedInUser: User | null;
-}
+import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; // Update with the correct path
 
 
-
-export const EditPostForm: React.FC<EditPostFormProps> = ({ loggedInUser }) => {
+export const EditPostForm: React.FC = () => {
   const { agent, postId } = useParams<{ agent: string; postId: string }>();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const post: Post | undefined = useSelector((state: RootState) =>
     postId ? selectPostById(state, postId) : undefined
   );
-
-  // const post = posts.find((post) => post.id === postId && post.agent === agent);
+  const loggedInUser = useSelector(selectLoggedInUser); // Add this line
 
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
@@ -33,6 +21,11 @@ export const EditPostForm: React.FC<EditPostFormProps> = ({ loggedInUser }) => {
   const [selectedAgent, setSelectedAgent] = useState(post?.agent || '');
 
   useEffect(() => {
+    const loggedInUserStr = localStorage.getItem('loggedInUser');
+  if (loggedInUserStr) {
+    const loggedInUser = JSON.parse(loggedInUserStr);
+    dispatch(setLoggedInUser(loggedInUser));
+  }
     setTitle(post?.title || '');
     setContent(post?.content || '');
     setVideoUrl(post?.videoUrl || '');
@@ -56,12 +49,12 @@ export const EditPostForm: React.FC<EditPostFormProps> = ({ loggedInUser }) => {
         userId: '',
         reactions: {},
       };
-
+      
       dispatch(postUpdated(updatedPost));
       navigate(`/posts/${selectedAgent}/${postId}`);
     }
   };
-
+  
   if (!post) {
     return <h2>Loading...</h2>;
   }

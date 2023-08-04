@@ -1,16 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-
-interface User {
-  id: string;
-  name: string;
-}
-
-interface RootState {
-  users: {
-    users: User[];
-  };
-}
+import { RootState } from '../../app/store';
 
 interface PostAuthorProps {
   userId: string; // This should be the userId of the post author

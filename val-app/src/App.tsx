@@ -18,7 +18,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/posts/:agent/:postId" element={<SinglePostPage />} />
-          <Route path="/editPost/:agent/:postId" element={<EditPostForm loggedInUser={null} />} />
+          <Route path="/editPost/:agent/:postId" element={<EditPostForm  />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
           {/* <Route path="/agents/" element={<PostsList posts={[]} />} /> */}
           <Route path="/addPost" element={<AddPostForm />} /> 

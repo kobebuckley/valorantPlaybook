@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { User, authenticateUser, setLoggedInUser } from './users/usersSlice';
-import { useNavigate } from 'react-router-dom';
+
+
 
 interface LoginPageProps {
   onLogin: (user: User | null) => void;
@@ -14,25 +15,25 @@ function LoginPage({ onLogin }: LoginPageProps) {
   const [loginError, setLoginError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-
+  
     const loggedInUser = await authenticateUser(username, password);
-
+  
     if (loggedInUser) {
-      dispatch(setLoggedInUser(loggedInUser));
+      dispatch(setLoggedInUser(loggedInUser)); 
+      localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
       setLoginError('');
       setSuccessMessage('Success! Logging in should do stuff...');
       console.log('loggedInUser:', loggedInUser);
-
+  
       onLogin(loggedInUser);
     } else {
       setLoginError('Authentication failed. Please check your credentials.');
       console.log('loggedInUser:', loggedInUser);
-      setSuccessMessage('');    }
+      setSuccessMessage('');
+    }
   };
-
   
 
   return (
