@@ -17,7 +17,8 @@ export const AddPostForm: React.FC = () => {
       const [videoUrl, setVideoUrl] = useState<string>('');
       const [agent, setAgent] = useState<string>(''); 
       const [userId, setUserId] = useState<string>('');
-      
+      const [showErrorModal, setShowErrorModal] = useState(false); 
+
       
   const dispatch = useDispatch();
   const loggedInUser = useSelector(selectLoggedInUser); 
@@ -58,10 +59,14 @@ export const AddPostForm: React.FC = () => {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    
+
+    if (!loggedInUser) {
+      setShowErrorModal(true);
+      return;
+    }
+
     onSavePostClicked(); 
   };
-
 
 
   const canSave = Boolean(title) && Boolean(content) && Boolean(userId)
@@ -72,7 +77,10 @@ export const AddPostForm: React.FC = () => {
   return (
     <section className="p-4 bg-gray-900 text-white rounded shadow-lg">
   <h2 className="text-2xl font-bold mb-4">Share Your Gaming Experience</h2>
-  
+  {loggedInUser === null && (
+      <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
+    )}
+
   <form onSubmit={handleSubmit}>
   <div className="mb-4">
           <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl">
