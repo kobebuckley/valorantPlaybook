@@ -1,7 +1,7 @@
 import express from 'express';
 
-const mongoose = require('mongoose')
-mongoose.set('strictQuery',false)
+import mongoose from 'mongoose';
+import dotenv from 'dotenv'
 
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -10,10 +10,19 @@ import path from 'path';
 import bcrypt from 'bcrypt';
 
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
+const CONNECTION = process.env.CONNECTION
+
 
 app.use(cors());
 app.use(bodyParser.json());
+mongoose.set('strictQuery',false)
+
+if (process.env.NODE_ENV !== 'production'){
+  dotenv.config()
+}
+
+
 
 
 const posts = [
@@ -101,7 +110,7 @@ app.post('/api/register', async (req, res) => {
     return res.status(400).json({ message: 'Username already taken' });
   }
 
-  const hashedPassword = await hashPassword(password); // Hash the password using bcrypt
+  const hashedPassword = await hashPassword(password); 
 
   const newUser = {
     id: generateUniqueId(),
@@ -126,18 +135,27 @@ app.get('/api/posts', (req, res) => {
   }
 });
 
-// const __filename = new URL(import.meta.url).pathname;
 
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
-// Serve static files from the 'build' directory
 app.use(express.static(path.join(__dirname, '../../build')));
 
-// Send the 'index.html' file for any route (client-side routing)
 app.get('*', (_, res) => {
   res.sendFile(path.join(__dirname, '../../build', 'index.html'));
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+
+
+const start = async() => {
+  try {
+
+    await mongoose.connect(CONNECTION)
+    app.listen(port, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  } catch (e){
+    console.log(e.message)
+  }
+}
+
+start()
