@@ -11,13 +11,11 @@ interface RegisterPageProps {
 function RegisterPage({ onRegister }: RegisterPageProps) {
   const dispatch = useDispatch<Dispatch<any>>(); // Type Dispatch<any> to allow any action
 
+  const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [registrationError, setRegistrationError] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
-
-
-
   
   const handleRegister = async () => {
     try {
@@ -26,18 +24,25 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }), 
+        body: JSON.stringify({ name: displayName, username, password }), 
       });
   
-      console.error('response: ', response);
+      console.log('response: ', response);
   
       if (response.ok) {
         const registeredUser = await response.json();
-        dispatch(addUserAsync({ ...registeredUser, hashedPassword: password }));
-        localStorage.setItem('loggedInUser', JSON.stringify(registeredUser));
+        console.log('before dispatch: ', registeredUser);
+
+        dispatch(addUserAsync({ ...registeredUser, hashedPassword: password, name: displayName }));
         setRegistrationSuccess(true);
         setRegistrationError('');
         onRegister();
+        console.log('does it work?: ', registeredUser);
+
+        // Clear input fields after successful registration
+        setDisplayName('');
+        setUsername('');
+        setPassword('');
       } else {
         const errorData = await response.json();
         setRegistrationError(errorData.message);
@@ -49,7 +54,7 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
       setRegistrationSuccess(false);
     }
   };
-
+  
   return (
     <div className="bg-gray-900 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
@@ -59,6 +64,18 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
         ) : (
           <div>
             {registrationError && <p className="text-red-500 mb-2">{registrationError}</p>}
+            <div className="mb-4">
+              <label htmlFor="displayName" className="block font-medium">
+                Display Name:
+              </label>
+              <input
+                type="text"
+                id="name"
+                value={displayName}
+                onChange={(e) => setDisplayName(e.target.value)}
+                className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+              />
+            </div>
             <div className="mb-4">
               <label htmlFor="username" className="block font-medium">
                 Username:

@@ -1,4 +1,8 @@
 import express from 'express';
+
+const mongoose = require('mongoose')
+mongoose.set('strictQuery',false)
+
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import { sub } from 'date-fns';
@@ -91,7 +95,7 @@ const hashPassword = async (password) => {
 const registeredUsers = [];
 
 app.post('/api/register', async (req, res) => {
-  const { username, password } = req.body;
+  const { name, username, password } = req.body;
 
   if (registeredUsers.some(user => user.username === username)) {
     return res.status(400).json({ message: 'Username already taken' });
@@ -101,9 +105,9 @@ app.post('/api/register', async (req, res) => {
 
   const newUser = {
     id: generateUniqueId(),
-    name: '',
+    name,
     username,
-    hashedPassword, // Store hashed password in the database
+    hashedPassword, 
     isAdmin: false,
   };
   registeredUsers.push(newUser);
