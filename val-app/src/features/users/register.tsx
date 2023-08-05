@@ -1,32 +1,39 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { setLoggedInUser } from './usersSlice';
+
+import { User, setLoggedInUser, addUserAsync } from './usersSlice';
+import { Dispatch } from '@reduxjs/toolkit';
 
 interface RegisterPageProps {
   onRegister: () => void;
 }
 
 function RegisterPage({ onRegister }: RegisterPageProps) {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<Dispatch<any>>(); // Type Dispatch<any> to allow any action
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [registrationError, setRegistrationError] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
+
+
+  
   const handleRegister = async () => {
     try {
-      const response = await fetch('/api/register', {
+      const response = await fetch('http://localhost:3000/api/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password }), 
       });
-
+  
+      console.error('response: ', response);
+  
       if (response.ok) {
         const registeredUser = await response.json();
-        dispatch(setLoggedInUser(registeredUser));
+        dispatch(addUserAsync({ ...registeredUser, hashedPassword: password }));
         localStorage.setItem('loggedInUser', JSON.stringify(registeredUser));
         setRegistrationSuccess(true);
         setRegistrationError('');

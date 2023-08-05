@@ -1,13 +1,16 @@
 import express from 'express';
 import cors from 'cors';
-import bodyParser from 'body-parser'; // Import body-parser as a default import
+import bodyParser from 'body-parser';
 import { sub } from 'date-fns';
+import path from 'path';
+import bcrypt from 'bcrypt';
 
 const app = express();
 const port = 3000;
 
 app.use(cors());
-app.use(bodyParser.json()); // Use bodyParser.json() as a default import
+app.use(bodyParser.json());
+
 
 const posts = [
 {
@@ -77,17 +80,58 @@ const posts = [
 
 }
 ];
+function generateUniqueId() {
+  return Math.random().toString(36).substr(2, 9);
+}
+const hashPassword = async (password) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+};
+const registeredUsers = [];
 
+app.post('/api/register', async (req, res) => {
+  const { username, password } = req.body;
+
+  if (registeredUsers.some(user => user.username === username)) {
+    return res.status(400).json({ message: 'Username already taken' });
+  }
+
+  const hashedPassword = await hashPassword(password); // Hash the password using bcrypt
+
+  const newUser = {
+    id: generateUniqueId(),
+    name: '',
+    username,
+    hashedPassword, // Store hashed password in the database
+    isAdmin: false,
+  };
+  registeredUsers.push(newUser);
+
+  res.status(201).json({ user: newUser });
+});
 
 app.get('/api/posts', (req, res) => {
   const { agent } = req.query;
 
   if (agent) {
-    const filteredPosts = posts.filter((post) => post.agent === agent);
+    const filteredPosts = posts.filter(post => post.agent === agent);
     res.json(filteredPosts);
   } else {
     res.json(posts);
   }
+});
+
+// const __filename = new URL(import.meta.url).pathname;
+
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+// Serve static files from the 'build' directory
+app.use(express.static(path.join(__dirname, '../../build')));
+
+// Send the 'index.html' file for any route (client-side routing)
+app.get('*', (_, res) => {
+  res.sendFile(path.join(__dirname, '../../build', 'index.html'));
 });
 
 app.listen(port, () => {
