@@ -108,7 +108,10 @@ const hashPassword = async (password) => {
   return hashedPassword;
 };
 
-app.post('/api/usersReg', async (req, res) => {
+
+
+
+app.post('/api/users2', async (req, res) => {
   const { name, username, password } = req.body;
 
   if (await User.findOne({ username })) {
@@ -145,6 +148,11 @@ app.get('/api/users', async (req, res) => {
     res.status(500).json({ message: 'Error while fetching users' });
   }
 });
+
+
+
+
+
 
 
 

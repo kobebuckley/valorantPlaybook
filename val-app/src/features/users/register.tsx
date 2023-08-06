@@ -19,7 +19,7 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
   
   const handleRegister = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/register', {
+    const response = await fetch('http://localhost:3000/api/users2', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
