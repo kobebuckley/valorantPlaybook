@@ -9,20 +9,27 @@ import { sub } from 'date-fns';
 import path from 'path';
 import bcrypt from 'bcrypt';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
-const CONNECTION = process.env.CONNECTION
 
+
+
+import { userSchema } from './models/users.js'; 
+function generateUniqueId() {
+  return Math.random().toString(36).substr(2, 9);
+}
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
+const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
-mongoose.set('strictQuery',false)
+mongoose.set('strictQuery', false);
 
-if (process.env.NODE_ENV !== 'production'){
-  dotenv.config()
-}
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
+const PORT = process.env.PORT;
+const CONNECTION = process.env.CONNECTION;
 
+const User = mongoose.model('User', userSchema);
 
 
 const posts = [
@@ -90,12 +97,13 @@ const posts = [
   agent: 'fade',
   userId: '2',
   reactions: {thumbsUp: 49583, hooray: 12313, heart: 3434, rocket: 333432, eyes: 300}
-
+  
 }
 ];
-function generateUniqueId() {
-  return Math.random().toString(36).substr(2, 9);
-}
+// app.get('/', (req, res) => {
+  
+// });
+
 const hashPassword = async (password) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -106,56 +114,76 @@ const registeredUsers = [];
 app.post('/api/register', async (req, res) => {
   const { name, username, password } = req.body;
 
-  if (registeredUsers.some(user => user.username === username)) {
+  if (await User.findOne({ username })) {
     return res.status(400).json({ message: 'Username already taken' });
   }
 
-  const hashedPassword = await hashPassword(password); 
+  const hashedPassword = await hashPassword(password);
 
-  const newUser = {
+  const newUser = new User({
     id: generateUniqueId(),
     name,
     username,
-    hashedPassword, 
+    hashedPassword,
     isAdmin: false,
-  };
-  registeredUsers.push(newUser);
+  });
 
-  res.status(201).json({ user: newUser });
-});
-
-app.get('/api/posts', (req, res) => {
-  const { agent } = req.query;
-
-  if (agent) {
-    const filteredPosts = posts.filter(post => post.agent === agent);
-    res.json(filteredPosts);
-  } else {
-    res.json(posts);
+  try {
+    await newUser.save();
+    res.status(201).json({ user: newUser });
+  } catch (error) {
+    res.status(500).json({ message: 'Error while saving user' });
   }
 });
 
-
-const __dirname = path.dirname(new URL(import.meta.url).pathname);
-
-app.use(express.static(path.join(__dirname, '../../build')));
-
-app.get('*', (_, res) => {
-  res.sendFile(path.join(__dirname, '../../build', 'index.html'));
-});
-
-
-
-const start = async() => {
+app.get('/api/users', async (req, res) => {
   try {
+    const users = await User.find({});
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Error while fetching users' });
+  }
+});
+// user1.save()
 
-    await mongoose.connect(CONNECTION)
-    app.listen(port, () => {
+
+
+
+
+
+
+
+
+
+
+
+const start = async () => {
+  try {
+    await mongoose.connect(CONNECTION);
+    console.log('Connected to MongoDB');
+
+    // Create and save a user (only for demonstration purposes)
+    const user1 = new User({
+      id: generateUniqueId(), // Make sure generateUniqueId is defined or imported
+      name: 'apple',
+      username: 'applesRus',
+      hashedPassword: 'passwordgoeshere?',
+      isAdmin: false,
+    });
+
+    try {
+      const savedUser = await user1.save();
+      console.log('User saved:', savedUser);
+    } catch (error) {
+      console.error('Error saving user:', error);
+    }
+
+    app.listen(PORT, () => {
       console.log(`Server is running on http://localhost:${PORT}`);
     });
-  } catch (e){
-    console.log(e.message)
+  } catch (e) {
+    console.log(e.message);
   }
-}
+};
 
-start()
+start();
