@@ -17,7 +17,12 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
   const [registrationError, setRegistrationError] = useState('');
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   
-  const handleRegister = async () => {
+    const handleRegister = async () => {
+      if (!displayName || !username || !password) {
+        setRegistrationError('Please fill out all fields.');
+        setRegistrationSuccess(false);
+        return; // Don't proceed with registration if any field is empty
+      }
     try {
     const response = await fetch('http://localhost:3000/api/users2', {
         method: 'POST',

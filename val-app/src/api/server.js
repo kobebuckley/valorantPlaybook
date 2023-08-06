@@ -118,7 +118,8 @@ app.post('/api/users2', async (req, res) => {
   const { name, username, password } = req.body;
 
   if (await User.findOne({ username })) {
-    return res.status(400).json({ message: 'Username already taken' });
+    // return res.status(400).json({ message: 'Username already taken' });
+    return res.status(400).json({ message: 'Incorrect Username or Password' });
   }
 
   const hashedPassword = await hashPassword(password);
