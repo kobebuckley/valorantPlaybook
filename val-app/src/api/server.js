@@ -100,18 +100,15 @@ const posts = [
   
 }
 ];
-// app.get('/', (req, res) => {
-  
-// });
+
 
 const hashPassword = async (password) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
 };
-const registeredUsers = [];
 
-app.post('/api/register', async (req, res) => {
+app.post('/api/usersReg', async (req, res) => {
   const { name, username, password } = req.body;
 
   if (await User.findOne({ username })) {
@@ -129,12 +126,16 @@ app.post('/api/register', async (req, res) => {
   });
 
   try {
-    await newUser.save();
-    res.status(201).json({ user: newUser });
+    const savedUser = await newUser.save();
+    console.log('User saved:', savedUser);
+    res.status(201).json({ user: savedUser });
   } catch (error) {
+    console.error('Error saving user:', error);
     res.status(500).json({ message: 'Error while saving user' });
   }
 });
+
+
 
 app.get('/api/users', async (req, res) => {
   try {
@@ -144,16 +145,6 @@ app.get('/api/users', async (req, res) => {
     res.status(500).json({ message: 'Error while fetching users' });
   }
 });
-// user1.save()
-
-
-
-
-
-
-
-
-
 
 
 
