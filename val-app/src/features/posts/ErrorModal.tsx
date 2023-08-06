@@ -20,7 +20,13 @@ const ErrorModal: React.FC<ErrorModalProps> = ({ message, onClose }) => {
           >
             Register
           </Link>
-
+          <Link
+            to="/login"
+            className="text-white bg-blue-500 px-4 py-2 rounded hover:bg-blue-600 focus:outline-none text-center w-full"
+            onClick={onClose}
+          >
+            Login
+          </Link>
         </div>
       </div>
     </div>

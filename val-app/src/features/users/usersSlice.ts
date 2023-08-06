@@ -74,6 +74,7 @@ export const addUserAsync = (user: User) => {
 
 export const authenticateUser = async (username: string, password: string) => {
   try {
+    
     const response = await fetch(`http://localhost:3000/api/users?username=${username}`);
     if (response.ok) {
       const users = await response.json();

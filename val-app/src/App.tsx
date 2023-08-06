@@ -15,7 +15,7 @@ import SignoutPage from './features/users/signOut';
 function App() {
   return (
     <Router>
-      <Navbar title={'Agents'} />
+      <Navbar title={'The Valorant Playbook'} />
       <div className="App">
         <Routes>
         <Route path="/login" element={<LoginPage onLogin={()=>{}} />} />
@@ -37,9 +37,6 @@ function App() {
 function Home() {
   return (
     <React.Fragment>
-      {/* Render the AgentsList component */}
-      
-      {/* <LoginPage onLogin={() => {}} /> */}
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
         throw new Error('Function not implemented.');
       } } />

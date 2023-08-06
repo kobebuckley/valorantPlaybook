@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { User, setLoggedInUser, addUserAsync } from './usersSlice';
+import { User, setLoggedInUser, addUserAsync, selectLoggedInUser } from './usersSlice';
 import { Dispatch } from '@reduxjs/toolkit';
 
 interface RegisterPageProps {
   onRegister: () => void;
 }
 
+
 function RegisterPage({ onRegister }: RegisterPageProps) {
   const dispatch = useDispatch<Dispatch<any>>(); // Type Dispatch<any> to allow any action
+  const loggedInUser = useSelector(selectLoggedInUser); // Move this line inside the component function
 
   const [displayName, setDisplayName] = useState('');
   const [username, setUsername] = useState('');
@@ -18,10 +20,14 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
   
     const handleRegister = async () => {
-      if (!displayName || !username || !password) {
+      if (loggedInUser) {
+        setRegistrationError('You are already logged in.');
+        return; 
+      }
+      else if (!displayName || !username || !password) {
         setRegistrationError('Please fill out all fields.');
         setRegistrationSuccess(false);
-        return; // Don't proceed with registration if any field is empty
+        return; 
       }
     try {
     const response = await fetch('http://localhost:3000/api/users2', {
@@ -44,7 +50,6 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
         onRegister();
         console.log('does it work?: ', registeredUser);
 
-        // Clear input fields after successful registration
         setDisplayName('');
         setUsername('');
         setPassword('');
@@ -107,7 +112,10 @@ function RegisterPage({ onRegister }: RegisterPageProps) {
             </div>
             <button
               onClick={handleRegister}
-              className="w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300"
+              className={`w-full bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none focus:ring focus:ring-blue-300 ${
+                loggedInUser ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+              disabled={loggedInUser !== null}
             >
               Register
             </button>
