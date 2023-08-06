@@ -111,6 +111,9 @@ const hashPassword = async (password) => {
 
 
 
+
+// post a new registered user and save
+
 app.post('/api/users2', async (req, res) => {
   const { name, username, password } = req.body;
 
@@ -139,6 +142,7 @@ app.post('/api/users2', async (req, res) => {
 });
 
 
+// all users 
 
 app.get('/api/users', async (req, res) => {
   try {
@@ -150,6 +154,8 @@ app.get('/api/users', async (req, res) => {
 });
 
 
+
+//area to login? or customize the find all users? 
 
 
 
@@ -170,9 +176,12 @@ const start = async () => {
       isAdmin: false,
     });
 
+
+
     try {
-      const savedUser = await user1.save();
-      console.log('User saved:', savedUser);
+      // const savedUser = await user1.save();
+
+      // console.log('User saved:', savedUser);
     } catch (error) {
       console.error('Error saving user:', error);
     }
