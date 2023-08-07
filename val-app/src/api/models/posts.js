@@ -17,9 +17,10 @@ export const postSchema = new mongoose.Schema({
   }
 });
 
+
+// update with a post status value - admin accounts will handle these before posts are shown publically
+
+
+
 export const Post = mongoose.model('Post', postSchema);
 
-// export default Post;
-
-
-// update me soon into the database next 
