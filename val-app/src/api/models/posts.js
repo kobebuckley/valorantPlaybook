@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const postSchema = new mongoose.Schema({
+export const postSchema = new mongoose.Schema({
   id: { type: String, required: true },
   date: { type: Date, required: true },
   title: { type: String, required: true },
@@ -17,9 +17,9 @@ const postSchema = new mongoose.Schema({
   }
 });
 
-const Post = mongoose.model('Post', postSchema);
+export const Post = mongoose.model('Post', postSchema);
 
-export default Post;
+// export default Post;
 
 
 // update me soon into the database next 

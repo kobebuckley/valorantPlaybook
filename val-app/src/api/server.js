@@ -13,6 +13,9 @@ import bcrypt from 'bcrypt';
 
 
 import { userSchema } from './models/users.js'; 
+import { postSchema, Post } from './models/posts.js'; 
+
+
 function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
@@ -35,7 +38,7 @@ const User = mongoose.model('User', userSchema);
 const posts = [
 {
   id: '1',
-  date: sub(new Date(), { minutes: 10 }).toISOString(),
+  date: new Date().toISOString(),
   title: 'Liquid Nats!',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=0t-A41qBGmg&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
@@ -57,7 +60,7 @@ const posts = [
 },
 {
   id: '3',
-  date:'',
+  date: sub(new Date(), { minutes: 21 }).toISOString(),
   title: 'Third Post!',
   content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce eu dapibus libero. Nulla dapibus, pursdfsqafdfsdfsfd',
   videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
@@ -156,6 +159,16 @@ app.get('/api/users', async (req, res) => {
 
 
 
+app.get('/api/posts', async (req, res) => {
+  try {
+    const thePosts = await Post.find({});
+    res.status(200).json(thePosts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error while fetching users' });
+  }
+});
+
+
 //area to login? or customize the find all users? 
 
 
@@ -177,14 +190,20 @@ const start = async () => {
       isAdmin: false,
     });
 
-
-
+    // Try to save the user, but handle any errors
     try {
-      // const savedUser = await user1.save();
-
-      // console.log('User saved:', savedUser);
+      const savedUser = await user1.save();
+      console.log('User saved:', savedUser);
     } catch (error) {
       console.error('Error saving user:', error);
+    }
+
+    // Save your posts to the database
+    try {
+      const savedPosts = await Post.insertMany(posts);
+      console.log('Saved posts:', savedPosts);
+    } catch (error) {
+      console.error('Error saving posts:', error);
     }
 
     app.listen(PORT, () => {
