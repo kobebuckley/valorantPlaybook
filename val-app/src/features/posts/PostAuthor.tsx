@@ -1,15 +1,30 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../app/store';
+import { fetchInitialState } from '../users/usersSlice'; // Import your fetch action
+import { unwrapResult } from '@reduxjs/toolkit';
+import { AppDispatch } from '../../app/store'; // Make sure you have AppDispatch properly exported
 
 interface PostAuthorProps {
-  userId: string; 
+  userId: string;
 }
 
 export const PostAuthor: React.FC<PostAuthorProps> = ({ userId }) => {
-  const author = useSelector((state: RootState) =>
-    state.users.users.find((user) => user.id === userId)
-  );
+  const dispatch: AppDispatch = useDispatch(); // Use the typed dispatch
+  const users = useSelector((state: RootState) => state.users.users);
+  const author = users.find((user) => user.id === userId);
+  console.log(author?.name); // Use optional chaining here
 
-  return <div><span>by {author ? author.name : 'Unknown author'}</span></div>;
+  useEffect(() => {
+    dispatch(fetchInitialState())
+      .then(unwrapResult) // Unwrap the result to get the actual payload
+      .then((fetchedUsers) => {
+        console.log('Fetched users:', JSON.stringify(fetchedUsers));
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error.message);
+      });
+  }, [dispatch]);
+
+  return <div><span>by {author?.name || 'Unknown author'}</span></div>; // Use optional chaining here as well
 };

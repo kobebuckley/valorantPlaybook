@@ -19,6 +19,17 @@ import { postSchema, Post } from './models/posts.js';
 function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
+
+
+// Define generateHashedPassword function here
+const generateHashedPassword = async (password) => {
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
+  return hashedPassword;
+};
+
+
+
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
@@ -145,7 +156,12 @@ app.post('/api/users2', async (req, res) => {
   }
 });
 
-
+users: [
+  { id: '0', name: 'Admin', username: 'admin', hashedPassword: await generateHashedPassword('adminBased'), isAdmin: true },
+  { id: '1', name: 'Actually Toxic', username: 'at', hashedPassword: await generateHashedPassword('toxic'), isAdmin: false },
+  { id: '2', name: 'TooPro Noob', username: 'tpn', hashedPassword: await generateHashedPassword('noob'), isAdmin: false },
+  { id: '3', name: 'CrispyAppleSlice', username: 'cas', hashedPassword: await generateHashedPassword('slice'), isAdmin: false }
+],
 // all users 
 
 app.get('/api/users', async (req, res) => {
@@ -175,27 +191,39 @@ app.get('/api/posts', async (req, res) => {
 
 
 
-
 const start = async () => {
+
+  const generateHashedPassword = async (password) => {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+    return hashedPassword;
+  };
+
+  
   try {
     await mongoose.connect(CONNECTION);
     console.log('Connected to MongoDB');
 
-    // Create and save a user (only for demonstration purposes)
-    const user1 = new User({
-      id: generateUniqueId(), // Make sure generateUniqueId is defined or imported
-      name: 'apple',
-      username: 'applesRus',
-      hashedPassword: 'passwordgoeshere?',
-      isAdmin: false,
-    });
+    // Generate hashed passwords for hard-coded users
+    const hashedAdminPassword = await generateHashedPassword('adminBased');
+    const hashedToxicPassword = await generateHashedPassword('toxic');
+    const hashedNoobPassword = await generateHashedPassword('noob');
+    const hashedSlicePassword = await generateHashedPassword('slice');
 
-    // Try to save the user, but handle any errors
+    // Create hard-coded users
+    const hardCodedUsers = [
+      { id: '0', name: 'Admin', username: 'admin', hashedPassword: hashedAdminPassword, isAdmin: true },
+      { id: '1', name: 'Actually Toxic', username: 'at', hashedPassword: hashedToxicPassword, isAdmin: false },
+      { id: '2', name: 'TooPro Noob', username: 'tpn', hashedPassword: hashedNoobPassword, isAdmin: false },
+      { id: '3', name: 'CrispyAppleSlice', username: 'cas', hashedPassword: hashedSlicePassword, isAdmin: false }
+    ];
+
+    // Insert hard-coded users into the database
     try {
-      const savedUser = await user1.save();
-      console.log('User saved:', savedUser);
+      const savedUsers = await User.insertMany(hardCodedUsers);
+      console.log('Saved users:', savedUsers);
     } catch (error) {
-      console.error('Error saving user:', error);
+      console.error('Error saving users:', error);
     }
 
     // Save your posts to the database
