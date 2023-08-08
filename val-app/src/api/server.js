@@ -183,7 +183,7 @@ app.post('/api/users2', async (req, res) => {
     // return res.status(400).json({ message: 'Username already taken' });
     return res.status(400).json({ message: 'Incorrect Username or Password' });
   }
-
+// sb
   const hashedPassword = await hashPassword(password);
 
   const newUser = new User({
