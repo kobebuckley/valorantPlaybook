@@ -134,23 +134,29 @@ const hashPassword = async (password) => {
   return hashedPassword;
 
 };
- // Define a middleware to check if the user is an admin
+// Define a middleware to check if the user is an admin
+// Define a middleware to check if the user is an admin
 const checkAdmin = (req, res, next) => {
-  if (!req.user || !req.user.isAdmin) {
+  const user = req.user; // Assuming req.user contains the user object
+  console.log('User:', user); // Add this log to check the user object
+  if (!user || !user.isAdmin) {
+    console.log('Unauthorized user:', user); // Add this log to check unauthorized users
     return res.status(403).json({ message: 'Unauthorized' });
   }
   next();
 };
 
-// Apply the middleware to the non-moderated posts route
 app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
   try {
     const nonModeratedPosts = await Post.find({ moderated: false });
+    console.log('The POSTS:', nonModeratedPosts); // Add this log to check the fetched posts
     res.status(200).json(nonModeratedPosts);
   } catch (error) {
+    console.error('No POsts:', error); // Add this log to check errors
     res.status(500).json({ message: 'Error while fetching non-moderated posts' });
   }
 });
+
 
 
 
