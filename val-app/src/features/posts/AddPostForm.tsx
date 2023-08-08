@@ -9,8 +9,12 @@ import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
 import ErrorModal from './ErrorModal';
 
 
-  
+
+
 export const AddPostForm: React.FC = () => {
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+
   
       const [title, setTitle] = useState<string>('');
       const [content, setContent] = useState<string>('');
@@ -33,26 +37,34 @@ export const AddPostForm: React.FC = () => {
   const onSavePostClicked = () => {
 
     if (title && content && videoUrl && agent && userId) {
-      const newPost: Post = {
-        id: nanoid(),
-        title,
-        content,
-        videoUrl,
-        date: new Date().toISOString(),
-        agent,
-        userId,
-        reactions: {},
+     const newPost: Post = {
+    id: nanoid(),
+    title,
+    content,
+    videoUrl,
+    date: new Date().toISOString(),
+    agent,
+    userId: loggedInUser!.id, // Use the logged-in user's id
+    reactions: {},
+    status: 'pending', 
+    moderated: false
       };
 
       dispatch(postAdded(title, content, videoUrl, agent, userId));
 
-      setTitle('');
-      setContent('');
-      setVideoUrl('');
-      setAgent('');
-      setUserId('');
+ 
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+        setTitle('');
+        setContent('');
+        setVideoUrl('');
+        setAgent('');
+        setUserId('');
+      }, 3000); // Clear form after 3 seconds
     }
   };
+
 
   console.log('loggedInUser:', loggedInUser);
 
@@ -110,9 +122,8 @@ export const AddPostForm: React.FC = () => {
             className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select an Author (placeholder)</option>
-    {loggedInUser && (
-      <option value={loggedInUser.id}>{loggedInUser.name}</option>
-    )}
+            <option value={loggedInUser?.id}>{loggedInUser?.name}</option>
+
           </select>
         </div>
 
@@ -162,6 +173,11 @@ export const AddPostForm: React.FC = () => {
           Save Post
         </button>
       </form>
+      {showSuccessMessage && (
+        <p className="text-green-500 mt-2">
+          Post submitted for approval!
+        </p>
+      )}
     </section>
   );
   }

@@ -48,6 +48,8 @@ export const EditPostForm: React.FC = () => {
         agent: selectedAgent,
         userId: '',
         reactions: {},
+        moderated: false,
+        status: 'pending'
       };
       
       dispatch(postUpdated(updatedPost));

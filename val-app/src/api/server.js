@@ -55,7 +55,9 @@ const posts = [
   videoUrl: 'https://www.youtube.com/watch?v=0t-A41qBGmg&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
   agent: 'breach',
   userId: '0',
-  reactions: {thumbsUp: 23, hooray: 2, heart: 254, rocket: 3, eyes: 5}
+  reactions: {thumbsUp: 23, hooray: 2, heart: 254, rocket: 3, eyes: 5},
+  moderated: true
+
 
 },
 {
@@ -66,7 +68,9 @@ const posts = [
   videoUrl: 'https://www.youtube.com/watch?v=7lVE9BQENGg',
   agent: 'gekko',
   userId: '0',
-  reactions: {thumbsUp: 324, hooray: 2, heart: 200, rocket: 2, eyes: 5}
+  reactions: {thumbsUp: 324, hooray: 2, heart: 200, rocket: 2, eyes: 5},
+  moderated: true
+
 
 },
 {
@@ -77,7 +81,9 @@ const posts = [
   videoUrl: 'https://www.youtube.com/watch?v=ohu59Ssdq7g',
   agent: 'fade',
   userId: '1',
-  reactions: {thumbsUp: 5, hooray: 23, heart: 4, rocket: 23, eyes: 59}
+  reactions: {thumbsUp: 5, hooray: 23, heart: 4, rocket: 23, eyes: 59},
+  moderated: false
+
 
 },
 {
@@ -88,7 +94,9 @@ const posts = [
   videoUrl: 'https://www.youtube.com/watch?v=aVgkN9dMXCY&pp=ygUKZ2Vra28gcHJvIA%3D%3D',
   agent: 'fade',
   userId: '2',
-  reactions: {thumbsUp: 30, hooray: 345, heart: 4, rocket: 342, eyes: 23}
+  reactions: {thumbsUp: 30, hooray: 345, heart: 4, rocket: 342, eyes: 23},
+  moderated: false
+
 
 },
 {
@@ -99,7 +107,9 @@ const posts = [
   videoUrl: 'https://www.youtube.com/watch?v=i7OsvSE4MEU&pp=ygUJZmFkZSBwcm8g',
   agent: 'fade',
   userId: '2',
-  reactions: {thumbsUp: 90, hooray: 45, heart: 2, rocket: 3, eyes: 34}
+  reactions: {thumbsUp: 90, hooray: 45, heart: 2, rocket: 3, eyes: 34},
+  moderated: true
+
 
 },
 {
@@ -110,7 +120,9 @@ const posts = [
   videoUrl: 'https://www.youtube.com/watch?v=AptQ7AXVXmw&pp=ygUSZmFkZSB2YWxvcmFudCBwcm8g',
   agent: 'fade',
   userId: '2',
-  reactions: {thumbsUp: 49583, hooray: 12313, heart: 3434, rocket: 333432, eyes: 300}
+  reactions: {thumbsUp: 49583, hooray: 12313, heart: 3434, rocket: 333432, eyes: 300},
+  moderated: false
+
   
 }
 ];
@@ -120,10 +132,46 @@ const hashPassword = async (password) => {
   const saltRounds = 10;
   const hashedPassword = await bcrypt.hash(password, saltRounds);
   return hashedPassword;
+
+};
+ // Define a middleware to check if the user is an admin
+const checkAdmin = (req, res, next) => {
+  if (!req.user || !req.user.isAdmin) {
+    return res.status(403).json({ message: 'Unauthorized' });
+  }
+  next();
 };
 
+// Apply the middleware to the non-moderated posts route
+app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
+  try {
+    const nonModeratedPosts = await Post.find({ moderated: false });
+    res.status(200).json(nonModeratedPosts);
+  } catch (error) {
+    res.status(500).json({ message: 'Error while fetching non-moderated posts' });
+  }
+});
 
 
+
+
+app.put('/api/posts/:postId/status', async (req, res) => {
+  if (!req.user.isAdmin) {
+    return res.status(403).json({ message: 'Unauthorized' });
+  }
+
+  const { postId } = req.params;
+  const { moderated } = req.body;
+
+  try {
+    const updatedPost = await Post.findByIdAndUpdate(postId, { moderated }, { new: true });
+
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error('Error updating post status:', error);
+    res.status(500).json({ message: 'Error updating post status' });
+  }
+});
 
 
 // post a new registered user and save
@@ -156,13 +204,7 @@ app.post('/api/users2', async (req, res) => {
   }
 });
 
-users: [
-  { id: '0', name: 'Admin', username: 'admin', hashedPassword: await generateHashedPassword('adminBased'), isAdmin: true },
-  { id: '1', name: 'Actually Toxic', username: 'at', hashedPassword: await generateHashedPassword('toxic'), isAdmin: false },
-  { id: '2', name: 'TooPro Noob', username: 'tpn', hashedPassword: await generateHashedPassword('noob'), isAdmin: false },
-  { id: '3', name: 'CrispyAppleSlice', username: 'cas', hashedPassword: await generateHashedPassword('slice'), isAdmin: false }
-],
-// all users 
+
 
 app.get('/api/users', async (req, res) => {
   try {

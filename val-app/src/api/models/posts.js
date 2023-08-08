@@ -14,11 +14,13 @@ export const postSchema = new mongoose.Schema({
     heart: { type: Number, default: 0 },
     rocket: { type: Number, default: 0 },
     eyes: { type: Number, default: 0 },
-  }
-});
+  },
+  moderated: {
+    type: Boolean, 
+    default: true, 
+  },});
 
 
-// update with a post status value - admin accounts will handle these before posts are shown publically
 
 
 

@@ -32,7 +32,7 @@ export const AgentPostsPage: React.FC = () => {
     const fetchAgentPosts = async () => {
       if (postStatus === 'idle' && agent) {
         try {
-          await dispatch(fetchPosts(agent));
+          await dispatch(fetchPosts());
         } catch (error) {
           // Handle error
         }
@@ -80,7 +80,7 @@ export const AgentPostsPage: React.FC = () => {
   const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
   const renderedPosts = orderedPosts
-  .filter((post) => post.agent === agent)
+  .filter((post) => post.agent === agent && post.moderated === true) 
   .map((post) => {
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 

@@ -11,6 +11,7 @@ import './App.css';
 import LoginPage from './features/users/login';
 import RegisterPage from './features/users/register';
 import SignoutPage from './features/users/signOut';
+import NonModeratedPostsPage from './features/posts/NonModeratedPostsPage';
 
 function App() {
   return (
@@ -26,7 +27,7 @@ function App() {
           <Route path="/editPost/:agent/:postId" element={<EditPostForm  />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
           <Route path="/addPost" element={<AddPostForm />} /> 
-
+          <Route path="/review" element={<NonModeratedPostsPage/>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

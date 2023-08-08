@@ -126,6 +126,12 @@ const handleSignOut = () => {
                 />
               </Link>
             )}
+            {loggedInUser && loggedInUser.isAdmin && (
+  <Link to="review">
+    <button className="bg-indigo-700 text-white px-3 py-1 rounded hover:bg-indigo-900 focus:outline-none focus:ring focus:ring-indigo-300">
+      Review
+    </button>
+  </Link>)}
           </div>
         </div>
       </section>
