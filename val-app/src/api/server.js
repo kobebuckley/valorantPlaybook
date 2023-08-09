@@ -188,6 +188,18 @@ const checkAdmin = (req, res, next) => {
   next();
 };
 
+
+// app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
+//   try {
+//     const nonModeratedPosts = await Post.find({ moderated: false });
+//     console.log('The POSTS:', nonModeratedPosts); // Add this log to check the fetched posts
+//     res.status(200).json(nonModeratedPosts);
+//   } catch (error) {
+//     console.error('No POsts:', error); // Add this log to check errors
+//     res.status(500).json({ message: 'Error while fetching non-moderated posts' });
+//   }
+// });
+
 // Protect the route using JWT authentication and check isAdmin
 // app.get('http://localhost:3000/api/posts/non-moderated', passport.authenticate('jwt', { session: false }), checkAdmin, (req, res) => {
 //   if (req.user.isAdmin) {
@@ -197,17 +209,15 @@ const checkAdmin = (req, res, next) => {
 //   }
 // });
 
-app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
+//! non admin checked versus that does work
+app.get('/api/posts/non-moderated', async (req, res) => {
   try {
     const nonModeratedPosts = await Post.find({ moderated: false });
-    console.log('The POSTS:', nonModeratedPosts); // Add this log to check the fetched posts
     res.status(200).json(nonModeratedPosts);
   } catch (error) {
-    console.error('No POsts:', error); // Add this log to check errors
     res.status(500).json({ message: 'Error while fetching non-moderated posts' });
   }
 });
-
 
 
 
@@ -290,12 +300,13 @@ app.get('/api/posts', async (req, res) => {
 //area to login? or customize the find all users? 
 
 
-app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+app.post('/api/login', passport.authenticate('local', { session: false }), (req, res) => {
   const user = req.user; // The user object is available after authentication
   const token = jwt.sign({ sub: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
   res.status(200).json({ token, user });
 });
+
 
 const start = async () => {
 
