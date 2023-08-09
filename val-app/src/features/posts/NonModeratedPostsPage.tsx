@@ -9,11 +9,11 @@ const NonModeratedPostsPage: React.FC = () => {
   const loggedInUser = useSelector(selectLoggedInUser);
 
   useEffect(() => {
-    // Fetch non-moderated posts from the server only if the user is authenticated and an admin
     if (loggedInUser && loggedInUser.isAdmin) {
       const fetchNonModeratedPosts = async () => {
         try {
-          const response = await axios.get('http://localhost:3000/api/posts/non-moderated');
+          const response = await axios.get('http://localhost:3000/api/posts/non-moderated', { withCredentials: true });
+
           setNonModeratedPosts(response.data);
         } catch (error) {
           console.error('Error fetching non-moderated posts:', error);
@@ -26,15 +26,21 @@ const NonModeratedPostsPage: React.FC = () => {
 
   return (
     <div>
-      <h2>Non-Moderated Posts</h2>
-      <ul>
-        {nonModeratedPosts.map((post) => (
-          <li key={post.id}>
-            <h3>{post.title}</h3>
-            <p>{post.content}</p>
-          </li>
-        ))}
-      </ul>
+      {loggedInUser && loggedInUser.isAdmin ? (
+        <div>
+          <h2>Non-Moderated Posts</h2>
+          <ul>
+            {nonModeratedPosts.map((post) => (
+              <li key={post.id}>
+                <h3>{post.title}</h3>
+                <p>{post.content}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <div>You don't have permission to view this page.</div>
+      )}
     </div>
   );
 };

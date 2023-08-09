@@ -1,3 +1,4 @@
+import { Strategy as JWTStrategy, ExtractJwt } from 'passport-jwt';
 import express from 'express';
 
 import mongoose from 'mongoose';
@@ -10,15 +11,26 @@ import path from 'path';
 import bcrypt from 'bcrypt';
 
 
-
-
+import session from 'express-session'; 
 import { userSchema } from './models/users.js'; 
 import { postSchema, Post } from './models/posts.js'; 
+
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
 
 function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
+
+// import cors from 'cors';
+
+
+const corsOptions = {
+  origin: 'http://localhost:3000/', // Replace with your actual client domain
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add the allowed HTTP methods
+  credentials: true, // Allow credentials (cookies, headers, etc.) to be included in requests
+};
 
 
 // Define generateHashedPassword function here
@@ -127,6 +139,39 @@ const posts = [
 }
 ];
 
+// Set up session middleware
+app.use(session({
+  secret: 'SECRET_KEY',
+  resave: false,
+  saveUninitialized: false
+}));
+
+// Set up passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+// Set up passport LocalStrategy for login
+passport.use(new LocalStrategy((username, password, done) => {
+  // Authenticate user here and call done(err) or done(null, user);
+}));
+
+// Serialize user for session
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+// Deserialize user from session
+passport.deserializeUser((id, done) => {
+  // Fetch user from DB based on id and call done(null, user);
+});
+
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: 'SECRET_KEY'
+}, (jwtPayload, done) => {
+  // Fetch user from DB based on jwtPayload.sub and call done(null, user);
+}));
+
 
 const hashPassword = async (password) => {
   const saltRounds = 10;
@@ -134,17 +179,23 @@ const hashPassword = async (password) => {
   return hashedPassword;
 
 };
-// Define a middleware to check if the user is an admin
-// Define a middleware to check if the user is an admin
+
 const checkAdmin = (req, res, next) => {
-  const user = req.user; // Assuming req.user contains the user object
-  console.log('User:', user); // Add this log to check the user object
+  const user = req.user;
   if (!user || !user.isAdmin) {
-    console.log('Unauthorized user:', user); // Add this log to check unauthorized users
     return res.status(403).json({ message: 'Unauthorized' });
   }
   next();
 };
+
+// Protect the route using JWT authentication and check isAdmin
+// app.get('http://localhost:3000/api/posts/non-moderated', passport.authenticate('jwt', { session: false }), checkAdmin, (req, res) => {
+//   if (req.user.isAdmin) {
+//     // Fetch and send non-moderated posts
+//   } else {
+//     res.status(403).json({ message: 'Access denied' });
+//   }
+// });
 
 app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
   try {
@@ -158,6 +209,9 @@ app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
 });
 
 
+
+
+// export default router;
 
 
 
@@ -236,8 +290,12 @@ app.get('/api/posts', async (req, res) => {
 //area to login? or customize the find all users? 
 
 
+app.post('/login', passport.authenticate('local', { session: false }), (req, res) => {
+  const user = req.user; // The user object is available after authentication
+  const token = jwt.sign({ sub: user.id }, process.env.SECRET_KEY, { expiresIn: '1h' });
 
-
+  res.status(200).json({ token, user });
+});
 
 const start = async () => {
 
@@ -289,5 +347,7 @@ const start = async () => {
     console.log(e.message);
   }
 };
+
+app.use(cors(corsOptions));
 
 start();

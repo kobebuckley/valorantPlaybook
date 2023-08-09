@@ -1,33 +1,38 @@
-import passport from 'passport';
-import { Strategy as JwtStrategy, ExtractJwt } from 'passport-jwt';
-import { secretKey } from './config'; // Create this file to store your secret key
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const JWTStrategy = require('passport-jwt').Strategy;
+const ExtractJWT = require('passport-jwt').ExtractJwt;
+const User = require('./models/User'); // Your User model
 
-const options = {
-  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: secretKey,
-};
+// Local Strategy for username/password authentication
+passport.use(new LocalStrategy({
+  usernameField: 'username',
+  passwordField: 'password',
+}, async (username, password, done) => {
+  try {
+    const user = await User.findOne({ username });
+    if (!user || !user.validPassword(password)) {
+      return done(null, false, { message: 'Incorrect username or password' });
+    }
+    return done(null, user);
+  } catch (error) {
+    return done(error);
+  }
+}));
 
-passport.use(
-  new JwtStrategy(options, (jwtPayload, done) => {
-    // You can fetch user information from a database based on jwtPayload.sub (user ID)
-    const user = getUserFromDatabase(jwtPayload.sub);
+// JWT Strategy for token authentication
+passport.use(new JWTStrategy({
+  jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+  secretOrKey: 'your_secret_key_here',
+}, async (jwtPayload, done) => {
+  try {
+    const user = await User.findById(jwtPayload.sub);
     if (user) {
       return done(null, user);
     } else {
       return done(null, false);
     }
-  })
-);
-
-// Serialize user information into the session
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-// Deserialize user information from the session
-passport.deserializeUser((id, done) => {
-  const user = getUserById(id);
-  done(null, user);
-});
-
-export default passport;
+  } catch (error) {
+    return done(error);
+  }
+}));

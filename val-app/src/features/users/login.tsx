@@ -21,6 +21,9 @@ function LoginPage({ onLogin }: LoginPageProps) {
     const loggedInUser = await authenticateUser(username, password);
   
     if (loggedInUser) {
+
+
+      
       dispatch(setLoggedInUser(loggedInUser)); 
       localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
       setLoginError('');
