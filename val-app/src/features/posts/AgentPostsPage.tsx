@@ -36,6 +36,8 @@ export const AgentPostsPage: React.FC = () => {
   }, [postStatus, dispatch, agent]);
 
 
+//firebase
+  
  const agentPosts = posts.filter((post) => post.agent === agent);
 
   if (postStatus === 'loading' || postStatus === 'idle') {
