@@ -77,10 +77,10 @@ export const AgentPostsPage: React.FC = () => {
     return match?.[1];
   };
   
-  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+  // const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
-  const renderedPosts = orderedPosts
-  .filter((post) => post.agent === agent && post.moderated === true) 
+  const renderedPosts = agentPosts
+  .filter((post) => post.moderated === true) 
   .map((post) => {
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 

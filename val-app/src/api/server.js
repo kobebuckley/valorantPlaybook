@@ -14,6 +14,7 @@ import bcrypt from 'bcrypt';
 import session from 'express-session'; 
 import { userSchema } from './models/users.js'; 
 import { postSchema, Post } from './models/posts.js'; 
+import jwt from 'jsonwebtoken'; 
 
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -25,20 +26,11 @@ function generateUniqueId() {
 
 // import cors from 'cors';
 
-
 const corsOptions = {
-  origin: 'http://localhost:3000/', // Replace with your actual client domain
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Add the allowed HTTP methods
-  credentials: true, // Allow credentials (cookies, headers, etc.) to be included in requests
+  origin: 'http://localhost:5173', 
+  credentials: true, 
 };
 
-
-// Define generateHashedPassword function here
-const generateHashedPassword = async (password) => {
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(password, saltRounds);
-  return hashedPassword;
-};
 
 
 
@@ -46,8 +38,8 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
+
+
 mongoose.set('strictQuery', false);
 
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -146,6 +138,7 @@ app.use(session({
   saveUninitialized: false
 }));
 
+
 // Set up passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -153,7 +146,18 @@ app.use(passport.session());
 // Set up passport LocalStrategy for login
 passport.use(new LocalStrategy((username, password, done) => {
   // Authenticate user here and call done(err) or done(null, user);
+  // Example: Compare the hashed passwords
+  User.findOne({ username }, async (err, user) => {
+    if (err) return done(err);
+    if (!user) return done(null, false);
+    
+    const isPasswordValid = await bcrypt.compare(password, user.hashedPassword);
+    if (!isPasswordValid) return done(null, false);
+    
+    return done(null, user);
+  });
 }));
+
 
 // Serialize user for session
 passport.serializeUser((user, done) => {
@@ -167,9 +171,13 @@ passport.deserializeUser((id, done) => {
 
 passport.use(new JWTStrategy({
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: 'SECRET_KEY'
+  secretOrKey: process.env.SECRET_KEY // Use your actual secret key
 }, (jwtPayload, done) => {
-  // Fetch user from DB based on jwtPayload.sub and call done(null, user);
+  User.findById(jwtPayload.sub, (err, user) => {
+    if (err) return done(err, false);
+    if (user) return done(null, user);
+    return done(null, false);
+  });
 }));
 
 
@@ -180,6 +188,10 @@ const hashPassword = async (password) => {
 
 };
 
+// Middleware for route protection
+const isAuthenticated = passport.authenticate('jwt', { session: false });
+
+// Custom middleware for authorization
 const checkAdmin = (req, res, next) => {
   const user = req.user;
   if (!user || !user.isAdmin) {
@@ -188,29 +200,8 @@ const checkAdmin = (req, res, next) => {
   next();
 };
 
-
-// app.get('/api/posts/non-moderated', checkAdmin, async (req, res) => {
-//   try {
-//     const nonModeratedPosts = await Post.find({ moderated: false });
-//     console.log('The POSTS:', nonModeratedPosts); // Add this log to check the fetched posts
-//     res.status(200).json(nonModeratedPosts);
-//   } catch (error) {
-//     console.error('No POsts:', error); // Add this log to check errors
-//     res.status(500).json({ message: 'Error while fetching non-moderated posts' });
-//   }
-// });
-
-// Protect the route using JWT authentication and check isAdmin
-// app.get('http://localhost:3000/api/posts/non-moderated', passport.authenticate('jwt', { session: false }), checkAdmin, (req, res) => {
-//   if (req.user.isAdmin) {
-//     // Fetch and send non-moderated posts
-//   } else {
-//     res.status(403).json({ message: 'Access denied' });
-//   }
-// });
-
-//! non admin checked versus that does work
-app.get('/api/posts/non-moderated', async (req, res) => {
+// Example route protected with JWT authentication and authorization
+app.get('/api/posts/non-moderated', isAuthenticated, checkAdmin, async (req, res) => {
   try {
     const nonModeratedPosts = await Post.find({ moderated: false });
     res.status(200).json(nonModeratedPosts);
@@ -219,7 +210,35 @@ app.get('/api/posts/non-moderated', async (req, res) => {
   }
 });
 
+//! Example route protected only with JWT authentication
+// app.get('/api/protected-route', isAuthenticated, (req, res) => {
+//   res.status(200).json({ message: 'This is a protected route' });
+// });
 
+
+
+
+//! non admin checked versus that does work
+// app.get('/api/posts/non-moderated', async (req, res) => {
+  
+//   try {
+//     const nonModeratedPosts = await Post.find({ moderated: false });
+//     res.status(200).json(nonModeratedPosts);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error while fetching non-moderated posts' });
+//   }
+// });
+//   { withCredentials: true }
+
+
+// app.get('/api/posts/non-moderated', async (req, res) => {
+//   try {
+//     const nonModeratedPosts = await Post.find({ moderated: false });
+//     res.status(200).json(nonModeratedPosts);
+//   } catch (error) {
+//     res.status(500).json({ message: 'Error while fetching non-moderated posts' });
+//   }
+// });
 
 // export default router;
 
@@ -359,6 +378,7 @@ const start = async () => {
   }
 };
 
-app.use(cors(corsOptions));
 
+app.use(bodyParser.json());
+app.use(cors(corsOptions));
 start();

@@ -24,12 +24,14 @@ const initialState: UsersState = {
 
 export const fetchInitialState = createAsyncThunk('users/fetchInitialState', async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/users');
+    const response = await fetch('http://localhost:3000/api/users', {
+      method: 'GET',
+      credentials: 'include',
+    });
     console.log(`The main response ${response}`)
     if (response.ok) {
       const users = await response.json();
       console.log(`The main users ${users}`)
-
       return users; 
     } else {
       console.error('Failed to fetch users from the server.');

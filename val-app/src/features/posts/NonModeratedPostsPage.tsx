@@ -10,10 +10,12 @@ const NonModeratedPostsPage: React.FC = () => {
 
   useEffect(() => {
     if (loggedInUser && loggedInUser.isAdmin) {
+      
       const fetchNonModeratedPosts = async () => {
         try {
+          console.log("hmm  " )
           const response = await axios.get('http://localhost:3000/api/posts/non-moderated', { withCredentials: true });
-
+          console.log("hmm the response is: " + response)
           setNonModeratedPosts(response.data);
         } catch (error) {
           console.error('Error fetching non-moderated posts:', error);
