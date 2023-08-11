@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Post } from './postsSlice';
+import { Post } from './postsSlice'; 
 import { useSelector } from 'react-redux';
 import { selectLoggedInUser } from '../users/usersSlice';
 
 const NonModeratedPostsPage: React.FC = () => {
   const [nonModeratedPosts, setNonModeratedPosts] = useState<Post[]>([]);
   const loggedInUser = useSelector(selectLoggedInUser);
-
+// updating
   useEffect(() => {
     if (loggedInUser && loggedInUser.isAdmin) {
       
