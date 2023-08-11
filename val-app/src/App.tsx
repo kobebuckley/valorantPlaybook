@@ -6,11 +6,17 @@ import SinglePostPage from './features/posts/SinglePostPage';
 import { EditPostForm } from './features/posts/EditPostForm';
 import { Navbar } from './app/Navbar';
 import { AgentPostsPage } from './features/posts/AgentPostsPage';
+import { AuthProvider } from './features/users/contexts/AuthContext'
+import  Signup  from './features/users/signup'
+import dotenv from 'dotenv';
+dotenv.config();
 
 import './App.css';
 
 function App() {
   return (
+    <AuthProvider>
+
     <Router>
       <Navbar title={'Agents'} />
       <div className="App">
@@ -26,17 +32,24 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 
 function Home() {
   return (
+    <AuthProvider>
+
     <React.Fragment>
-      {/* Render the AgentsList component */}
+
+      <Route  element={<Signup />} /> 
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
         throw new Error('Function not implemented.');
       } } />
+
     </React.Fragment>
+    </AuthProvider>
+
   );
 }
 
