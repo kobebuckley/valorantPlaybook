@@ -1,3 +1,6 @@
+// firebase-config.ts
+import { initializeApp } from 'firebase/app';
+import { getAuth } from 'firebase/auth';
 console.log('API Key:', import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
 console.log('Auth Domain:', import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
 
@@ -9,10 +12,10 @@ const config = {
   messagingSenderId: import.meta.env.VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID,
 };
-// console.log('Environment variables:', import.meta.env);
+console.log('Environment variables:', import.meta.env);
 
 export function getFirebaseConfig() {
-  // console.log('Config:', config); 
+  console.log('Config:', config); // Log the config object
 
   if (!config || !config.apiKey) {
     throw new Error('No Firebase configuration object provided.' + '\n' +
