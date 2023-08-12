@@ -1,21 +1,23 @@
+console.log('API Key:', import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
+console.log('Auth Domain:', import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
 
+const config = {
+  apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID,
+};
+// console.log('Environment variables:', import.meta.env);
 
-import React, { useEffect } from 'react';
-import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+export function getFirebaseConfig() {
+  // console.log('Config:', config); 
 
-function App() {
-  useEffect(() => {
-    fetch('/api/config')
-      .then(response => response.json())
-      .then(config => {
-        const app = initializeApp(config);
-        const auth = getAuth(app);
-        // Now you can use Firebase services like authentication, Firestore, etc.
-      })
-      .catch(error => {
-        console.error('Error fetching configuration:', error);
-      });
-  }, []);
-
-}export default App
+  if (!config || !config.apiKey) {
+    throw new Error('No Firebase configuration object provided.' + '\n' +
+    'Add your web app\'s configuration object to firebase-config.ts');
+  } else {
+    return config;
+  }
+}

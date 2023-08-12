@@ -31,25 +31,25 @@
 //   credentials: true, 
 // };
 
-const express = require('express');
-const app = express();
+//! const express = require('express');
+// const app = express();
 
-app.get('/api/config', (req, res) => {
-  const config = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.REACT_APP_FIREBASE_APP_ID
-  };
+// app.get('/api/config', (req, res) => {
+//   const config = {
+//     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+//     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+//     projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+//     storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+//     messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+//     appId: process.env.REACT_APP_FIREBASE_APP_ID
+//   };
   
-  res.json(config);
-});
+//   res.json(config);
+// });
 
-app.listen(3001, () => {
-  console.log('Server is running on port 3001');
-});
+// app.listen(3001, () => {
+//   console.log('Server is running on port 3001');
+// });
 
 
 
