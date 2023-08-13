@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction, nanoid, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
 import { FetchResult, client } from '../../api/client';
+import { collection, getDocs } from '@firebase/firestore';
+import { db } from '../../firebase/firebase-config';
 
 export interface Post {
   moderated: boolean;
@@ -47,17 +49,18 @@ export const selectEditingPostId = (state: RootState) => state.posts.editingPost
 //     throw error; 
 //   }
 // });
-
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
-    const response: FetchResult = await client.get('http://localhost:3000/api/posts');
-    console.log('API Response:', response.data);
-    return response.data;
+    const querySnapshot = await getDocs(collection(db, 'posts'));
+    const posts: Post[] = querySnapshot.docs.map((doc) => doc.data() as Post); // Type assertion here
+    console.log('Fetched Posts:', posts);
+    return posts;
   } catch (error) {
     console.error('Error fetching posts:', error);
-    throw error; 
+    throw error;
   }
 });
+
 
 
 const postsSlice = createSlice({

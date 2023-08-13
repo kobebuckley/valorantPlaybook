@@ -7,6 +7,7 @@ import { AuthContext } from './context/auth-context';
 import RequireAuth from './components/require-auth';
 import NewLogin from './routes/NewLogin';
 import NewRegister from './routes/NewRegister';
+import AgentPostsPage from './features/posts/AgentPostsPage';
 
 function App() {
   const { currentUser } = useContext(AuthContext); // Use the AuthContext
@@ -15,11 +16,11 @@ function App() {
 
   console.log('User:', !!currentUser);
 
-  useEffect(() => {
-    if (currentUser) {
-      navigate('/profile');
-    }
-  }, [currentUser]);
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     navigate('/profile');
+  //   }
+  // }, [currentUser]);
 
   return (
     <div>
@@ -30,6 +31,8 @@ function App() {
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<NewRegister />} />
           <Route path="/addPost" element={<AddPostForm isAuth={isAuth} />} />
+          <Route path="/agents/:agent" element={<AgentPostsPage />} />
+
         </Routes>
       </div>
     </div>

@@ -1,11 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore'; // Import Firestore module
+import { getFirestore } from 'firebase/firestore';
 
 console.log('API Key:', import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
 console.log('Auth Domain:', import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
-
-
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
@@ -15,6 +13,7 @@ const firebaseConfig = {
   messagingSenderId: import.meta.env.VITE_REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
   appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID,
 };
+
 console.log('Environment variables:', import.meta.env);
 
 const app = initializeApp(firebaseConfig); // Initialize the Firebase app
@@ -34,7 +33,6 @@ export function getFirebaseConfig() {
     return firebaseConfig;
   }
 }
-
 
 export const db = getFirestore(app)
 

@@ -5,7 +5,12 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
 
-function AddPostForm() {
+
+interface AddPostFormProps {
+  isAuth: boolean;
+}
+
+function AddPostForm(props: AddPostFormProps) {
   const [title, setTitle] = useState('');
   const [postText, setPostText] = useState('');
   const [videoUrl, setVideoUrl] = useState('');
@@ -30,15 +35,16 @@ function AddPostForm() {
     if (!auth.currentUser) {
       return;
     }
-
+  
     try {
+      const timestamp = new Date().toISOString(); // Convert the date to an ISO string
       await addDoc(postsCollectionRef, {
-        date: new Date(),
+        date: timestamp, // Store the ISO string as the date
         title,
         content: postText,
         videoUrl,
         agent,
-        userId: auth.currentUser.uid, // Use Firebase UID
+        userId: auth.currentUser.uid,
         reactions: {
           thumbsUp: 0,
           hooray: 0,
@@ -48,18 +54,19 @@ function AddPostForm() {
         },
         moderated: false,
       });
-
+  
       setTitle('');
       setPostText('');
       setVideoUrl('');
       setAgent('');
       setShowSuccessMessage(true);
-
+  
       navigate('/');
     } catch (error) {
       console.error('Error creating post:', error);
     }
   };
+  
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
