@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth';
 console.log('API Key:', import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
 console.log('Auth Domain:', import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
 
-const config = {
+ const firebaseConfig  = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: import.meta.env.VITE_REACT_APP_FIREBASE_PROJECT_ID,
@@ -15,12 +15,15 @@ const config = {
 console.log('Environment variables:', import.meta.env);
 
 export function getFirebaseConfig() {
-  console.log('Config:', config); // Log the config object
+  console.log('Config:', firebaseConfig ); // Log the config object
 
-  if (!config || !config.apiKey) {
+  if (!firebaseConfig  || !firebaseConfig.apiKey) {
     throw new Error('No Firebase configuration object provided.' + '\n' +
     'Add your web app\'s configuration object to firebase-config.ts');
   } else {
-    return config;
+    return firebaseConfig ;
   }
 }
+
+
+// export default firebaseConfig

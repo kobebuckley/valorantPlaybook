@@ -30,7 +30,7 @@ function Home() {
       const userCredential = await signInUser(email, password)
       console.log(`user creds are: ${userCredential} `)
 
-      if (userCredential) {
+      if ( userCredential) {
         resetFormFields()
         navigate('/profile')
       }
