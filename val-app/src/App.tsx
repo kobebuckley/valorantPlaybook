@@ -1,43 +1,25 @@
 import React, { useContext, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import { AgentsList } from './features/agents/AgentsList';
-import { AddPostForm } from './features/posts/AddPostForm';
-import SinglePostPage from './features/posts/SinglePostPage';
-import { EditPostForm } from './features/posts/EditPostForm';
+import AddPostForm from "./features/posts/AddPostForm";
 import { Navbar } from './app/Navbar';
-import { AgentPostsPage } from './features/posts/AgentPostsPage';
-
-import './App.css';
-import LoginPage from './features/users/login';
-import RegisterPage from './features/users/register';
-import SignoutPage from './features/users/signOut';
-import NonModeratedPostsPage from './features/posts/NonModeratedPostsPage';
-
-
-
-
-
-import Profile from './routes/profile'
 import { AuthContext } from './context/auth-context';
 import RequireAuth from './components/require-auth';
 import NewLogin from './routes/NewLogin';
 import NewRegister from './routes/NewRegister';
 
-
-
-
 function App() {
-  const { currentUser } = useContext(AuthContext)
-  const navigate = useNavigate()
+  const { currentUser } = useContext(AuthContext); // Use the AuthContext
+  const isAuth = currentUser !== null;
+  const navigate = useNavigate();
 
   console.log('User:', !!currentUser);
 
   useEffect(() => {
     if (currentUser) {
-      navigate('/profile')
+      navigate('/profile');
     }
-  }, [currentUser])
-
+  }, [currentUser]);
 
   return (
     <div>
@@ -47,6 +29,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<NewLogin />} />
           <Route path="/register" element={<NewRegister />} />
+          <Route path="/addPost" element={<AddPostForm isAuth={isAuth} />} />
         </Routes>
       </div>
     </div>
@@ -64,6 +47,7 @@ function Home() {
 }
 
 export default App;
+
 //   return (
  
 //       {/* <Route index element={<NewRegister />} /> */}

@@ -5,6 +5,8 @@ import { getFirestore } from 'firebase/firestore'; // Import Firestore module
 console.log('API Key:', import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
 console.log('Auth Domain:', import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
 
+
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -16,8 +18,8 @@ const firebaseConfig = {
 console.log('Environment variables:', import.meta.env);
 
 const app = initializeApp(firebaseConfig); // Initialize the Firebase app
-const auth = getAuth(); // Get the Firebase Auth instance
-const firestore = getFirestore(); // Initialize Firestore
+export const auth = getAuth(); // Get the Firebase Auth instance
+// const firestore = getFirestore(); 
 
 export function getFirebaseConfig() {
   console.log('Config:', firebaseConfig); // Log the config object
@@ -33,4 +35,7 @@ export function getFirebaseConfig() {
   }
 }
 
-export { app, auth, firestore }; // Export the Firebase app, auth, and firestore instances
+
+export const db = getFirestore(app)
+
+// export { app, auth, }; // Export the Firestore instance
