@@ -11,7 +11,7 @@ import {
 import { getFirebaseConfig } from './firebase-config';
 
 const app = initializeApp(getFirebaseConfig());
-const auth = getAuth(app);
+export const auth = getAuth(app);
 
 export const signInUser = async (
   email: string, 

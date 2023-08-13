@@ -39,21 +39,50 @@ function App() {
   }, [currentUser])
 
 
-   
   return (
-    <Routes>
-      {/* <Route index element={<NewRegister />} /> */}
-      {/* <Route index element={<NewLogin />} /> */}
-      <Route path="profile" element={
-        <RequireAuth>
-          <Profile />
-        </RequireAuth>}
-      />
-    </Routes>
-  )
+    <div>
+      <Navbar title={'The Valorant Playbook'} />
+      <div className="App">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<NewLogin />} />
+          <Route path="/register" element={<NewRegister />} />
+        </Routes>
+      </div>
+    </div>
+  );
 }
 
-export default App
+function Home() {
+  return (
+    <React.Fragment>
+      <AgentsList onSelectAgent={function (selectedAgent: string): void {
+        throw new Error('Function not implemented.');
+      }} />
+    </React.Fragment>
+  );
+}
+
+export default App;
+//   return (
+ 
+//       {/* <Route index element={<NewRegister />} /> */}
+//       {/* <Route index element={<NewLogin />} /> */}
+//       <Route path="/" element={<Home />} />
+//       <Route path="/login" element={<NewLogin />} />
+//       <Route path="/register" element={<NewRegister />} />
+//       <Route path="profile" element={
+//         <RequireAuth>
+//           <Profile />
+//         </RequireAuth>}
+//       />
+//     </Routes>
+//         </Router>
+//             </div>
+
+//   )
+// }
+
 
 
 //   return (
