@@ -1,16 +1,18 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import { registerUserWithEmailAndPassword } from '../firebase/firebase';
+import { registerUserWithEmailAndPassword, signInUser } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 import '.././App.css';
+import { UserCredential, updateProfile } from 'firebase/auth'; // Make sure to import the correct types
 
 const defaultFormFields = {
+  displayName: '',
   email: '',
   password: '',
 };
 
 function NewRegister() {
   const [formFields, setFormFields] = useState(defaultFormFields);
-  const { email, password } = formFields;
+  const { displayName, email, password } = formFields;
   const navigate = useNavigate();
 
   const resetFormFields = () => {
@@ -19,19 +21,29 @@ function NewRegister() {
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
+  
     try {
-      const registeredUser = await registerUserWithEmailAndPassword(email, password);
-      console.log('New user registered:', registeredUser);
-
+        const registeredUser = await registerUserWithEmailAndPassword(displayName, email, password);
+  
       if (registeredUser) {
-        resetFormFields();
-        navigate('/profile');
+        const signedInUser = await signInUser(email, password);
+  
+        if (signedInUser) {
+          // Update the display name using updateProfile
+          const user = signedInUser; // Use the user from signedInUser
+          await updateProfile(user, {
+            displayName: displayName,
+          });
+  
+          resetFormFields();
+          navigate('/profile');
+        }
       }
-    } catch (error: any) { // Explicitly type the 'error' variable
+    } catch (error: any) {
       console.log('User Registration Failed', error.message);
     }
   };
+  
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -42,6 +54,16 @@ function NewRegister() {
     <div className="App">
       <div className="card">
         <form onSubmit={handleSubmit}>
+          <div>
+            <input
+              type="text"
+              name="displayName"
+              value={displayName}
+              onChange={handleChange}
+              placeholder="Display Name"
+              required
+            />
+          </div>
           <div>
             <input
               type="email"

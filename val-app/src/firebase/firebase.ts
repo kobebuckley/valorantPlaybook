@@ -4,9 +4,10 @@ import {
   onAuthStateChanged,
   signOut,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, // Add this import
+  createUserWithEmailAndPassword,
+  User, // Update the import to include 'User'
   NextOrObserver,
-  User
+  updateProfile
 } from 'firebase/auth';
 import { getFirebaseConfig } from './firebase-config';
 
@@ -30,8 +31,8 @@ export const signInUser = async (
   }
 };
 
-// Add the registration function
 export const registerUserWithEmailAndPassword = async (
+  displayName: string, // Add the displayName parameter
   email: string,
   password: string
 ): Promise<User | null> => {
@@ -41,12 +42,23 @@ export const registerUserWithEmailAndPassword = async (
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-    return userCredential.user;
+
+    if (userCredential.user) {
+      // Update the user's display name
+      await updateProfile(userCredential.user, {
+        displayName: displayName,
+      });
+
+      return userCredential.user;
+    }
+
+    return null;
   } catch (error) {
     console.error('Registration error:', error);
     throw error;
   }
 };
+
 
 export const userStateListener = (callback: NextOrObserver<User>) => {
   return onAuthStateChanged(auth, callback);
