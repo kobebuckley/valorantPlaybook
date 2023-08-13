@@ -37,14 +37,16 @@ function AddPostForm(props: AddPostFormProps) {
     }
   
     try {
-      const timestamp = new Date().toISOString(); // Convert the date to an ISO string
-      await addDoc(postsCollectionRef, {
-        date: timestamp, // Store the ISO string as the date
+      const timestamp = new Date().toISOString();
+      const newPost = {
+        id: Date.now(), // Unique ID for each post
+        date: timestamp,
         title,
         content: postText,
         videoUrl,
         agent,
         userId: auth.currentUser.uid,
+        displayName: displayName, // User's display name
         reactions: {
           thumbsUp: 0,
           hooray: 0,
@@ -53,7 +55,8 @@ function AddPostForm(props: AddPostFormProps) {
           eyes: 0,
         },
         moderated: false,
-      });
+      };
+      await addDoc(postsCollectionRef, newPost);
   
       setTitle('');
       setPostText('');
@@ -66,7 +69,6 @@ function AddPostForm(props: AddPostFormProps) {
       console.error('Error creating post:', error);
     }
   };
-  
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

@@ -19,16 +19,15 @@ export const AgentPostsPage: React.FC = () => {
   const posts = useTypedSelector(selectAllPosts);
   const postStatus = useTypedSelector((state) => state.posts.status);
 
-  // Access logged-in user
   const loggedInUser = useSelector(selectLoggedInUser);
   console.log('loggedInUser:', loggedInUser);
 
   useEffect(() => {
     const loggedInUserStr = localStorage.getItem('loggedInUser');
-  if (loggedInUserStr) {
-    const loggedInUser = JSON.parse(loggedInUserStr);
-    dispatch(setLoggedInUser(loggedInUser));
-  }
+    if (loggedInUserStr) {
+      const loggedInUser = JSON.parse(loggedInUserStr);
+      dispatch(setLoggedInUser(loggedInUser));
+    }
     const fetchAgentPosts = async () => {
       if (postStatus === 'idle' && agent) {
         try {
@@ -39,12 +38,10 @@ export const AgentPostsPage: React.FC = () => {
       }
     };
 
-
     fetchAgentPosts();
   }, [postStatus, dispatch, agent]);
 
-
- const agentPosts = posts.filter((post) => post.agent === agent);
+  const agentPosts = posts.filter((post) => post.agent === agent);
 
   if (postStatus === 'loading' || postStatus === 'idle') {
     return (
@@ -70,21 +67,21 @@ export const AgentPostsPage: React.FC = () => {
     );
   }
 
- 
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
     const match = url.match(videoIdRegex);
     return match?.[1];
   };
-  
-  // const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
 
-  const renderedPosts = agentPosts
+  const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+
+
+  const renderedPosts = orderedPosts
   .filter((post) => post.moderated === true) 
   .map((post) => {
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 
-      return (
+    return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> 
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
           <PostAuthor userId={post.userId} />
@@ -115,6 +112,7 @@ export const AgentPostsPage: React.FC = () => {
         </article>
       );
     });
+
 
   return (
     <section className="bg-gray-900 min-h-screen py-10">
