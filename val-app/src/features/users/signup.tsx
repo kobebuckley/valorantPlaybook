@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../../context/auth-context';
 
 export default function Signup() {
     const emailRef = useRef<HTMLInputElement>(null);

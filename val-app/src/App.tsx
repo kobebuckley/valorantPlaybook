@@ -17,10 +17,11 @@ import NonModeratedPostsPage from './features/posts/NonModeratedPostsPage';
 
 
 
-import Home from './routes/home'
 import Profile from './routes/profile'
 import { AuthContext } from './context/auth-context';
 import RequireAuth from './components/require-auth';
+import NewLogin from './routes/NewLogin';
+import NewRegister from './routes/NewRegister';
 
 
 
@@ -41,7 +42,8 @@ function App() {
    
   return (
     <Routes>
-      <Route index element={<Home />} />
+      {/* <Route index element={<NewRegister />} /> */}
+      {/* <Route index element={<NewLogin />} /> */}
       <Route path="profile" element={
         <RequireAuth>
           <Profile />

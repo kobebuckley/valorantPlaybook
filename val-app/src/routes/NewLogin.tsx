@@ -10,7 +10,7 @@ const defaultFormFields = {
   password: '',
 }
 
-function Home() {
+function NewLogin() {
   const [formFields, setFormFields] = useState(defaultFormFields)
   const { email, password } = formFields
   const navigate = useNavigate()
@@ -82,4 +82,4 @@ function Home() {
   )
 }
 
-export default Home
+export default NewLogin
