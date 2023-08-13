@@ -24,7 +24,7 @@ const reactionEmoji = {
 interface ReactionButtonsProps {
   post: Post;
 }
-
+// update me as well
 export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
   const dispatch = useDispatch();
 
