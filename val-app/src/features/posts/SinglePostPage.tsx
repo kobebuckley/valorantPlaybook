@@ -8,6 +8,8 @@ import { ReactionButtons } from './ReactButton';
 import { selectPostById, Post } from './postsSlice';
 import { RootState } from '../../app/store';
 
+//update next
+
 export const SinglePostPage: React.FC = () => {
   const { agent, postId } = useParams<{ agent: string; postId: string }>();
 
