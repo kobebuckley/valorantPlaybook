@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, Dispatch, PayloadAction } from '@reduxjs/toolkit';
 import bcrypt from 'bcryptjs';
 import { RootState, store } from '../../app/store';
+import { collection, getDocs } from '@firebase/firestore';
+import { db } from '../../firebase/firebase-config';
 // import { generateHashedPassword } from './passwordUtils';
 
 export interface User {
@@ -24,21 +26,11 @@ const initialState: UsersState = {
 
 export const fetchInitialState = createAsyncThunk('users/fetchInitialState', async () => {
   try {
-    const response = await fetch('http://localhost:3000/api/users', {
-      method: 'GET',
-      credentials: 'include',
-    });
-    console.log(`The main response ${response}`)
-    if (response.ok) {
-      const users = await response.json();
-      console.log(`The main users ${users}`)
-      return users; 
-    } else {
-      console.error('Failed to fetch users from the server.');
-      throw new Error('Failed to fetch users from the server.');
-    }
+    const usersSnapshot = await getDocs(collection(db, 'users'));
+    const users = usersSnapshot.docs.map((doc: { data: () => any; }) => doc.data()) as User[];
+    return users;
   } catch (error) {
-    console.error('Error while fetching users:', error);
+    console.error('Error while fetching users from Firestore:', error);
     throw error;
   }
 });
@@ -66,6 +58,7 @@ extraReducers: (builder) => {
     state.users = action.payload;
   });
 },
+
 });
 
 export const addUserAsync = (user: User) => {

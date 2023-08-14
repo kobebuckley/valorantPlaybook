@@ -5,6 +5,7 @@ import { collection, getDocs } from '@firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 
 export interface Post {
+  displayName: string;
   moderated: boolean;
   id: string;
   date: string;
@@ -79,10 +80,11 @@ const postsSlice = createSlice({
         state.posts.push(action.payload);
         state.adding = 'succeeded';
       },
-      prepare(title: string, content: string, videoUrl: string, agent: string, userId: string): { payload: Post } {
+      prepare(title: string, content: string, videoUrl: string, agent: string, userId: string, displayName: string): { payload: Post } {
         return {
           payload: {
             id: nanoid(),
+            displayName,
             date: new Date().toISOString(),
             title,
             content,
@@ -92,13 +94,13 @@ const postsSlice = createSlice({
             reactions: {},
             status: 'pending', 
             moderated: false
-
           },
         };
       },
+      
     },
     postUpdated(state, action: PayloadAction<Post>) {
-      const { id, date, title, content, videoUrl, agent } = action.payload;
+      const { id, displayName, date, title, content, videoUrl, agent } = action.payload;
       const existingPost = state.posts.find((post) => post.id === id);
       if (existingPost) {
         existingPost.title = title;

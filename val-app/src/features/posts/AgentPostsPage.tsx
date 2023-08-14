@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux';
 import YouTube from 'react-youtube';
 import { RootState, AppDispatch } from '../../app/store';
-import { PostAuthor } from './PostAuthor';
+// import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 import { fetchPosts, selectAllPosts } from './postsSlice';
@@ -84,7 +84,7 @@ export const AgentPostsPage: React.FC = () => {
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> 
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-          <PostAuthor userId={post.userId} />
+          <h2 className="text-3xl font-bold mb-4">{post.displayName}</h2>
           <TimeAgo timestamp={post.date}/>
           {videoId && (
             <div className="flex justify-center mb-6">

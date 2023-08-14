@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
-import { PostAuthor } from './PostAuthor';
+// import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 import { selectPostById, Post } from './postsSlice';
@@ -36,7 +36,7 @@ export const SinglePostPage: React.FC = () => {
       <div className="container mx-auto">
         <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-          <PostAuthor userId={post.userId} />
+          {/* <PostAuthor userId={post.userId} /> */}
           <TimeAgo timestamp={post.date} />
           {videoId ? (
             <div className="flex justify-center mb-6">

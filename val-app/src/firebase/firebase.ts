@@ -32,7 +32,7 @@ export const signInUser = async (
 };
 
 export const registerUserWithEmailAndPassword = async (
-  displayName: string, // Add the displayName parameter
+  displayName: string, 
   email: string,
   password: string
 ): Promise<User | null> => {

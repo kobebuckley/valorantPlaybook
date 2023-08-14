@@ -1,9 +1,14 @@
 import React, { useState, useEffect, useContext, ChangeEvent, FormEvent } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
-import { db, auth } from '../../firebase/firebase-config';
+import { useDispatch } from 'react-redux'; // Assuming useDispatch is from 'react-redux'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
+import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState
+import { auth, db } from '../../firebase/firebase-config';
+import { User, setLoggedInUser } from '../users/usersSlice';
+
+// ... other imports
 
 
 interface AddPostFormProps {
@@ -21,12 +26,22 @@ function AddPostForm(props: AddPostFormProps) {
   const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const displayName = currentUser?.displayName || '';
+  const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!currentUser) {
-      navigate('/login');
+    if (currentUser) {
+      setSelectedDisplayName(currentUser.displayName || '');
+      dispatch(setLoggedInUser(currentUser as unknown as User)); // Use the correct type here
     }
-  }, []);
+  }, [currentUser, dispatch]);
+
+
+  // useEffect(() => {
+  //   if (!currentUser) {
+  //     navigate('/login');
+  //   }
+  // }, []);
 
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
@@ -46,7 +61,7 @@ function AddPostForm(props: AddPostFormProps) {
         videoUrl,
         agent,
         userId: auth.currentUser.uid,
-        displayName: displayName, // User's display name
+        displayName: displayName, 
         reactions: {
           thumbsUp: 0,
           hooray: 0,
@@ -70,16 +85,17 @@ function AddPostForm(props: AddPostFormProps) {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
+  
     if (!currentUser) {
       setShowErrorModal(true);
       return;
     }
-
-    createPost();
+  
+    await createPost(); // Call the createPost function to submit the post
   };
+  
 
   const canSave = Boolean(title) && Boolean(postText) && Boolean(videoUrl) && Boolean(agent);
   const isSaveButtonDisabled = !canSave;
@@ -90,7 +106,23 @@ function AddPostForm(props: AddPostFormProps) {
       {!auth.currentUser && (
         <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
       )}
-
+       <div className="mb-4">
+          <label htmlFor="displayNameSelect" className="block font-semibold mb-2 text-xl">
+            Select Display Name:
+          </label>
+          <select
+            id="displayNameSelect"
+            name="displayNameSelect"
+            value={selectedDisplayName}
+            onChange={(e) => setSelectedDisplayName(e.target.value)}
+            className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            required
+          >
+            <option value="" disabled>Select a display name</option>
+            <option value={displayName}>{displayName}</option>
+            {/* Add other options here */}
+          </select>
+        </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl">

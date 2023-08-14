@@ -1,35 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../app/store';
-import { collection, getDoc, getFirestore, doc } from 'firebase/firestore';
+// import React from 'react';
+// import { useSelector } from 'react-redux';
 
-interface PostAuthorProps {
-  userId: string;
-}
+// interface User {
+//   id: string;
+//   name: string;
+// }
 
-export const PostAuthor: React.FC<PostAuthorProps> = ({ userId }) => {
-  const [authorDisplayName, setAuthorDisplayName] = useState<string | null>(null);
-  const firestore = getFirestore();
+// interface RootState {
+//   users: User[];
+// }
 
-  useEffect(() => {
-    const fetchAuthorDisplayName = async () => {
-      try {
-        const userDocRef = doc(firestore, 'users', userId);
-        const userDocSnap = await getDoc(userDocRef);
+// interface PostAuthorProps {
+//   userId: string;
+// }
 
-        if (userDocSnap.exists()) {
-          const userData = userDocSnap.data();
-          if (userData) {
-            setAuthorDisplayName(userData.displayName); // Use 'displayName' from database
-          }
-        }
-      } catch (error: any) {
-        console.error('Error fetching user:', error.message);
-      }
-    };
-
-    fetchAuthorDisplayName();
-  }, [firestore, userId]);
-
-  return <div><span>by {authorDisplayName || 'Unknown author'}</span></div>;
-};
+// export const PostAuthor: React.FC<PostAuthorProps> = ({ userId }) => {
+//   const author = useSelector((state: RootState) =>
+//   state.users.find((user) => user.id === userId)
+//   );
+  
+//   return <div><span>by {author ? author.name : 'Unknown author'}</span></div>;
+// };

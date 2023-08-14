@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import { registerUserWithEmailAndPassword, signInUser } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
 import '.././App.css';
-import { UserCredential, updateProfile } from 'firebase/auth'; // Make sure to import the correct types
+import { updateProfile } from 'firebase/auth'; // UpdateProfile doesn't require explicit typing
 
 const defaultFormFields = {
   displayName: '',
@@ -23,7 +23,7 @@ function NewRegister() {
     event.preventDefault();
   
     try {
-        const registeredUser = await registerUserWithEmailAndPassword(displayName, email, password);
+      const registeredUser = await registerUserWithEmailAndPassword(displayName, email, password);
   
       if (registeredUser) {
         const signedInUser = await signInUser(email, password);
@@ -44,7 +44,6 @@ function NewRegister() {
     }
   };
   
-
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     setFormFields({ ...formFields, [name]: value });
