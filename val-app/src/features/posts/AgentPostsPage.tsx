@@ -84,7 +84,8 @@ export const AgentPostsPage: React.FC = () => {
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> 
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-          <h2 className="text-3xl font-bold mb-4">{post.displayName}</h2>
+          {/* <h2 className="text-3xl font-bold mb-4">{post.displayName}</h2> */}
+          <div><span>by {`${post.displayName || 'Unknown author'}`}</span></div>
           <TimeAgo timestamp={post.date}/>
           {videoId && (
             <div className="flex justify-center mb-6">
