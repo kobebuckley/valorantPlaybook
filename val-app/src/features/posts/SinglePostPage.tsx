@@ -55,8 +55,15 @@ export const SinglePostPage: React.FC = () => {
   const posts = useTypedSelector(selectAllPosts);
   console.log('The grabbed posts', posts)
 
-  const post = posts.find((post) => post.id === id);
-  console.log('The single id', id)
+if (posts.length === 0) {
+  return <div>Loading...</div>;
+}
+
+  // const postsIds = posts.find((post) => post.id);  
+  const post = posts.find((post) => post.id === post.id);
+  
+  // console.log('The postsIds list', postsIds)
+  console.log('The url id', id)
   console.log('The single post', post)
   
   const extractVideoId = (url: string): string | undefined => {
