@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
 // import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
@@ -14,17 +14,51 @@ import { RootState, AppDispatch } from '../../app/store';
 import { fetchPosts, selectAllPosts } from './postsSlice';
 import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
 
+const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 
 export const SinglePostPage: React.FC = () => {
-  const { agent, postId } = useParams<{ agent: string; postId: string }>();
+  const { agent, id } = useParams<{ agent: string; id: string }>();
+  console.log("Selected id:", id);
 
+  console.log("Selected Agent:", agent);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  useEffect(() => {
+    const loggedInUserStr = localStorage.getItem('loggedInUser');
+    if (loggedInUserStr) {
+      const loggedInUser = JSON.parse(loggedInUserStr);
+      dispatch(setLoggedInUser(loggedInUser));
+    }
+    const fetchAgentPosts = async () => {
+      if (agent) {
+        try {
+          await dispatch(fetchPosts());
+        } catch (error) {
+          // Handle error
+        }
+      }
+    };
+
+    fetchAgentPosts();
+  }, [dispatch, agent]);
+  
   // Use the selector and explicitly define the type for the state
-  const post: Post | undefined = useSelector((state: RootState) =>
-  postId ? selectPostById(state, postId) : undefined
-);
+  // const post: Post | undefined = useSelector((state: RootState) =>
+  // id ? selectPostById(state, id) : undefined
+  // );
 
 
+
+  // console.log("the posts:", selectedPost);
+  const posts = useTypedSelector(selectAllPosts);
+  console.log('The grabbed posts', posts)
+
+  const post = posts.find((post) => post.id === id);
+  console.log('The single id', id)
+  console.log('The single post', post)
+  
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?/]+)/;
     const match = url.match(videoIdRegex);

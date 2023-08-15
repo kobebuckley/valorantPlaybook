@@ -33,7 +33,7 @@ function App() {
           <Route path="/register" element={<NewRegister />} />
           <Route path="/addPost" element={<AddPostForm isAuth={isAuth} />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
-          <Route path="/posts/:agent/:postId" element={<SinglePostPage />} />
+          <Route path="/posts/:agent/:id" element={<SinglePostPage />} />
         </Routes>
       </div>
     </div>

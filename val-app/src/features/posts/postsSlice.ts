@@ -101,6 +101,7 @@ const postsSlice = createSlice({
     },
     postUpdated(state, action: PayloadAction<Post>) {
       const { id, displayName, date, title, content, videoUrl, agent } = action.payload;
+      
       const existingPost = state.posts.find((post) => post.id === id);
       if (existingPost) {
         existingPost.title = title;
