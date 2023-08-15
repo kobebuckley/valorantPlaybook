@@ -20,6 +20,7 @@ const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 export const SinglePostPage: React.FC = () => {
   const { agent, id } = useParams<{ agent: string; id: string }>();
   console.log("Selected id:", id);
+  console.log("URL id:", id);
 
   console.log("Selected Agent:", agent);
 
@@ -51,20 +52,23 @@ export const SinglePostPage: React.FC = () => {
 
 
 
-  // console.log("the posts:", selectedPost);
   const posts = useTypedSelector(selectAllPosts);
-  console.log('The grabbed posts', posts)
+console.log('The grabbed posts', posts);
 
 if (posts.length === 0) {
   return <div>Loading...</div>;
 }
+const decodedId = decodeURIComponent(id ?? ''); 
+const post = posts.find((post) => post.id == decodedId);
 
-  // const postsIds = posts.find((post) => post.id);  
-  const post = posts.find((post) => post.id === post.id);
-  
-  // console.log('The postsIds list', postsIds)
-  console.log('The url id', id)
-  console.log('The single post', post)
+// console.log("URL id:", id);
+// posts.forEach((post) => {
+//   console.log("Post id:", post.id);
+// });
+
+// console.log('The url id', decodedId); // Use decodedId instead of id
+// console.log('The single post', post);
+
   
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?/]+)/;

@@ -68,8 +68,8 @@ const postsSlice = createSlice({
   initialState,
   reducers: {
     reactionAdded(state, action) {
-      const { postId, reaction } = action.payload;
-      const existingPost = state.posts.find(post => post.id === postId);
+      const { id, reaction } = action.payload;
+      const existingPost = state.posts.find(post => post.id === id);
       if (existingPost) {
         existingPost.reactions[reaction]++;
       }
@@ -101,7 +101,7 @@ const postsSlice = createSlice({
     },
     postUpdated(state, action: PayloadAction<Post>) {
       const { id, displayName, date, title, content, videoUrl, agent } = action.payload;
-      
+
       const existingPost = state.posts.find((post) => post.id === id);
       if (existingPost) {
         existingPost.title = title;
@@ -112,8 +112,8 @@ const postsSlice = createSlice({
       }
     },
     postApproved(state, action: PayloadAction<string>) {
-      const postId = action.payload;
-      const existingPost = state.posts.find(post => post.id === postId);
+      const id = action.payload;
+      const existingPost = state.posts.find(post => post.id === id);
       if (existingPost) {
         existingPost.status = 'approved';
       }
@@ -174,8 +174,8 @@ export const {
 
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 
-export const selectPostById = (state: RootState, postId: string) =>
-  state.posts.posts.find((post: Post) => post.id === postId);
+export const selectPostById = (state: RootState, id: string) =>
+  state.posts.posts.find((post: Post) => post.id === id);
 
 export const selectPendingPosts = (state: RootState) =>
   state.posts.posts.filter((post: Post) => post.status === 'pending');
