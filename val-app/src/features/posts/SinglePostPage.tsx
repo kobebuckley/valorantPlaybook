@@ -5,10 +5,16 @@ import YouTube from 'react-youtube';
 // import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
-import { selectPostById, Post } from './postsSlice';
-import { RootState } from '../../app/store';
 
 //update next
+
+
+import { selectPostById, Post } from './postsSlice';
+import { RootState, AppDispatch } from '../../app/store';
+import { fetchPosts, selectAllPosts } from './postsSlice';
+import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
+
+
 
 export const SinglePostPage: React.FC = () => {
   const { agent, postId } = useParams<{ agent: string; postId: string }>();

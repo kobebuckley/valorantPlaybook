@@ -2,12 +2,16 @@ import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux';
 import YouTube from 'react-youtube';
-import { RootState, AppDispatch } from '../../app/store';
+
+
 // import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
+
+
+import { RootState, AppDispatch } from '../../app/store';
 import { fetchPosts, selectAllPosts } from './postsSlice';
-import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; // Update with the correct path
+import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
 
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
@@ -17,11 +21,14 @@ export const AgentPostsPage: React.FC = () => {
 
   const dispatch: AppDispatch = useDispatch();
   const posts = useTypedSelector(selectAllPosts);
+  
+  
   const postStatus = useTypedSelector((state) => state.posts.status);
-
+  console.log("Posts Status:", postStatus);
+  
   const loggedInUser = useSelector(selectLoggedInUser);
   console.log('loggedInUser:', loggedInUser);
-
+  
   useEffect(() => {
     const loggedInUserStr = localStorage.getItem('loggedInUser');
     if (loggedInUserStr) {
@@ -37,12 +44,12 @@ export const AgentPostsPage: React.FC = () => {
         }
       }
     };
-
+    
     fetchAgentPosts();
   }, [postStatus, dispatch, agent]);
-
+  
   const agentPosts = posts.filter((post) => post.agent === agent);
-
+  
   if (postStatus === 'loading' || postStatus === 'idle') {
     return (
       <section className="bg-gray-900 min-h-screen py-10">
@@ -54,7 +61,7 @@ export const AgentPostsPage: React.FC = () => {
       </section>
     );
   }
-
+  
   if (agentPosts.length === 0) {
     return (
       <section className="bg-gray-900 min-h-screen py-10">
@@ -66,24 +73,26 @@ export const AgentPostsPage: React.FC = () => {
       </section>
     );
   }
-
+  
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/;
     const match = url.match(videoIdRegex);
     return match?.[1];
   };
-
+  
   const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
-
-
+  
+  
   const renderedPosts = orderedPosts
   .filter((post) => post.moderated === true) 
   .map((post) => {
+    
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
-
+    
     return (
       <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> 
           <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
+      
           {/* <h2 className="text-3xl font-bold mb-4">{post.displayName}</h2> */}
           <div><span>by {`${post.displayName || 'Unknown author'}`}</span></div>
           <TimeAgo timestamp={post.date}/>
