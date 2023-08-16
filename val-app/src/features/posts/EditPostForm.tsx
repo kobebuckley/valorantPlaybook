@@ -1,37 +1,69 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { RootState } from '../../app/store';
 import { Post, postUpdated, selectPostById } from './postsSlice';
-import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
 //update next
+import { TimeAgo } from './TimeAgo';
+import { ReactionButtons } from './ReactButton';
 
+
+import { RootState, AppDispatch } from '../../app/store';
+import { fetchPosts, selectAllPosts } from './postsSlice';
+import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
+
+
+const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const EditPostForm: React.FC = () => {
-  const { agent, postId } = useParams<{ agent: string; postId: string }>();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const post: Post | undefined = useSelector((state: RootState) =>
-    postId ? selectPostById(state, postId) : undefined
-  );
-  const loggedInUser = useSelector(selectLoggedInUser); 
+  const { agent, id } = useParams<{ agent: string; id: string }>();
+  console.log("Selected id:", id);
+  console.log("URL id:", id);
 
+  console.log("Selected Agent:", agent);
+
+  const dispatch: AppDispatch = useDispatch();
+  
+  useEffect(() => {
+  
+  const fetchAgentPosts = async () => {
+    if (agent) {
+      try {
+        await dispatch(fetchPosts());
+      } catch (error) {
+        // Handle error
+      }
+    }
+  }
+    // setTitle(post?.title || '');
+    // setContent(post?.content || '');
+    // setVideoUrl(post?.videoUrl || '');
+    // setSelectedAgent(post?.agent || '');
+    fetchAgentPosts();
+  }, 
+
+  [dispatch, agent]);
+
+  const navigate = useNavigate();
+
+  // const post: Post | undefined = useSelector((state: RootState) =>
+  // id ? selectPostById(state, id) : undefined
+  // );
+  const loggedInUser = useSelector(selectLoggedInUser); 
+  
+  const posts = useTypedSelector(selectAllPosts);
+  console.log('The grabbed posts', posts);
+
+if (posts.length === 0) {
+  return <div>Loading...</div>;
+}
+const decodedId = decodeURIComponent(id ?? ''); 
+const post = posts.find((post) => post.id == decodedId);
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || '');
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
   const [selectedAgent, setSelectedAgent] = useState(post?.agent || '');
 
-  useEffect(() => {
-    const loggedInUserStr = localStorage.getItem('loggedInUser');
-  if (loggedInUserStr) {
-    const loggedInUser = JSON.parse(loggedInUserStr);
-    dispatch(setLoggedInUser(loggedInUser));
-  }
-    setTitle(post?.title || '');
-    setContent(post?.content || '');
-    setVideoUrl(post?.videoUrl || '');
-    setSelectedAgent(post?.agent || '');
-  }, [post]);
+  
 
   const onTitleChanged = (e: React.ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onContentChanged = (e: React.ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
@@ -41,7 +73,7 @@ export const EditPostForm: React.FC = () => {
   const onSavePostClicked = () => {
     if (title && content && videoUrl && selectedAgent) {
       const updatedPost: Post = {
-        id: postId!,
+        id: id!,
         date: new Date().toISOString(),
         title,
         content,
@@ -50,28 +82,22 @@ export const EditPostForm: React.FC = () => {
         userId: '',
         reactions: {},
         moderated: false,
-        status: 'pending'
+        status: 'pending',
+        displayName: ''
       };
       
       dispatch(postUpdated(updatedPost));
-      navigate(`/posts/${selectedAgent}/${postId}`);
+      navigate(`/posts/${selectedAgent}/${id}`);
     }
   };
   
-  if (!post) {
-    return <h2>Loading...</h2>;
-  }
-  console.log('loggedInUser:', loggedInUser);
-  console.log('post:', post);
 
-  const isAuthor = loggedInUser && loggedInUser.id === post.userId;
-  console.log('Is author:', isAuthor);
 
   return (
     <section className="bg-gray-900 min-h-screen py-10">
       <div className="container mx-auto">
         <h2 className="text-3xl font-bold mb-4 text-white">Edit Post</h2>
-        {isAuthor ? ( // Render the form if the user is the author
+        {post ? ( // Render the form if the user is the author
           <form className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
             <label htmlFor="agentSelect" className="text-lg text-white">
@@ -133,11 +159,11 @@ export const EditPostForm: React.FC = () => {
               type="button"
               onClick={onSavePostClicked}
               className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              disabled={loggedInUser.id !== post.userId && !loggedInUser.isAdmin}
+              // disabled={loggedInUser.id !== post.userId && !loggedInUser.isAdmin}
             >
               Save Post
             </button>
-            <Link to={`/posts/${selectedAgent}/${postId}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
+            <Link to={`/posts/${selectedAgent}/${id}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
               Cancel
             </Link>
           </div>

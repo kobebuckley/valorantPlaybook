@@ -9,6 +9,7 @@ import NewLogin from './routes/NewLogin';
 import NewRegister from './routes/NewRegister';
 import AgentPostsPage from './features/posts/AgentPostsPage';
 import SinglePostPage from './features/posts/SinglePostPage';
+import EditPostForm from './features/posts/EditPostForm';
 
 function App() {
   const { currentUser } = useContext(AuthContext); // Use the AuthContext
@@ -34,6 +35,8 @@ function App() {
           <Route path="/addPost" element={<AddPostForm isAuth={isAuth} />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
           <Route path="/posts/:agent/:id" element={<SinglePostPage />} />
+          <Route path="/editPost/:agent/:id" element={<EditPostForm  />} />
+
         </Routes>
       </div>
     </div>
