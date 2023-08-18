@@ -17,35 +17,13 @@ export const EditPostForm: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const { currentUser } = useContext(AuthContext);
+
   const post: Post | undefined = useSelector((state: RootState) =>
     id ? selectPostById(state, id) : undefined
   );
 
   console.log("Selected post:", post);
-
-
-
-  const { currentUser } = useContext(AuthContext);
-  const displayName = currentUser?.displayName || '';
-  const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
-  
-
-  useEffect(() => {
-    if (currentUser) {
-      setSelectedDisplayName(currentUser.displayName || '');
-      dispatch(setLoggedInUser(currentUser as unknown as User)); // userslice 
-    }
-  }, [currentUser, dispatch]);
-
-
-
-
-  if (!id) {
-   
-    return <p>Error: Post ID is not defined.</p>; 
-  }
-
-  // const loggedInUser = useSelector(selectLoggedInUser);
 
   const [title, setTitle] = useState(post?.title || '');
   const [postText, setPostText] = useState(post?.content || ''); // Changed to postText
@@ -65,16 +43,15 @@ export const EditPostForm: React.FC = () => {
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setSelectedAgent(e.target.value);
   const onPostTextChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setPostText(e.target.value);
-  useEffect(() => {
-    // if (!loggedInUser) {
-    //   navigate('/login'); // Redirect to login if the user is not logged in
-    // }
 
-    // Rest of your useEffect code
-  }, [ navigate]);
   const onUpdatePostClicked = async () => {
+    if (!id) {
+      console.error("Post ID is not defined.");
+      return;
+    }
+  
     if (post && title && postText && videoUrl && selectedAgent) {
-      const updatedPost: Partial<Post> = { // Use Partial<Post> here
+      const updatedPost: Partial<Post> = {
         title,
         content: postText,
         videoUrl,
@@ -82,19 +59,15 @@ export const EditPostForm: React.FC = () => {
       };
   
       await updateDoc(doc(db, 'posts', id), updatedPost);
-      dispatch(postUpdated(updatedPost as Post)); // Cast updatedPost as Post
+      dispatch(postUpdated(updatedPost as Post));
       navigate(`/posts/${selectedAgent}/${id}`);
     }
   };
-  
-  
+
 
   function setShowErrorModal(arg0: boolean): void {
     throw new Error('Function not implemented.');
   }
-
-  // const isAuthor = loggedInUser && loggedInUser.id == post?.userId;
-  // console.log(isAuthor)
 
   return (
     <section className="bg-gray-900 min-h-screen py-10">
