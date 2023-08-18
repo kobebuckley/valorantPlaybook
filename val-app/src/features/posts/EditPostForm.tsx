@@ -86,7 +86,9 @@ export const EditPostForm: React.FC = () => {
   
       const docRef = doc(db, 'posts', id);
       const snapshot = await getDoc(docRef);
-  
+
+      console.log(`Snapshot is: ${snapshot.id}`)
+      console.log(`DocRef is: ${docRef.id}`)
       if (snapshot.exists()) {
         await updateDoc(docRef, postPayload);
       } else {
