@@ -39,17 +39,6 @@ export const selectAddingStatus = (state: RootState) => state.posts.adding;
 export const selectEditingPostId = (state: RootState) => state.posts.editingPostId;
 
 
-//! Agent selector version if needed
-// export const fetchPosts = createAsyncThunk('posts/fetchPosts', async (agent: string) => {
-//   try {
-//     const response: FetchResult = await client.get(`http://localhost:3000/api/posts?agent=${agent}`);
-//     console.log('API Response:', response.data);
-//     return response.data;
-//   } catch (error) {
-//     console.error('Error fetching posts:', error);
-//     throw error; 
-//   }
-// });
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
@@ -69,7 +58,7 @@ const postsSlice = createSlice({
   reducers: {
     reactionAdded(state, action) {
       const { id, reaction } = action.payload;
-      const existingPost = state.posts.find(post => post.id === id);
+      const existingPost = state.posts.find(post => post.id == id);
       if (existingPost) {
         existingPost.reactions[reaction]++;
       }
@@ -102,7 +91,7 @@ const postsSlice = createSlice({
     postUpdated(state, action: PayloadAction<Post>) {
       const { id, displayName, date, title, content, videoUrl, agent } = action.payload;
 
-      const existingPost = state.posts.find((post) => post.id === id);
+      const existingPost = state.posts.find((post) => post.id == id);
       if (existingPost) {
         existingPost.title = title;
         existingPost.date = date;
@@ -113,15 +102,15 @@ const postsSlice = createSlice({
     },
     postApproved(state, action: PayloadAction<string>) {
       const id = action.payload;
-      const existingPost = state.posts.find(post => post.id === id);
+      const existingPost = state.posts.find(post => post.id == id);
       if (existingPost) {
         existingPost.status = 'approved';
       }
     },
 
     postRejected(state, action: PayloadAction<string>) {
-      const postId = action.payload;
-      const existingPost = state.posts.find(post => post.id === postId);
+      const id = action.payload;
+      const existingPost = state.posts.find(post => post.id == id);
       if (existingPost) {
         existingPost.status = 'rejected';
       }
@@ -175,10 +164,10 @@ export const {
 export const selectAllPosts = (state: RootState) => state.posts.posts;
 
 export const selectPostById = (state: RootState, id: string) =>
-  state.posts.posts.find((post: Post) => post.id === id);
+  state.posts.posts.find((post: Post) => post.id == id);
 
 export const selectPendingPosts = (state: RootState) =>
-  state.posts.posts.filter((post: Post) => post.status === 'pending');
+  state.posts.posts.filter((post: Post) => post.status == 'pending');
 
 
 export default postsSlice.reducer;

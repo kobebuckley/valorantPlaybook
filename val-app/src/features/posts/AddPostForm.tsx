@@ -106,23 +106,7 @@ function AddPostForm(props: AddPostFormProps) {
       {!auth.currentUser && (
         <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
       )}
-       {/* <div className="mb-4">
-          <label htmlFor="displayNameSelect" className="block font-semibold mb-2 text-xl">
-            Select Display Name:
-          </label>
-          <select
-            id="displayNameSelect"
-            name="displayNameSelect"
-            value={selectedDisplayName}
-            onChange={(e) => setSelectedDisplayName(e.target.value)}
-            className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            required
-          >
-            <option value="" disabled>Select a display name</option>
-            <option value={displayName}>{displayName}</option> */}
-            {/* Add other options here */}
-          {/* </select> */}
-        {/* </div> */}
+
         
       <form onSubmit={handleSubmit}>
         <div className="mb-4">

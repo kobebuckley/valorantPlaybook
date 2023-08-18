@@ -35,7 +35,7 @@ function App() {
           <Route path="/addPost" element={<AddPostForm isAuth={isAuth} />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
           <Route path="/posts/:agent/:id" element={<SinglePostPage />} />
-          <Route path="/editPost/:agent/:id" element={<EditPostForm  />} />
+          <Route path="/editPost/:agent/:id" element={<EditPostForm   />} />
 
         </Routes>
       </div>
