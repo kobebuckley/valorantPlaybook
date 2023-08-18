@@ -36,7 +36,7 @@ function AddPostForm(props: AddPostFormProps) {
         name: currentUser.displayName || '',
         username: '', // Fill in the appropriate value if needed
         hashedPassword: '', // Fill in the appropriate value if needed
-        isAdmin: false, // Fill in the appropriate value if needed
+        isAdmin: false, //! Fill in the appropriate value if needed (strange maybe needs a change later)
         // ... other properties from the User type
       };
       dispatch(setLoggedInUser(userToStore));

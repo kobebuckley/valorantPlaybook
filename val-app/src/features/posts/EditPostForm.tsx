@@ -14,7 +14,8 @@ export const EditPostForm: React.FC = () => {
   const { agent, id } = useParams<{ agent: string; id: string }>();
   console.log("Selected id:", id);
   console.log("Selected Agent:", agent);
-  
+  const posts = useSelector((state: RootState) => state.posts.posts);
+
   // const dispatch = useDispatch();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
@@ -30,25 +31,29 @@ export const EditPostForm: React.FC = () => {
   const [title, setTitle] = useState(post?.title || '');
   const [postText, setPostText] = useState(post?.content || ''); // Changed to postText
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
-  const [selectedAgent, setSelectedAgent] = useState(post?.agent || '');
+  const [selectedAgent, setSelectedAgent] = useState(post?.agent || '')
+
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        await dispatch(fetchPosts());
-        if (post) {
-          setTitle(post.title);
-          setPostText(post.content);
-          setVideoUrl(post.videoUrl);
-          setSelectedAgent(post.agent);
+      if (!post && posts.length === 0) {
+        try {
+          await dispatch(fetchPosts());
+        } catch (error) {
+          console.error('Error fetching posts:', error);
         }
-      } catch (error) {
-        console.error('Error fetching posts:', error);
+      }
+  
+      if (post) {
+        setTitle(post.title);
+        setPostText(post.content);
+        setVideoUrl(post.videoUrl);
+        setSelectedAgent(post.agent);
       }
     };
-
+  
     fetchData();
-  }, [dispatch, post]);
+  }, [dispatch, posts, post]);
   
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
