@@ -31,10 +31,18 @@ function AddPostForm(props: AddPostFormProps) {
 
   useEffect(() => {
     if (currentUser) {
-      setSelectedDisplayName(currentUser.displayName || '');
-      dispatch(setLoggedInUser(currentUser as unknown as User)); // Use the correct type here
+      const userToStore: User = {
+        id: currentUser.uid, // You might need to adjust this property name
+        name: currentUser.displayName || '',
+        username: '', // Fill in the appropriate value if needed
+        hashedPassword: '', // Fill in the appropriate value if needed
+        isAdmin: false, // Fill in the appropriate value if needed
+        // ... other properties from the User type
+      };
+      dispatch(setLoggedInUser(userToStore));
     }
   }, [currentUser, dispatch]);
+  
 
 
   // useEffect(() => {
