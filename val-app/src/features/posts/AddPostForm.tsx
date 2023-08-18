@@ -8,8 +8,6 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState
 import { auth, db } from '../../firebase/firebase-config';
 import { User, setLoggedInUser } from '../users/usersSlice';
 
-// ... other imports
-
 
 interface AddPostFormProps {
   isAuth: boolean;
@@ -24,9 +22,12 @@ function AddPostForm(props: AddPostFormProps) {
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const postsCollectionRef = collection(db, 'posts');
   const navigate = useNavigate();
+
+
   const { currentUser } = useContext(AuthContext);
   const displayName = currentUser?.displayName || '';
   const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
+  
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,13 +36,6 @@ function AddPostForm(props: AddPostFormProps) {
       dispatch(setLoggedInUser(currentUser as unknown as User)); // Use the correct type here
     }
   }, [currentUser, dispatch]);
-
-
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     navigate('/login');
-  //   }
-  // }, []);
 
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
