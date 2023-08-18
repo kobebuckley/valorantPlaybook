@@ -86,7 +86,8 @@ function AddPostForm(props: AddPostFormProps) {
       setVideoUrl('');
       setAgent('');
       setShowSuccessMessage(true);
-  
+      console.log("SUCCESS")
+
       navigate('/');
     } catch (error) {
       console.error('Error creating post:', error);

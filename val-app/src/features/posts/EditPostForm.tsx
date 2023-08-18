@@ -1,20 +1,22 @@
 import React, { useState, useEffect, ChangeEvent, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Post, postUpdated, selectPostById } from './postsSlice';
-import { RootState } from '../../app/store';
+import { Post,PostStatus, fetchPosts, postAdded, postUpdated, selectPostById } from './postsSlice';
+import { AppDispatch, RootState } from '../../app/store';
 import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
-import { doc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
+import { doc, getDoc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
 import { db } from '../../firebase/firebase-config';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
+
 
 export const EditPostForm: React.FC = () => {
   const { agent, id } = useParams<{ agent: string; id: string }>();
   console.log("Selected id:", id);
   console.log("Selected Agent:", agent);
-
-  const dispatch = useDispatch();
+  
+  // const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
   const { currentUser } = useContext(AuthContext);
@@ -31,13 +33,23 @@ export const EditPostForm: React.FC = () => {
   const [selectedAgent, setSelectedAgent] = useState(post?.agent || '');
 
   useEffect(() => {
-    if (post) {
-      setTitle(post.title);
-      setPostText(post.content);
-      setVideoUrl(post.videoUrl);
-      setSelectedAgent(post.agent);
-    }
-  }, [post]);
+    const fetchData = async () => {
+      try {
+        await dispatch(fetchPosts());
+        if (post) {
+          setTitle(post.title);
+          setPostText(post.content);
+          setVideoUrl(post.videoUrl);
+          setSelectedAgent(post.agent);
+        }
+      } catch (error) {
+        console.error('Error fetching posts:', error);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, post]);
+  
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
@@ -50,20 +62,41 @@ export const EditPostForm: React.FC = () => {
       return;
     }
   
-    if (post && title && postText && videoUrl && selectedAgent) {
-      const updatedPost: Partial<Post> = {
+    // const postId = String(id);
+  
+    if (title && postText && videoUrl && selectedAgent) {
+      const postPayload = {
+        id: id,
+        displayName: '',
+        date: new Date().toISOString(),
         title,
         content: postText,
         videoUrl,
         agent: selectedAgent,
+        userId: '',
+        reactions: {},
+        moderated: false,
+        status: 'pending' as PostStatus,
       };
   
-      await updateDoc(doc(db, 'posts', id), updatedPost);
-      dispatch(postUpdated(updatedPost as Post));
-      navigate(`/posts/${selectedAgent}/${id}`);
+      const docRef = doc(db, 'posts', id);
+      const snapshot = await getDoc(docRef);
+  
+      if (snapshot.exists()) {
+        await updateDoc(docRef, postPayload);
+      } else {
+        console.error("Document doesn't exist:", id);
+      }
+  
+      try {
+        await updateDoc(doc(db, 'posts', id), postPayload);
+        dispatch(postUpdated(postPayload));
+        navigate(`/posts/${selectedAgent}/${id}`);
+      } catch (error) {
+        console.error('Error updating post:', error);
+      }
     }
   };
-
 
   function setShowErrorModal(arg0: boolean): void {
     throw new Error('Function not implemented.');

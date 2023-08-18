@@ -4,6 +4,8 @@ import { FetchResult, client } from '../../api/client';
 import { collection, getDocs } from '@firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 
+export type PostStatus = 'pending' | 'approved' | 'rejected' | 'idle' | 'added' | 'succeeded' | 'failed';
+
 export interface Post {
   displayName: string;
   moderated: boolean;
@@ -15,9 +17,9 @@ export interface Post {
   agent: string;
   userId: string;
   reactions: { [key: string]: number };
-  status: 'pending' | 'approved' | 'rejected' | 'idle' | 'added' | 'succeeded' | 'failed'
-  
+  status: PostStatus; // Use the defined type here
 }
+
 
 interface PostsState {
   posts: Post[];
@@ -69,7 +71,7 @@ const postsSlice = createSlice({
         state.posts.push(action.payload);
         state.adding = 'succeeded';
       },
-      prepare(title: string, content: string, videoUrl: string, agent: string, userId: string, displayName: string): { payload: Post } {
+      prepare(id:string,title: string, content: string, videoUrl: string, agent: string, userId: string, displayName: string): { payload: Post } {
         return {
           payload: {
             id: nanoid(),
@@ -93,6 +95,8 @@ const postsSlice = createSlice({
 
       const existingPost = state.posts.find((post) => post.id == id);
       if (existingPost) {
+        existingPost.id = id;
+
         existingPost.title = title;
         existingPost.date = date;
         existingPost.content = content;
