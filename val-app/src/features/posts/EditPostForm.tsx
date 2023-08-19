@@ -73,7 +73,7 @@ export const EditPostForm: React.FC = () => {
         querySnapshot.docs.forEach(doc => {
           const postRef = doc
           const postData = doc.data();
-          if (postRef.data().id == post?.id) {
+          if (postData.id == post?.id) {
             foundSelectedDocData = postRef;
 
           }
@@ -97,7 +97,9 @@ export const EditPostForm: React.FC = () => {
 
 
   
-  console.log('TEST HEREs',selectedDocData)
+  // console.log('TEST HERE',selectedDocData.id)
+    console.log('The Doc that will be updated',selectedDocData)
+
   // const postDocRef = doc(db, 'posts', selectedDocData.id);
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
@@ -135,13 +137,13 @@ export const EditPostForm: React.FC = () => {
           agent,
           userId: currentUser?.uid || '',
           reactions: post!.reactions,
-          moderated: post!.moderated,
+          moderated: false,
         };
   
         // Update the document using the selectedDocData
-        // const postDocRef = doc(db, 'posts', selectedDocData); // Modify this line
-        await updateDoc(selectedDocData._document, updatedPostPayload);
         // Update the Redux state
+        const docRef = doc(db, 'posts', selectedDocData.id); // Modify this line
+        await updateDoc(docRef, updatedPostPayload);
         dispatch(postUpdated(updatedPostPayload));
         console.log('PostDoc', selectedDocData)
         setShowSuccessMessage(true);
