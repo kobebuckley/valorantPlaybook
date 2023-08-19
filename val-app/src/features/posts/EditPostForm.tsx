@@ -1,7 +1,7 @@
 import React, { useState, useEffect, ChangeEvent, useContext, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Post,PostStatus, fetchPosts, postUpdated, selectPostById } from './postsSlice';
+import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
 import { AppDispatch, RootState } from '../../app/store';
 import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
@@ -109,7 +109,7 @@ export const EditPostForm: React.FC = () => {
           userId: string;
           reactions: { [key: string]: number };
           moderated: boolean;
-          status: PostStatus;
+          // status: PostStatus;
         } = {
           id: post!.id,
           displayName: currentUser?.displayName || '',
@@ -121,7 +121,7 @@ export const EditPostForm: React.FC = () => {
           userId: currentUser?.uid || '',
           reactions: post!.reactions, 
           moderated: post!.moderated,
-          status: post!.status,
+          // status: post!.status,
         };
         
         setTitle('');
