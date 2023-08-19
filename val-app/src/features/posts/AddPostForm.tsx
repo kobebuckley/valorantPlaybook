@@ -23,11 +23,11 @@ function AddPostForm(props: AddPostFormProps) {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const postsCollectionRef = collection(db, 'posts');
-  const navigate = useNavigate();
   const { currentUser } = useContext(AuthContext);
   const displayName = currentUser?.displayName || '';
   const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {

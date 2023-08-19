@@ -4,23 +4,41 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Post,PostStatus, fetchPosts, postAdded, postUpdated, selectPostById } from './postsSlice';
 import { AppDispatch, RootState } from '../../app/store';
 import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
-import { doc, getDoc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
+import { collection, doc, getDoc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
 import { db } from '../../firebase/firebase-config';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
 
 
 export const EditPostForm: React.FC = () => {
-  const { agent, id } = useParams<{ agent: string; id: string }>();
-  console.log("Selected id:", id);
-  console.log("Selected Agent:", agent);
-  const posts = useSelector((state: RootState) => state.posts.posts);
-
-  // const dispatch = useDispatch();
+  // const [title, setTitle] = useState('');
+  // const [postText, setPostText] = useState('');
+  // const [videoUrl, setVideoUrl] = useState('');
+  // const [agent, setAgent] = useState('');
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const postsCollectionRef = collection(db, 'posts');
+  const { currentUser } = useContext(AuthContext);
+  const displayName = currentUser?.displayName || '';
+  const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
-  const { currentUser } = useContext(AuthContext);
+
+
+
+
+
+
+
+
+  const { agent, id } = useParams<{ agent: string; id: string }>();
+
+  const posts = useSelector((state: RootState) => state.posts.posts);
+
+  // const dispatch = useDispatch();
+
+  // const { currentUser } = useContext(AuthContext);
 
   const post: Post | undefined = useSelector((state: RootState) =>
     id ? selectPostById(state, id) : undefined
@@ -29,7 +47,7 @@ export const EditPostForm: React.FC = () => {
   console.log("Selected post:", post);
 
   const [title, setTitle] = useState(post?.title || '');
-  const [postText, setPostText] = useState(post?.content || ''); // Changed to postText
+  const [postText, setPostText] = useState(post?.content || ''); 
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
   const [selectedAgent, setSelectedAgent] = useState(post?.agent || '')
 
@@ -105,9 +123,7 @@ export const EditPostForm: React.FC = () => {
     }
   };
 
-  function setShowErrorModal(arg0: boolean): void {
-    throw new Error('Function not implemented.');
-  }
+
 
   return (
     <section className="bg-gray-900 min-h-screen py-10">
