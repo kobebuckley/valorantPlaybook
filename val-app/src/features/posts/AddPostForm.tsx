@@ -45,12 +45,6 @@ function AddPostForm(props: AddPostFormProps) {
   
 
 
-  // useEffect(() => {
-  //   if (!currentUser) {
-  //     navigate('/login');
-  //   }
-  // }, []);
-
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
 

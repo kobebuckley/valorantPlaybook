@@ -1,11 +1,11 @@
-import React, { useState, useEffect, ChangeEvent, useContext } from 'react';
+import React, { useState, useEffect, ChangeEvent, useContext, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { Post,PostStatus, fetchPosts, postAdded, postUpdated, selectPostById } from './postsSlice';
+import { Post,PostStatus, fetchPosts, postUpdated, selectPostById } from './postsSlice';
 import { AppDispatch, RootState } from '../../app/store';
 import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
-import { db } from '../../firebase/firebase-config';
+import { auth, db } from '../../firebase/firebase-config';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
 
@@ -26,19 +26,11 @@ export const EditPostForm: React.FC = () => {
 
 
 
+  // const { agent, id } = useParams<{ agent: string; id: string }>();
 
-
-
-
-
-
-  const { agent, id } = useParams<{ agent: string; id: string }>();
+  const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
 
   const posts = useSelector((state: RootState) => state.posts.posts);
-
-  // const dispatch = useDispatch();
-
-  // const { currentUser } = useContext(AuthContext);
 
   const post: Post | undefined = useSelector((state: RootState) =>
     id ? selectPostById(state, id) : undefined
@@ -47,9 +39,9 @@ export const EditPostForm: React.FC = () => {
   console.log("Selected post:", post);
 
   const [title, setTitle] = useState(post?.title || '');
-  const [postText, setPostText] = useState(post?.content || ''); 
+  const [content, setContent] = useState(post?.content || ''); 
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
-  const [selectedAgent, setSelectedAgent] = useState(post?.agent || '')
+  const [agent, setAgent] = useState(post?.agent || '')
 
 
   useEffect(() => {
@@ -64,9 +56,9 @@ export const EditPostForm: React.FC = () => {
   
       if (post) {
         setTitle(post.title);
-        setPostText(post.content);
+        setContent(post.content);
         setVideoUrl(post.videoUrl);
-        setSelectedAgent(post.agent);
+        setAgent(post.agent);
       }
     };
   
@@ -76,55 +68,86 @@ export const EditPostForm: React.FC = () => {
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
-  const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setSelectedAgent(e.target.value);
-  const onPostTextChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setPostText(e.target.value);
+  const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
+  const onPostTextChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
+
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     const userToStore: User = {
+  //       id: currentUser.uid, // You might need to adjust this property name
+  //       name: currentUser.displayName || '',
+  //       username: '', // Fill in the appropriate value if needed
+  //       hashedPassword: '', // Fill in the appropriate value if needed
+  //       isAdmin: false, //! Fill in the appropriate value if needed (strange maybe needs a change later)
+  //       // ... other properties from the User type
+  //     };
+  //     dispatch(setLoggedInUser(userToStore));
+  //   }
+  // }, [currentUser, dispatch]);
+  
+
+
 
   const onUpdatePostClicked = async () => {
-    if (!id) {
-      console.error("Post ID is not defined.");
+    if (!auth.currentUser || !post) {
       return;
     }
   
-    // const postId = String(id);
+    let postPayload;
   
-    if (title && postText && videoUrl && selectedAgent) {
-      const postPayload = {
-        id: id,
-        displayName: '',
-        date: new Date().toISOString(),
-        title,
-        content: postText,
-        videoUrl,
-        agent: selectedAgent,
-        userId: '',
-        reactions: {},
-        moderated: false,
-        status: 'pending' as PostStatus,
-      };
-  
-      const docRef = doc(db, 'posts', id);
-      const snapshot = await getDoc(docRef);
-
-      console.log(`Snapshot is: ${snapshot.id}`)
-      console.log(`DocRef is: ${docRef.id}`)
-      if (snapshot.exists()) {
-        await updateDoc(docRef, postPayload);
-      } else {
-        console.error("Document doesn't exist:", id);
-      }
-  
-      try {
-        await updateDoc(doc(db, 'posts', id), postPayload);
+    try {
+      if (title && content && videoUrl && agent && post) {
+        const timestamp = new Date().toISOString();
+        const postPayload: {
+          id: string;
+          displayName: string;
+          date: string;
+          title: string;
+          content: string;
+          videoUrl: string;
+          agent: string;
+          userId: string;
+          reactions: { [key: string]: number };
+          moderated: boolean;
+          status: PostStatus;
+        } = {
+          id: post!.id,
+          displayName: currentUser?.displayName || '',
+          date: timestamp,
+          title,
+          content,
+          videoUrl,
+          agent,
+          userId: currentUser?.uid || '',
+          reactions: post!.reactions, 
+          moderated: post!.moderated,
+          status: post!.status,
+        };
+        
+        setTitle('');
+        setContent('');
+        setVideoUrl('');
+        setAgent('');
+        setShowSuccessMessage(true);
+        console.log("SUCCESS");
+        navigate('/');
+        await updateDoc(doc(db, 'posts', id!), postPayload);
+        
         dispatch(postUpdated(postPayload));
-        navigate(`/posts/${selectedAgent}/${id}`);
-      } catch (error) {
-        console.error('Error updating post:', error);
+        navigate(`/posts/${agent}/${id}`);
       }
+  
+    } catch (error) {
+      console.error('Error updating post:', error);
     }
+    
+    const docRef = doc(db, 'posts', id!);
+    const snapshot = await getDoc(docRef);
+  
+    console.log(`Snapshot is: ${snapshot.id}`);
+    console.log(`DocRef is: ${docRef.id}`);
   };
-
-
-
+  
   return (
     <section className="bg-gray-900 min-h-screen py-10">
       <div className="container mx-auto">
@@ -138,7 +161,7 @@ export const EditPostForm: React.FC = () => {
             <select
               id="agentSelect"
               name="agentSelect"
-              value={selectedAgent}
+              value={agent}
               onChange={onAgentChanged}
               className="border border-gray-300 rounded-md p-2"
             >
@@ -167,7 +190,7 @@ export const EditPostForm: React.FC = () => {
             <textarea
               id="postContent"
               name="postContent"
-              value={postText}
+              value={content}
               onChange={onPostTextChanged}
               className="border border-gray-300 rounded-md p-2"
               rows={6}
@@ -195,7 +218,7 @@ export const EditPostForm: React.FC = () => {
             >
               Save Post
             </button>
-            <Link to={`/posts/${selectedAgent}/${id}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
+            <Link to={`/posts/${agent}/${id}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
               Cancel
             </Link>
           </div>

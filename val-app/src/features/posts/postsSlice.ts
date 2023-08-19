@@ -73,7 +73,7 @@ const postsSlice = createSlice({
         state.posts.push(action.payload);
         state.adding = 'succeeded';
       },
-      prepare(id:string,title: string, content: string, videoUrl: string, agent: string, userId: string, displayName: string): { payload: Post } {
+      prepare(title: string, content: string, videoUrl: string, agent: string, userId: string, displayName: string): { payload: Post } {
         return {
           payload: {
             id: nanoid(),
@@ -93,7 +93,7 @@ const postsSlice = createSlice({
       
     },
     postUpdated(state, action: PayloadAction<Post>) {
-      const { id, displayName, date, title, content, videoUrl, agent } = action.payload;
+      const { id, date, title, content, videoUrl, agent } = action.payload;
 
       const existingPost = state.posts.find((post) => post.id == id);
       if (existingPost) {
