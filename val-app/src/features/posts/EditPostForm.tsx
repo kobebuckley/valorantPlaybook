@@ -4,11 +4,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
 import { AppDispatch, RootState } from '../../app/store';
 import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
-import { collection, doc, getDoc, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
 import { auth, db } from '../../firebase/firebase-config';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
 
+const postsCollectionRef = collection(db, 'posts');
 
 export const EditPostForm: React.FC = () => {
   // const [title, setTitle] = useState('');
@@ -30,75 +31,90 @@ export const EditPostForm: React.FC = () => {
 
   const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
 
-  const posts = useSelector((state: RootState) => state.posts.posts);
+  // const posts = useSelector((state: RootState) => state.posts.posts);
 
   const post: Post | undefined = useSelector((state: RootState) =>
     id ? selectPostById(state, id) : undefined
   );
 
   console.log("Selected post:", post);
-
+  
+  
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || ''); 
   const [videoUrl, setVideoUrl] = useState(post?.videoUrl || '');
   const [agent, setAgent] = useState(post?.agent || '')
+  const [selectedDocData, setSelectedDocData] = useState<any | null>(null);
+
+  console.log("Selected post:", post);
 
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!post && posts.length === 0) {
+      if (!post && id) {
         try {
           await dispatch(fetchPosts());
         } catch (error) {
           console.error('Error fetching posts:', error);
         }
       }
-  
+
       if (post) {
         setTitle(post.title);
         setContent(post.content);
         setVideoUrl(post.videoUrl);
         setAgent(post.agent);
       }
+
+      try {
+        const querySnapshot = await getDocs(collection(db, 'posts'));
+        let foundSelectedDocData = null;
+
+        querySnapshot.docs.forEach(doc => {
+          const postRef = doc
+          const postData = doc.data();
+          if (postRef.data().id == post?.id) {
+            foundSelectedDocData = postRef;
+
+          }
+          // console.log("Post Id:", postData.id);
+        });
+
+        setSelectedDocData(foundSelectedDocData);
+        if (foundSelectedDocData) {
+          console.log("Selected Document Data:", foundSelectedDocData);
+          return
+        } else {
+          console.log("No document with matching ID found.");
+        }
+      } catch (error) {
+        console.error("Error fetching and logging collection:", error);
+      }
     };
-  
+
     fetchData();
-  }, [dispatch, posts, post]);
+  }, [dispatch, id, post]);
+
+
   
+  console.log('TEST HEREs',selectedDocData)
+  // const postDocRef = doc(db, 'posts', selectedDocData.id);
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
   const onPostTextChanged = (e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value);
 
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     const userToStore: User = {
-  //       id: currentUser.uid, // You might need to adjust this property name
-  //       name: currentUser.displayName || '',
-  //       username: '', // Fill in the appropriate value if needed
-  //       hashedPassword: '', // Fill in the appropriate value if needed
-  //       isAdmin: false, //! Fill in the appropriate value if needed (strange maybe needs a change later)
-  //       // ... other properties from the User type
-  //     };
-  //     dispatch(setLoggedInUser(userToStore));
-  //   }
-  // }, [currentUser, dispatch]);
-  
-
-
-
   const onUpdatePostClicked = async () => {
-    if (!auth.currentUser || !post) {
+    if (!auth.currentUser || !post || !selectedDocData) {
       return;
     }
-  
-    let postPayload;
   
     try {
       if (title && content && videoUrl && agent && post) {
         const timestamp = new Date().toISOString();
-        const postPayload: {
+  
+        const updatedPostPayload: {
           id: string;
           displayName: string;
           date: string;
@@ -109,7 +125,6 @@ export const EditPostForm: React.FC = () => {
           userId: string;
           reactions: { [key: string]: number };
           moderated: boolean;
-          // status: PostStatus;
         } = {
           id: post!.id,
           displayName: currentUser?.displayName || '',
@@ -119,34 +134,25 @@ export const EditPostForm: React.FC = () => {
           videoUrl,
           agent,
           userId: currentUser?.uid || '',
-          reactions: post!.reactions, 
+          reactions: post!.reactions,
           moderated: post!.moderated,
-          // status: post!.status,
         };
-        
-        setTitle('');
-        setContent('');
-        setVideoUrl('');
-        setAgent('');
+  
+        // Update the document using the selectedDocData
+        // const postDocRef = doc(db, 'posts', selectedDocData); // Modify this line
+        await updateDoc(selectedDocData._document, updatedPostPayload);
+        // Update the Redux state
+        dispatch(postUpdated(updatedPostPayload));
+        console.log('PostDoc', selectedDocData)
         setShowSuccessMessage(true);
         console.log("SUCCESS");
         navigate('/');
-        await updateDoc(doc(db, 'posts', id!), postPayload);
-        
-        dispatch(postUpdated(postPayload));
-        navigate(`/posts/${agent}/${id}`);
       }
-  
     } catch (error) {
       console.error('Error updating post:', error);
     }
-    
-    const docRef = doc(db, 'posts', id!);
-    const snapshot = await getDoc(docRef);
-  
-    console.log(`Snapshot is: ${snapshot.id}`);
-    console.log(`DocRef is: ${docRef.id}`);
   };
+  
   
   return (
     <section className="bg-gray-900 min-h-screen py-10">

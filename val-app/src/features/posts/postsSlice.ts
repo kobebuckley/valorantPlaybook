@@ -4,7 +4,7 @@ import { FetchResult, client } from '../../api/client';
 import { collection, getDocs } from '@firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 
-export type PostStatus = 'pending' | 'approved' | 'rejected' | 'idle' | 'added' | 'succeeded' | 'failed';
+// export type PostStatus = 'pending' | 'approved' | 'rejected' | 'idle' | 'added' | 'succeeded' | 'failed';
 
 export interface Post {
   displayName: string;
@@ -17,7 +17,7 @@ export interface Post {
   agent: string;
   userId: string;
   reactions: { [key: string]: number };
-  status: PostStatus; // Use the defined type here
+  // status: PostStatus; // Use the defined type here
 }
 
 
@@ -85,7 +85,7 @@ const postsSlice = createSlice({
             agent,
             userId,
             reactions: {},
-            status: 'pending', 
+            // status: 'pending', 
             moderated: false
           },
         };
@@ -109,17 +109,17 @@ const postsSlice = createSlice({
     postApproved(state, action: PayloadAction<string>) {
       const id = action.payload;
       const existingPost = state.posts.find(post => post.id == id);
-      if (existingPost) {
-        existingPost.status = 'approved';
-      }
+      // if (existingPost) {
+      //   existingPost.status = 'approved';
+      // }
     },
 
     postRejected(state, action: PayloadAction<string>) {
       const id = action.payload;
       const existingPost = state.posts.find(post => post.id == id);
-      if (existingPost) {
-        existingPost.status = 'rejected';
-      }
+      // if (existingPost) {
+      //   existingPost.status = 'rejected';
+      // }
     },
     
     startAddingPost: (state, action: PayloadAction<string>) => {
@@ -172,8 +172,8 @@ export const selectAllPosts = (state: RootState) => state.posts.posts;
 export const selectPostById = (state: RootState, id: string) =>
   state.posts.posts.find((post: Post) => post.id == id);
 
-export const selectPendingPosts = (state: RootState) =>
-  state.posts.posts.filter((post: Post) => post.status == 'pending');
+// export const selectPendingPosts = (state: RootState) =>
+//   state.posts.posts.filter((post: Post) => post.status == 'pending');
 
 
 export default postsSlice.reducer;
