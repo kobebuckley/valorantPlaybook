@@ -1,17 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { reactionAdded } from './postsSlice';
-
-interface Post {
-  id: string;
-  date: string;
-  title: string;
-  content: string;
-  videoUrl: string;
-  agent: string;
-  userId: string;
-  reactions: { [key: string]: number };
-}
+import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
 
 const reactionEmoji = {
   thumbsUp: '👍',
@@ -24,6 +14,8 @@ const reactionEmoji = {
 interface ReactionButtonsProps {
   post: Post;
 }
+
+
 // update me as well
 export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
   const dispatch = useDispatch();
@@ -35,7 +27,7 @@ export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
         type="button"
         className="muted-button reaction-button"
         onClick={() =>
-          dispatch(reactionAdded({ postId: post.id, reaction: name }))
+          dispatch(reactionAdded({ id: post.id, reaction: name }))
         }
       >
         {emoji} {post.reactions[name as keyof typeof reactionEmoji]}
