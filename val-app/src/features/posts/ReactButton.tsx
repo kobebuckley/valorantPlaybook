@@ -113,17 +113,22 @@ useEffect(() => {
           videoUrl: post.videoUrl,
           agent: post.agent,
           userId: currentUser?.uid || '',
-          reactions: post!.reactions,
-          moderated: false,
+          reactions: reactions, // Use the updated reactions state
+          moderated: post.moderated,
         };
 
         const docRef = doc(db, 'posts', selectedDocData.id);
         await updateDoc(docRef, updatedPostPayload);
+        
         dispatch(postUpdated(updatedPostPayload));
+        console.log('Reactions updated in the database:', updatedPostPayload.reactions);
         console.log('PostDoc', selectedDocData);
+
         console.log("SUCCESS");
       }
     } catch (error) {
+      console.error('Error updating reactions in the database:', error);
+
       console.error('Error updating post:', error);
     }
   };
@@ -138,6 +143,8 @@ useEffect(() => {
 
     // Dispatch the reaction added action
     dispatch(reactionAdded({ id: post.id, reaction: reactionName }));
+    onUpdatePostClicked();
+
   };
 
 // update me as well
