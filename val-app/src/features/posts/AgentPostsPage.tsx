@@ -12,6 +12,7 @@ import { ReactionButtons } from './ReactButton';
 import { RootState, AppDispatch } from '../../app/store';
 import { fetchPosts, selectAllPosts } from './postsSlice';
 import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
+import PostDeleteButton from './PostDeleteButton';
 
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
@@ -118,6 +119,7 @@ export const AgentPostsPage: React.FC = () => {
             >
               Edit Post
             </Link>
+           <PostDeleteButton/>
           </div>
         </article>
       );

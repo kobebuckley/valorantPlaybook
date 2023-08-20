@@ -13,6 +13,7 @@ import { selectPostById, Post } from './postsSlice';
 import { RootState, AppDispatch } from '../../app/store';
 import { fetchPosts, selectAllPosts } from './postsSlice';
 import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
+import PostDeleteButton from './PostDeleteButton';
 
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
@@ -101,6 +102,9 @@ const post = posts.find((post) => post.id == decodedId);
           <Link to={`/editPost/${agent}/${post.id}`} className="text-blue-500 hover:text-blue-700">
             Edit Post
           </Link>
+          
+                 {/* make a delete button only available to the same logged in user auth as the user id of the post*/}
+                 <PostDeleteButton/>
         </article>
       </div>
     </section>
