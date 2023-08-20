@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { reactionAdded } from './postsSlice';
 import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
-import { collection, getDocs } from '@firebase/firestore';
-import { db } from '../../firebase/firebase-config';
+import { collection, doc, getDocs, updateDoc } from '@firebase/firestore';
+import { auth, db } from '../../firebase/firebase-config';
 import { AppDispatch } from '../../app/store';
 import { useParams } from 'react-router-dom';
+import { AuthContext } from '../../context/auth-context';
 
 const reactionEmoji = {
   thumbsUp: '👍',
@@ -16,8 +17,11 @@ const reactionEmoji = {
 };
 interface ReactionButtonsProps {
   post: Post;
-}
+}  
+
+
 export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
+  const { currentUser } = useContext(AuthContext);
   const [selectedDocData, setSelectedDocData] = useState<any | null>(null);
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
@@ -75,6 +79,53 @@ useEffect(() => {
 
 // console.log('TEST HERE',selectedDocData.id)
   console.log('The Doc that will be updated',selectedDocData)
+
+
+
+  
+  const onUpdatePostClicked = async () => {
+    if (!auth.currentUser || !post || !selectedDocData) {
+      return;
+    }
+  
+    try {
+      if (post) {
+        const timestamp = new Date().toISOString();
+  
+        const updatedPostPayload: {
+          id: string;
+          displayName: string;
+          date: string;
+          title: string;
+          content: string;
+          videoUrl: string;
+          agent: string;
+          userId: string;
+          reactions: { [key: string]: number };
+          moderated: boolean;
+        } = {
+          id: post!.id,
+          displayName: currentUser?.displayName || '',
+          date: timestamp,
+          title: post.title, // Use the local reactions object for these properties
+          content: post.content,
+          videoUrl: post.videoUrl,
+          agent: post.agent,
+          userId: currentUser?.uid || '',
+          reactions: post!.reactions,
+          moderated: false,
+        };
+
+        const docRef = doc(db, 'posts', selectedDocData.id);
+        await updateDoc(docRef, updatedPostPayload);
+        dispatch(postUpdated(updatedPostPayload));
+        console.log('PostDoc', selectedDocData);
+        console.log("SUCCESS");
+      }
+    } catch (error) {
+      console.error('Error updating post:', error);
+    }
+  };
   
 
 // update me as well
