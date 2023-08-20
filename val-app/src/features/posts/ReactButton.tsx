@@ -28,6 +28,7 @@ export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
 
 console.log("Selected post:", post);
 
+const [reactions, setReactions] = useState(post?.reactions || {}); // Initialize with post.reactions
 
 useEffect(() => {
   const fetchData = async () => {
@@ -126,7 +127,18 @@ useEffect(() => {
       console.error('Error updating post:', error);
     }
   };
+
   
+  const handleReactionClick = (reactionName: string) => {
+    // Update the reactions state when a reaction button is clicked
+    setReactions((prevReactions) => ({
+      ...prevReactions,
+      [reactionName]: (prevReactions[reactionName] || 0) + 1,
+    }));
+
+    // Dispatch the reaction added action
+    dispatch(reactionAdded({ id: post.id, reaction: reactionName }));
+  };
 
 // update me as well
 
@@ -136,9 +148,8 @@ useEffect(() => {
         key={name}
         type="button"
         className="muted-button reaction-button"
-        onClick={() =>
-          dispatch(reactionAdded({ id: post.id, reaction: name }))
-        }
+        onClick={() => handleReactionClick(name)}
+
       >
         {emoji} {post.reactions[name as keyof typeof reactionEmoji]}
       </button>
