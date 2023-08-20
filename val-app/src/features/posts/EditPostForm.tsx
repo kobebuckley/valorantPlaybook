@@ -12,10 +12,6 @@ import ErrorModal from './ErrorModal';
 const postsCollectionRef = collection(db, 'posts');
 
 export const EditPostForm: React.FC = () => {
-  // const [title, setTitle] = useState('');
-  // const [postText, setPostText] = useState('');
-  // const [videoUrl, setVideoUrl] = useState('');
-  // const [agent, setAgent] = useState('');
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const postsCollectionRef = collection(db, 'posts');
@@ -24,21 +20,13 @@ export const EditPostForm: React.FC = () => {
   const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-
-
-
-  // const { agent, id } = useParams<{ agent: string; id: string }>();
-
   const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
-
-  // const posts = useSelector((state: RootState) => state.posts.posts);
 
   const post: Post | undefined = useSelector((state: RootState) =>
     id ? selectPostById(state, id) : undefined
   );
 
   console.log("Selected post:", post);
-  
   
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || ''); 
@@ -47,7 +35,6 @@ export const EditPostForm: React.FC = () => {
   const [selectedDocData, setSelectedDocData] = useState<any | null>(null);
 
   console.log("Selected post:", post);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,7 +64,6 @@ export const EditPostForm: React.FC = () => {
             foundSelectedDocData = postRef;
 
           }
-          // console.log("Post Id:", postData.id);
         });
 
         setSelectedDocData(foundSelectedDocData);
@@ -139,9 +125,7 @@ export const EditPostForm: React.FC = () => {
           reactions: post!.reactions,
           moderated: false,
         };
-  
-        // Update the document using the selectedDocData
-        // Update the Redux state
+
         const docRef = doc(db, 'posts', selectedDocData.id); // Modify this line
         await updateDoc(docRef, updatedPostPayload);
         dispatch(postUpdated(updatedPostPayload));
