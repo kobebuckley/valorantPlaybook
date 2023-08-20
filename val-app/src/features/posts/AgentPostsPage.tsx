@@ -119,7 +119,7 @@ export const AgentPostsPage: React.FC = () => {
             >
               Edit Post
             </Link>
-           <PostDeleteButton/>
+           {/* <PostDeleteButton/> */}
           </div>
         </article>
       );
