@@ -141,90 +141,100 @@ export const EditPostForm: React.FC = () => {
   };
   
   
-  return (
-    <section className="bg-gray-900 min-h-screen py-10">
-      <div className="container mx-auto">
-        <h2 className="text-3xl font-bold mb-4 text-white">Edit Post</h2>
-        {currentUser ? ( // Render the form if the user is the author
-          <form className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1">
-            <label htmlFor="agentSelect" className="text-lg text-white">
-              Agent:
-            </label>
-            <select
-              id="agentSelect"
-              name="agentSelect"
-              value={agent}
-              onChange={onAgentChanged}
-              className="border border-gray-300 rounded-md p-2"
-            >
-              <option value="gekko">Gekko</option>
-              <option value="fade">Fade</option>
-            </select>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="postTitle" className="text-lg text-white">
-              Post Title:
-            </label>
-            <input
-              type="text"
-              id="postTitle"
-              name="postTitle"
-              placeholder="What's on your mind?"
-              value={title}
-              onChange={onTitleChanged}
-              className="border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="postContent" className="text-lg text-white">
-              Content:
-            </label>
-            <textarea
-              id="postContent"
-              name="postContent"
-              value={content}
-              onChange={onPostTextChanged}
-              className="border border-gray-300 rounded-md p-2"
-              rows={6}
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label htmlFor="videoUrlContent" className="text-lg text-white">
-              Video:
-            </label>
-            <input
-              type="text"
-              id="videoUrlContent"
-              name="videoUrlContent"
-              value={videoUrl}
-              onChange={onVideoUrlChanged}
-              className="border border-gray-300 rounded-md p-2"
-            />
-          </div>
-          <div className="mt-4">
-            <button
-              type="button"
-              onClick={onUpdatePostClicked}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              disabled={!currentUser}
-            >
-              Save Post
-            </button>
-            <Link to={`/posts/${agent}/${id}`} className="px-4 py-2 ml-2 text-blue-500 hover:text-blue-700">
-              Cancel
-            </Link>
-          </div>
-                     <PostDeleteButton/>
+  return (  
+  <div className="bg-gray-900 min-h-screen flex items-center justify-center">
 
-        </form>
-              ) : (
-                  <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
-                )}
+     <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
+      <div className="container mx-auto">
+      <h1 className="text-3xl font-bold mb-4 text-center">Edit Your Article</h1>
+        {currentUser ? (
+          <form className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1">
+                       <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl text-center">
+                {/* Agent: */}
+              </label>
+              <select
+                id="agentSelect"
+                name="agentSelect"
+                value={agent}
+                onChange={onAgentChanged}
+                className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">             
+                <option disabled value="">Select an agent</option>
+
+                <option value="gekko">Gekko</option>
+                <option value="fade">Fade</option>
+              </select>
             </div>
-          </section>
-        );
-      };
-    
+           <div className="mb-4">
+          <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl text-center">
+                {/* Post Title: */}
+              </label>
+              <input
+                type="text"
+                id="postTitle"
+                name="postTitle"
+                value={title}
+                onChange={onTitleChanged}
+                className="border border-gray-800 rounded p-2 mb-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter the game title"              />
+            </div>
+            <div className="mb-4">
+           <label htmlFor="postContent" className="block font-semibold mb-2 text-xl text-center">
+                Content:
+              </label>
+              <textarea
+                id="postContent"
+                name="postContent"
+                value={content}
+                onChange={onPostTextChanged}
+                className="border border-gray-800 rounded p-4 mb-2 w-full h-48 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Write your article here..." rows={6}
+              />
+            </div>
+
+
+        <div className="mb-4">
+               <label htmlFor="postVideo" className="block font-semibold mb-2 text-xl text-center">
+                Video:
+              </label>
+              <input
+                type="text"
+                id="videoUrlContent"
+                name="videoUrlContent"
+                value={videoUrl}
+                onChange={onVideoUrlChanged}
+                className="border border-gray-800 rounded p-2 mb-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="Paste video URL here"              />
+            </div>
+            <div className="mt-4">
+              <div className="flex justify-center mt-2 space-x-2">
+              <button
+                type="button"
+                onClick={onUpdatePostClicked}
+                className=" bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 cursor-pointer" 
+                disabled={!currentUser}
+              >
+                Save Post
+              </button>
+              
+                <Link
+                  to={`/posts/${agent}/${id}`}
+                  className=" bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 cursor-pointer" 
+                >
+                  Cancel
+                </Link>
+                <PostDeleteButton />
+              </div>
+              </div>
+          </form>
+        ) : (
+          <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
+          )}
+      </div>
+    </section>
+    </div>
+  );
+};
+
     
 export default EditPostForm; 

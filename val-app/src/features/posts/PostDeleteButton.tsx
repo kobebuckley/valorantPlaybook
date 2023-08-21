@@ -142,22 +142,22 @@ export const PostDeleteButton: React.FC = () => {
   
   
   return (
-    <section className="bg-gray-900 min-h-screen py-10">
-      <div className="container mx-auto">
-      <div className="mt-4">
-            <button
-              type="button"
-              onClick={onDeletePostClicked}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              disabled={!currentUser}
-            >
-              Delete Post
-            </button>
-       </div>
-       </div>          
-    </section>
-        );
-      };
-    
+    // <section className="bg-gray-900 min-h-screen py-10">
+      <div className="">
+        {/* <div className="mt-4"> */}
+          <button
+            type="button"
+            onClick={onDeletePostClicked}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200"
+            disabled={!currentUser}
+          >
+            Delete Post
+          </button>
+        {/* </div> */}
+      </div>
+    // </section>
+  );
+};
+
     
 export default PostDeleteButton; 

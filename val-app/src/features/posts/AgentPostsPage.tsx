@@ -91,53 +91,51 @@ export const AgentPostsPage: React.FC = () => {
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
     
     return (
-      <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}> 
-          <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-      
-          {/* <h2 className="text-3xl font-bold mb-4">{post.displayName}</h2> */}
-          <div><span>by {`${post.displayName || 'Unknown author'}`}</span></div>
-          <TimeAgo timestamp={post.date}/>
-          {videoId && (
-            <div className="flex justify-center mb-6">
-              <YouTube videoId={videoId} />
-            </div>
-          )}
-          <p className="post-content">{post.content.substring(0, 100)}</p>
-          <div className="mt-4"> 
-            <ReactionButtons post={post} />
-          </div>
-          <div className="flex justify-center mt-4">
-            <Link
-              to={`/posts/${post.agent}/${post.id}`}
-              className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
-            >
-              View Post
-            </Link>
-            <Link
-              to={`/editPost/${post.agent}/${post.id}`}
-              className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
-            >
-              Edit Post
-            </Link>
-           {/* <PostDeleteButton/> */}
-          </div>
-        </article>
-      );
-    });
-
-
-  return (
-    <section className="bg-gray-900 min-h-screen py-10">
-      <div className="container mx-auto">
-        <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
-          Posts for {agent}
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-          {renderedPosts}
+      <article className="bg-gray-900 text-white rounded shadow-lg p-6 mb-8" key={post.id}>
+        <h2 className="text-2xl font-semibold mb-2">{post.title}</h2>
+        <div className="text-gray-500 text-sm mb-2">
+          by {post.displayName || 'Unknown author'}
         </div>
+        <TimeAgo timestamp={post.date} />
+        {videoId && (
+          <div className="flex justify-center my-4">
+            <YouTube videoId={videoId} />
+          </div>
+        )}
+        <p className="post-content text-gray-300">{post.content.substring(0, 150)}...</p>
+        <div className="mt-2">
+          <ReactionButtons post={post} />
+        </div>
+        <div className="flex justify-center mt-4">
+          <Link
+            to={`/posts/${post.agent}/${post.id}`}
+            className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
+          >
+            View Post
+          </Link>
+          <Link
+            to={`/editPost/${post.agent}/${post.id}`}
+            className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
+          >
+            Edit Post
+          </Link>
+        </div>
+      </article>
+    );
+  });
+
+return (
+  <section className="bg-gray-900 min-h-screen py-10">
+    <div className="container mx-auto">
+      <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
+        Posts for {agent}
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+        {renderedPosts}
       </div>
-    </section>
-  );
+    </div>
+  </section>
+);
 };
 
 export default AgentPostsPage;
