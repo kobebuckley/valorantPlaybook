@@ -1,7 +1,7 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import { signInUser } from '../firebase/firebase';
 import { useNavigate } from 'react-router-dom';
-
+import '.././App.css' //! affects the posts styling... might need to fix this later for more control
 const defaultFormFields = {
   email: '',
   password: '',

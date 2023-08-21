@@ -129,7 +129,7 @@ function AddPostForm(props: AddPostFormProps) {
               required
               className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select an agent</option>
+              <option disabled value="">Select an agent</option>
               <option value="gekko">Gekko</option>
               <option value="fade">Fade</option>
             </select>
