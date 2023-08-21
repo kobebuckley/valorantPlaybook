@@ -2,8 +2,6 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { User, authenticateUser, setLoggedInUser } from './usersSlice';
 
-
-
 interface LoginPageProps {
   onLogin: (user: User | null) => void;
 }
@@ -14,22 +12,19 @@ function LoginPage({ onLogin }: LoginPageProps) {
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-  
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     const loggedInUser = await authenticateUser(username, password);
-  
+
     if (loggedInUser) {
-
-
-      
-      dispatch(setLoggedInUser(loggedInUser)); 
+      dispatch(setLoggedInUser(loggedInUser));
       localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
       setLoginError('');
       setSuccessMessage('Success! Logging in should do stuff...');
       console.log('loggedInUser:', loggedInUser);
-  
+
       onLogin(loggedInUser);
     } else {
       setLoginError('Authentication failed. Please check your credentials.');
@@ -37,17 +32,16 @@ function LoginPage({ onLogin }: LoginPageProps) {
       setSuccessMessage('');
     }
   };
-  
 
   return (
     <div className="bg-gray-900 min-h-screen flex items-center justify-center">
       <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
-        {loginError && <p className="text-red-500 mb-2">{loginError}</p>}
-        {successMessage && <p className="text-blue-500 mb-2">{successMessage}</p>}
+        <div className="text-center mb-4">
+          {/* Insert your logo here if desired */}
+        </div>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
-            <label htmlFor="username" className="block font-medium">
+            <label htmlFor="username" className="block font-medium mb-1">
               Username:
             </label>
             <input
@@ -56,10 +50,12 @@ function LoginPage({ onLogin }: LoginPageProps) {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+              placeholder="Enter your username"
+              required
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block font-medium">
+            <label htmlFor="password" className="block font-medium mb-1">
               Password:
             </label>
             <input
@@ -68,6 +64,8 @@ function LoginPage({ onLogin }: LoginPageProps) {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:border-blue-500"
+              placeholder="Enter your password"
+              required
             />
           </div>
           <button
@@ -76,6 +74,12 @@ function LoginPage({ onLogin }: LoginPageProps) {
           >
             Login
           </button>
+          {loginError && (
+            <p className="text-red-500 mt-2">{loginError}</p>
+          )}
+          {successMessage && (
+            <p className="text-blue-500 mt-2">{successMessage}</p>
+          )}
         </form>
       </div>
     </div>

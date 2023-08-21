@@ -8,6 +8,8 @@ import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState
 import { auth, db } from '../../firebase/firebase-config';
 import { User, setLoggedInUser } from '../users/usersSlice';
 
+import ReactQuill from 'react-quill'; // Import react-quill
+import 'react-quill/dist/quill.snow.css'; // Import the styles for react-quill
 // ... other imports
 
 
@@ -96,92 +98,106 @@ function AddPostForm(props: AddPostFormProps) {
       return;
     }
   
-    await createPost(); // Call the createPost function to submit the post
+    await createPost(); 
   };
-  
+
+
 
   const canSave = Boolean(title) && Boolean(postText) && Boolean(videoUrl) && Boolean(agent);
   const isSaveButtonDisabled = !canSave;
 
+ 
   return (
-    <section className="p-4 bg-gray-900 text-white rounded shadow-lg">
-      <h2 className="text-2xl font-bold mb-4">Share Your Gaming Experience</h2>
-      {!auth.currentUser && (
-        <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
-      )}
+    <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+      <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
+        <h1 className="text-3xl font-bold mb-4 text-center">Share Your Article</h1>
 
-        
-      <form onSubmit={handleSubmit}>
-        <div className="mb-4">
-          <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl">
-            Select Agent:
-          </label>
-          <select
-            id="agentSelect"
-            name="agentSelect"
-            value={agent}
-            onChange={onAgentChanged}
-            className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option value="">Select an agent</option>
-            <option value="gekko">Gekko</option>
-            <option value="fade">Fade</option>
-          </select>
-        </div>
+        {!auth.currentUser && (
+          <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
+        )}
 
-        <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl">
-          Game Title:
-        </label>
-        <input
-          type="text"
-          id="postTitle"
-          name="postTitle"
-          value={title}
-          onChange={onTitleChanged}
-          className="border border-gray-800 rounded p-2 mb-4 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter the game title"
-        />
+        <form onSubmit={handleSubmit} className="w-full mx-auto">
+          <div className="mb-4">
+            <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl text-center">
+              Select Agent:
+            </label>
+            <select
+              id="agentSelect"
+              name="agentSelect"
+              value={agent}
+              onChange={onAgentChanged}
+              required
+              className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="">Select an agent</option>
+              <option value="gekko">Gekko</option>
+              <option value="fade">Fade</option>
+            </select>
+          </div>
 
-        <label htmlFor="postContent" className="block font-semibold mb-2 text-xl">
-          Walkthrough Details:
-        </label>
-        <textarea
-          id="postContent"
-          name="postContent"
-          value={postText}
-          onChange={(e) => setPostText(e.target.value)}
-          className="border border-gray-800 rounded p-4 mb-4 w-full h-48 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Share your in-depth walkthrough here..."
-        />
+          <div className="mb-4">
+            <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl text-center">
+              Game Title:
+            </label>
+            <input
+              type="text"
+              id="postTitle"
+              name="postTitle"
+              value={title}
+              onChange={onTitleChanged}
+              required
+              className="border border-gray-800 rounded p-2 mb-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter the game title"
+            />
+          </div>
 
-<label htmlFor="postVideo" className="block font-semibold mb-2 text-xl">
-  Video URL:
-</label>
-<input
-  type="text"
-  id="postVideo"
-  name="postVideo"
-  value={videoUrl}
-  onChange={(e) => setVideoUrl(e.target.value)}
-  className="border border-gray-800 rounded p-2 mb-4 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
-  placeholder="Paste video URL here"
-/>
+          <div className="mb-4">
+            <label htmlFor="postContent" className="block font-semibold mb-2 text-xl text-center">
+              Walkthrough Details:
+            </label>
+            <textarea
+              id="postContent"
+              name="postContent"
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
+              required
+              className="border border-gray-800 rounded p-4 mb-2 w-full h-48 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Write your article here..."
+            />
+          </div>
 
-<button
-  type="submit"
-  disabled={isSaveButtonDisabled}
-  className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
->
-  Save Post
-</button>
-      </form>
-      {showSuccessMessage && (
-        <p className="text-green-500 mt-2">
-          Post submitted for approval!
-        </p>
-      )}
-    </section>
+          <div className="mb-4">
+            <label htmlFor="postVideo" className="block font-semibold mb-2 text-xl text-center">
+              Video URL:
+            </label>
+            <input
+              type="text"
+              id="postVideo"
+              name="postVideo"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+              required
+              className="border border-gray-800 rounded p-2 mb-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Paste video URL here"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isSaveButtonDisabled}
+            className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 cursor-pointer" 
+            >
+            Publish Article
+          </button>
+        </form>
+
+        {showSuccessMessage && (
+          <p className="text-green-500 mt-4 text-center">Article published successfully!</p>
+        )}
+      </section>
+    </div>
   );
 }
-
 export default AddPostForm;
+
+
