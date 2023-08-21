@@ -140,6 +140,8 @@ export const EditPostForm: React.FC = () => {
     }
   };
   
+  // maybe add a delete confirmation to the delete button if not too time intensive
+
   
   return (  
   <div className="bg-gray-900 min-h-screen flex items-center justify-center">
