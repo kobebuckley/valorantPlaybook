@@ -99,12 +99,15 @@ const post = posts.find((post) => post.id == decodedId);
           <div className="mt-4"> {/* New div to create a new line */}
             <ReactionButtons post={post} />
           </div>
-          <Link to={`/editPost/${agent}/${post.id}`} className="text-blue-500 hover:text-blue-700">
+          <div className="mt-32"> {/* New div to create a new line */}
+
+          <Link to={`/editPost/${agent}/${post.id}`} className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
             Edit Post
           </Link>
           
+          </div>
                  {/* make a delete button only available to the same logged in user auth as the user id of the post*/}
-                 <PostDeleteButton/>
+                 {/* <PostDeleteButton/> */}
         </article>
       </div>
     </section>
