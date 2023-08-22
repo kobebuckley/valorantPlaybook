@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { reactionAdded } from './postsSlice';
-import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
+import { Post, fetchPosts, selectPostById } from './postsSlice';
 import { collection, doc, getDocs, updateDoc } from '@firebase/firestore';
 import { auth, db } from '../../firebase/firebase-config';
 import { AppDispatch } from '../../app/store';
@@ -26,26 +26,13 @@ export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
 
-console.log("Selected post:", post);
+// console.log("Selected post:", post);
 
 const [reactions, setReactions] = useState(post?.reactions || {}); // Initialize with post.reactions
 
 useEffect(() => {
   const fetchData = async () => {
-    // if (!post && id) {
-    //   try {
-    //     await dispatch(fetchPosts());
-    //   } catch (error) {
-    //     console.error('Error fetching posts:', error);
-    //   }
-    // }
 
-    // if (post) {
-    //   setTitle(post.title);
-    //   setContent(post.content);
-    //   setVideoUrl(post.videoUrl);
-    //   setAgent(post.agent);
-    // }
 
     try {
       const querySnapshot = await getDocs(collection(db, 'posts'));
@@ -79,7 +66,7 @@ useEffect(() => {
 
 
 // console.log('TEST HERE',selectedDocData.id)
-  console.log('The Doc that will be updated',selectedDocData)
+  // console.log('The Doc that will be updated',selectedDocData)
 
 
 
@@ -120,9 +107,9 @@ useEffect(() => {
         const docRef = doc(db, 'posts', selectedDocData.id);
         await updateDoc(docRef, updatedPostPayload);
         
-        dispatch(postUpdated(updatedPostPayload));
-        console.log('Reactions updated in the database:', updatedPostPayload.reactions);
-        console.log('PostDoc', selectedDocData);
+        // dispatch(postUpdated(updatedPostPayload));
+        console.log('Reactions updated in the database:', updatedPostPayload.reactions); // is behind by 1...
+        // console.log('PostDoc', selectedDocData);
 
         console.log("SUCCESS");
       }
@@ -133,21 +120,29 @@ useEffect(() => {
     }
   };
 
-  
-  const handleReactionClick = (reactionName: string) => {
+  const handleReactionClick = async (reactionName: string) => {
     // Update the reactions state when a reaction button is clicked
     setReactions((prevReactions) => ({
       ...prevReactions,
       [reactionName]: (prevReactions[reactionName] || 0) + 1,
     }));
-
+  
     // Dispatch the reaction added action
     dispatch(reactionAdded({ id: post.id, reaction: reactionName }));
-    onUpdatePostClicked();
-
+  
+    // Wait for a short period (optional) to allow Redux state to update
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjust the time if needed
+  
+    // Update the database with the new reactions
+    // onUpdatePostClicked();
   };
+  
+  useEffect(() => {
+    if (reactions !== post.reactions) {
+      onUpdatePostClicked();
+    }
+  }, [reactions, post]);
 
-// update me as well
 
   const reactionButtons = Object.entries(reactionEmoji).map(([name, emoji]) => {
     return (
