@@ -9,12 +9,14 @@ import NewLogin from './routes/NewLogin';
 import NewRegister from './routes/NewRegister';
 import AgentPostsPage from './features/posts/AgentPostsPage';
 import SinglePostPage from './features/posts/SinglePostPage';
+
+import './App.css'
 import EditPostForm from './features/posts/EditPostForm';
 
 function App() {
   const { currentUser } = useContext(AuthContext); // Use the AuthContext
   const isAuth = currentUser !== null;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   console.log('User:', !!currentUser);
 

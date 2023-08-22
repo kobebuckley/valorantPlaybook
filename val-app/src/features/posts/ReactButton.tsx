@@ -64,13 +64,6 @@ useEffect(() => {
 }, [dispatch, id, post]);
 
 
-
-// console.log('TEST HERE',selectedDocData.id)
-  // console.log('The Doc that will be updated',selectedDocData)
-
-
-
-  
   const onUpdatePostClicked = async () => {
     if (!auth.currentUser || !post || !selectedDocData) {
       return;
