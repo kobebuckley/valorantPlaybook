@@ -18,17 +18,17 @@ const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const AgentPostsPage: React.FC = () => {
   const { agent } = useParams<{ agent?: string }>();
-  console.log("Selected Agent:", agent);
+  // console.log("Selected Agent:", agent);
 
   const dispatch: AppDispatch = useDispatch();
   const posts = useTypedSelector(selectAllPosts);
   
   
   const postStatus = useTypedSelector((state) => state.posts.status);
-  console.log("Posts Status:", postStatus);
+  // console.log("Posts Status:", postStatus);
   
   const loggedInUser = useSelector(selectLoggedInUser);
-  console.log('loggedInUser:', loggedInUser);
+  // console.log('loggedInUser:', loggedInUser);
   
   useEffect(() => {
     const loggedInUserStr = localStorage.getItem('loggedInUser');
@@ -53,7 +53,7 @@ export const AgentPostsPage: React.FC = () => {
   
   if (postStatus === 'loading' || postStatus === 'idle') {
     return (
-      <section className="bg-gray-900 min-h-screen py-10">
+      <section className="bg-gray-800 min-h-screen py-10">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
             Loading...
@@ -65,7 +65,7 @@ export const AgentPostsPage: React.FC = () => {
   
   if (agentPosts.length === 0) {
     return (
-      <section className="bg-gray-900 min-h-screen py-10">
+      <section className="bg-gray-800 min-h-screen py-10">
         <div className="container mx-auto">
           <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
             No posts available for {agent}

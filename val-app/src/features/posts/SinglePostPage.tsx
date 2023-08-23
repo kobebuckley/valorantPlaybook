@@ -84,34 +84,49 @@ const post = posts.find((post) => post.id == decodedId);
   const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
 
   return (
-    <section className="bg-gray-900 min-h-screen py-10">
-      <div className="container mx-auto">
-        <article className="post-excerpt p-6 bg-gray-900 text-white rounded shadow-lg" key={post.id}>
-          <h2 className="text-3xl font-bold mb-4">{post.title}</h2>
-          {/* <PostAuthor userId={post.userId} /> */}
-          <TimeAgo timestamp={post.date} />
-          {videoId ? (
-            <div className="flex justify-center mb-6">
-              <YouTube videoId={videoId} />
-            </div>
-          ) : null}
-          <p className="post-content">{post.content.substring(0, 100)}</p>
-          <div className="mt-4"> {/* New div to create a new line */}
-            <ReactionButtons post={post} />
-          </div>
-          <div className="mt-32"> {/* New div to create a new line */}
+    <section className="bg-gray-800 py-10 w-full h-full ">
 
-          <Link to={`/editPost/${agent}/${post.id}`} className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">
+      <article className=" bg-gray-700 text-white rounded  p-6 flex flex-col justify-between items-center h-full mb-4  w-full"  key={post.id}>
+            <div className="p-6 mb-0 bg-gray-800 text-white rounded shadow-lg flex flex-col justify-between items-center h-full w-full">
+    
+      <h2 className="text-2xl font-semibold mb-2 w-full" >{post.title}</h2>
+      <div className=" max-w-[750px] w-full">
+          by {post.displayName || 'Unknown author'}
+        </div>
+        <div className='text-center w-full'>
+    
+        <TimeAgo timestamp={post.date} />
+        </div>
+    
+        {videoId && (
+          <div className="flex justify-center my-4 max-w-[750px] w-full">
+            <YouTube videoId={videoId} />
+          </div>
+        )}
+              <p className="post-content text-gray-300 text-center max-w-[1250px] w-full">
+                {post.content}</p>
+        <div className="mt-2">
+          <ReactionButtons post={post} />
+        </div>
+        <div className="flex justify-center mt-4">
+          <Link
+            to={`/posts/${post.agent}/${post.id}`}
+            className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
+          >
+            View Post
+          </Link>
+          <Link
+            to={`/editPost/${post.agent}/${post.id}`}
+            className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
+          >
             Edit Post
           </Link>
-          
-          </div>
-                 {/* make a delete button only available to the same logged in user auth as the user id of the post*/}
-                 {/* <PostDeleteButton/> */}
-        </article>
-      </div>
-    </section>
-  );
-};
+        </div>
+        </div>
+      </article>
+      </section>
+    );
+    }
+
 
 export default SinglePostPage;

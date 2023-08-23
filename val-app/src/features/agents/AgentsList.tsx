@@ -77,7 +77,7 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
   };
 
   return (
-    <section className="container mx-auto bg-gray-900 py-10">
+    <section className=" mx-auto bg-gray-800 py-10 w-full">
       <div className="max-w-3xl mx-auto mb-4">
         <input
           type="text"
