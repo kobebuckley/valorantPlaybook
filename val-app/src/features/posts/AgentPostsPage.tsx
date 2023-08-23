@@ -91,18 +91,25 @@ export const AgentPostsPage: React.FC = () => {
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
     
     return (
-      <article className="bg-gray-900 text-white rounded shadow-lg p-6 mb-8" key={post.id}>
-        <h2 className="text-2xl font-semibold mb-2">{post.title}</h2>
-        <div className="text-gray-500 text-sm mb-2">
+      <article className=" bg-gray-700 text-white rounded  p-6 flex flex-col justify-between items-center h-full mb-4  w-full"  key={post.id}>
+            <div className="p-6 mb-0 bg-gray-800 text-white rounded shadow-lg flex flex-col justify-between items-center h-full w-full">
+
+      <h2 className="text-2xl font-semibold mb-2 w-full" >{post.title}</h2>
+      <div className=" max-w-[750px] w-full">
           by {post.displayName || 'Unknown author'}
         </div>
+        <div className='text-center w-full'>
+
         <TimeAgo timestamp={post.date} />
+        </div>
+
         {videoId && (
-          <div className="flex justify-center my-4">
+          <div className="flex justify-center my-4 max-w-[750px] w-full">
             <YouTube videoId={videoId} />
           </div>
         )}
-        <p className="post-content text-gray-300">{post.content.substring(0, 150)}...</p>
+              <p className="post-content text-gray-300 text-center max-w-[750px] w-full">
+                {post.content.substring(0, 300)}{post.content.length > 300 ? '...' : ''}</p>
         <div className="mt-2">
           <ReactionButtons post={post} />
         </div>
@@ -120,19 +127,20 @@ export const AgentPostsPage: React.FC = () => {
             Edit Post
           </Link>
         </div>
+        </div>
       </article>
     );
   });
 
 return (
-  <section className="bg-gray-900 min-h-screen py-10">
-    <div className="container mx-auto">
-      <h2 className="text-4xl font-bold mb-8 text-white text-center tracking-wider">
+  <section className="bg-gray-800 min-h-screen py-10  ">
+    <div className="container mx-auto text-center max-w-[1000px] ">
+    <h2 className="text-6xl font-bold mb-16 text-white text-center tracking-wider">
         Posts for {agent}
       </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+      {/* <div className="bg-orange-600 flex flex-col justify-center items-center max-w-[1000px]"> */}
         {renderedPosts}
-      </div>
+      {/* </div> */}
     </div>
   </section>
 );
