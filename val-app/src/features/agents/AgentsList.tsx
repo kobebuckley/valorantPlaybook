@@ -77,7 +77,7 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
   };
 
   return (
-    <section className=" mx-auto bg-gray-800 py-10 w-full">
+    <section className="mx-auto bg-gray-800 py-10 ">
       <div className="max-w-3xl mx-auto mb-4">
         <input
           type="text"
@@ -87,10 +87,10 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
           className="w-full px-4 py-2 bg-gray-800 text-white placeholder-gray-400 border border-gray-600 rounded-lg focus:outline-none focus:border-blue-500"
         />
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
+      <div className="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center">
         {filteredCharacters.map(({ uuid, displayName, description, fullPortrait }) => (
           <article
-            className="rounded overflow-hidden shadow-lg bg-black text-white relative transform transition-transform duration-300 hover:scale-110 hover:z-10 cursor-pointer"
+            className="rounded-lg overflow-hidden shadow-lg bg-gray-900 text-white transform transition-transform hover:scale-105 hover:z-10 cursor-pointer w-full h-full"
             key={uuid}
           >
             <Link to={`/agents/${displayName.toLowerCase()}`} onClick={() => handleAgentSelect(displayName)}>
@@ -98,7 +98,7 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
               <div className="p-6">
                 <div className="font-bold text-xl mb-2">{displayName}</div>
                 <p className="text-gray-300 text-base">
-                  {description ? description.substring(0, 100) : 'No description available'}
+                  {description ? description.substring(0, 300) + (description.length > 300 ? '...' : '') : 'No description available'}
                 </p>
                 <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg tracking-wider transition-colors duration-300">
                   Discover
@@ -110,4 +110,4 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
       </div>
     </section>
   );
-};
+        }

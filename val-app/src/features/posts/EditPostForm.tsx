@@ -144,7 +144,7 @@ export const EditPostForm: React.FC = () => {
 
   
   return (  
-  <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+  <div className="bg-gray-800 min-h-screen flex items-center justify-center">
 
      <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
       <div className="container mx-auto">
