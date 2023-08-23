@@ -62,8 +62,8 @@ function NewRegister() {
   };
 
   return (
-    <div className="bg-gray-900 min-h-screen flex items-center justify-center">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-lg">
+    <div className="bg-gray-800 min-h-screen flex items-center justify-center">
+      <div className="bg-gray-200 p-8 rounded shadow-md w-full max-w-lg">
         <h2 className="text-2xl font-semibold mb-4 text-center">Register</h2>
         {registerError && (
           <p className="text-red-500 mb-2 text-center">{registerError}</p>

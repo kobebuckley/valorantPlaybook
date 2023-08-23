@@ -108,7 +108,7 @@ function AddPostForm(props: AddPostFormProps) {
 
  
   return (
-    <div className="bg-gray-900 min-h-screen flex items-center justify-center">
+    <div className="bg-gray-800 min-h-screen flex items-center justify-center">
       <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
         <h1 className="text-3xl font-bold mb-4 text-center">Share Your Article</h1>
 
