@@ -49,7 +49,7 @@ export const AgentPostsPage: React.FC = () => {
     fetchAgentPosts();
   }, [postStatus, dispatch, agent]);
   
-  const agentPosts = posts.filter((post) => post.agent === agent);
+  let agentPosts = posts.filter((post) => post.agent === agent);
   
   if (postStatus === 'loading' || postStatus === 'idle') {
     return (
@@ -80,12 +80,12 @@ export const AgentPostsPage: React.FC = () => {
     const match = url.match(videoIdRegex);
     return match?.[1];
   };
-  
   const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
+  agentPosts = orderedPosts
   
   
-  const renderedPosts = orderedPosts
-  .filter((post) => post.moderated === true) 
+  const renderedPosts = agentPosts
+  .filter((post) => post.moderated === true && post.agent === agent) 
   .map((post) => {
     
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;

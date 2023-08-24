@@ -161,10 +161,40 @@ export const EditPostForm: React.FC = () => {
                 value={agent}
                 onChange={onAgentChanged}
                 className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">             
-                <option disabled value="">Select an agent</option>
+                  <option disabled value="">Select an agent</option>
+              <option value="gekko">Gekko</option>
+              <option value="fade">Fade</option>
 
-                <option value="gekko">Gekko</option>
-                <option value="fade">Fade</option>
+              <option value="breach">Breach</option>
+              <option value="deadlock">Deadlock</option>
+
+              <option value="raze">Raze</option>
+              <option value="chamber">Chamber</option>
+
+              <option value="kay/o">Kay/o</option>
+              <option value="skye">Skye</option>
+
+              <option value="cypher">Cypher</option>
+              <option value="sova">Sova</option>
+
+              <option value="killjoy">Killjoy</option>
+              <option value="harbor">Harbor</option>
+
+              <option value="viper">viper</option>
+              <option value="phoenix">Phoenix</option>
+
+              <option value="astra">Astra</option>
+              <option value="brimstone">Brimstone</option>
+
+              <option value="neon">Neon</option>
+              <option value="yoru">Yoru</option>
+              
+
+              <option value="sage">Sage</option>
+              <option value="reyna">Reyna</option>
+
+              <option value="omen">Omen</option>
+              <option value="jett">Jett</option>
               </select>
             </div>
            <div className="mb-4">
