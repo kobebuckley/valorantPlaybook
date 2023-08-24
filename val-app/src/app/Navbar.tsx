@@ -48,7 +48,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
           ) : (
             <Link
               to="/login"
-              className="pl-80 hover:text-yellow-400 font-bold  sm:mb-0 p-0 text-white mr-40 text-2xl mb-2 "
+              className=" hover:text-yellow-400 font-bold  sm:mb-0 p-10 text-white text-3xl  "
             >
               Login
             </Link>
@@ -59,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
           {!user && (
             <Link
               to="/register"
-              className="text-lg font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
+              className=" text-2xl font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
             >
               Register
             </Link>
@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
   
           <Link
             to="/addPost"
-            className="text-lg font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
+            className=" text-2xl font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400 pl-8"
           >
             Add Post
           </Link>
