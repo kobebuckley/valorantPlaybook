@@ -163,7 +163,8 @@ function AddPostForm(props: AddPostFormProps) {
               required
               className="border border-gray-800 rounded p-4 mb-2 w-full h-48 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Write your article here..."
-            />
+              >
+            </textarea>
           </div>
 
           <div className="mb-4">
