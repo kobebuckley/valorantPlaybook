@@ -23,6 +23,6 @@ export const postSchema = new mongoose.Schema({
 
 
 
-
+// starting cleanup process
 export const Post = mongoose.model('Post', postSchema);
 
