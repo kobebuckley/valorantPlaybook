@@ -71,10 +71,11 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
   const navigate = useNavigate(); // Get the navigate function from useNavigate
 
   const handleAgentSelect = (selectedAgent: string) => {
-    const lowercasedAgent = selectedAgent.toLowerCase(); // Convert the selectedAgent to lowercase
-    onSelectAgent(lowercasedAgent); // Call the onSelectAgent function with the lowercase agent name
-    navigate(`/agents/${lowercasedAgent}`); // Navigate to the AgentPostsPage with the lowercase agent name
+    const encodedAgent = encodeURIComponent(selectedAgent.toLowerCase()); // Convert the agent name to a URL-friendly format
+    onSelectAgent(selectedAgent.toLowerCase());
+    navigate(`/agents/${encodedAgent}`);
   };
+  
 
   return (
     <section className="mx-auto bg-gray-800 py-10 ">
@@ -88,26 +89,30 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
         />
       </div>
       <div className="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center">
-        {filteredCharacters.map(({ uuid, displayName, description, fullPortrait }) => (
-          <article
-            className="rounded-lg overflow-hidden shadow-lg bg-gray-900 text-white transform transition-transform hover:scale-105 hover:z-10 cursor-pointer w-full h-full"
-            key={uuid}
-          >
-            <Link to={`/agents/${displayName.toLowerCase()}`} onClick={() => handleAgentSelect(displayName)}>
-              <img className="w-full object-cover object-center" src={fullPortrait} alt={displayName} />
-              <div className="p-6">
-                <div className="font-bold text-xl mb-2">{displayName}</div>
-                <p className="text-gray-300 text-base">
-                  {description ? description.substring(0, 300) + (description.length > 300 ? '...' : '') : 'No description available'}
-                </p>
-                <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg tracking-wider transition-colors duration-300">
-                  Discover
-                </button>
-              </div>
-            </Link>
-          </article>
-        ))}
+        {filteredCharacters.map(({ uuid, displayName, description, fullPortrait }) => {
+        const encodedAgent = encodeURIComponent(displayName.toLowerCase()); // Convert the agent name to a URL-friendly format in lowercase
+        return (
+            <article
+              className="rounded-lg overflow-hidden shadow-lg bg-gray-900 text-white transform transition-transform hover:scale-105 hover:z-10 cursor-pointer w-full h-full"
+              key={uuid}
+            >
+              <Link to={`/agents/${encodedAgent}`} onClick={() => handleAgentSelect(displayName)}>
+                <img className="w-full object-cover object-center" src={fullPortrait} alt={displayName} />
+                <div className="p-6">
+                  <div className="font-bold text-xl mb-2">{displayName}</div>
+                  <p className="text-gray-300 text-base">
+                    {description ? description.substring(0, 300) + (description.length > 300 ? '...' : '') : 'No description available'}
+                  </p>
+                  <button className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg tracking-wider transition-colors duration-300">
+                    Discover
+                  </button>
+                </div>
+              </Link>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
+  
         }

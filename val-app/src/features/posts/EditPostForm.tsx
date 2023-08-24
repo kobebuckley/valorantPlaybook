@@ -161,7 +161,7 @@ export const EditPostForm: React.FC = () => {
                 value={agent}
                 onChange={onAgentChanged}
                 className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">             
-                  <option disabled value="">Select an agent</option>
+               <option disabled value="">Select an agent</option>
               <option value="gekko">Gekko</option>
               <option value="fade">Fade</option>
 
@@ -180,7 +180,7 @@ export const EditPostForm: React.FC = () => {
               <option value="killjoy">Killjoy</option>
               <option value="harbor">Harbor</option>
 
-              <option value="viper">viper</option>
+              <option value="viper">Viper</option>
               <option value="phoenix">Phoenix</option>
 
               <option value="astra">Astra</option>
@@ -195,6 +195,7 @@ export const EditPostForm: React.FC = () => {
 
               <option value="omen">Omen</option>
               <option value="jett">Jett</option>
+
               </select>
             </div>
            <div className="mb-4">

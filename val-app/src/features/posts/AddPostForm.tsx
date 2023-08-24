@@ -148,7 +148,7 @@ function AddPostForm(props: AddPostFormProps) {
               <option value="killjoy">Killjoy</option>
               <option value="harbor">Harbor</option>
 
-              <option value="viper">viper</option>
+              <option value="viper">Viper</option>
               <option value="phoenix">Phoenix</option>
 
               <option value="astra">Astra</option>
@@ -163,7 +163,7 @@ function AddPostForm(props: AddPostFormProps) {
 
               <option value="omen">Omen</option>
               <option value="jett">Jett</option>
-              
+
             </select>
           </div>
 
