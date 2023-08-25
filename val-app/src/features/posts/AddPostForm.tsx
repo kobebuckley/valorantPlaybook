@@ -1,17 +1,11 @@
 import React, { useState, useEffect, useContext, ChangeEvent, FormEvent } from 'react';
 import { addDoc, collection } from 'firebase/firestore';
-import { useDispatch } from 'react-redux'; // Assuming useDispatch is from 'react-redux'
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
-import { useAuthState } from 'react-firebase-hooks/auth'; // Import useAuthState
 import { auth, db } from '../../firebase/firebase-config';
 import { User, setLoggedInUser } from '../users/usersSlice';
-
-import ReactQuill from 'react-quill'; // Import react-quill
-import 'react-quill/dist/quill.snow.css'; // Import the styles for react-quill
-// ... other imports
-
 
 interface AddPostFormProps {
   isAuth: boolean;
@@ -27,26 +21,23 @@ function AddPostForm(props: AddPostFormProps) {
   const postsCollectionRef = collection(db, 'posts');
   const { currentUser } = useContext(AuthContext);
   const displayName = currentUser?.displayName || '';
-  const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (currentUser) {
       const userToStore: User = {
-        id: currentUser.uid, // You might need to adjust this property name
+        id: currentUser.uid, 
         name: currentUser.displayName || '',
-        username: '', // Fill in the appropriate value if needed
-        hashedPassword: '', // Fill in the appropriate value if needed
-        isAdmin: false, //! Fill in the appropriate value if needed (strange maybe needs a change later)
-        // ... other properties from the User type
+        username: '', 
+        hashedPassword: '', 
+        isAdmin: false, 
+
       };
       dispatch(setLoggedInUser(userToStore));
     }
   }, [currentUser, dispatch]);
   
-
-
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
 
@@ -58,7 +49,7 @@ function AddPostForm(props: AddPostFormProps) {
     try {
       const timestamp = new Date().toISOString();
       const newPost = {
-        id: Date.now(), // Unique ID for each post
+        id: Date.now(), 
         date: timestamp,
         title,
         content: postText,
@@ -82,7 +73,6 @@ function AddPostForm(props: AddPostFormProps) {
       setVideoUrl('');
       setAgent('');
       setShowSuccessMessage(true);
-      console.log("SUCCESS")
 
       navigate('/');
     } catch (error) {
@@ -110,7 +100,7 @@ function AddPostForm(props: AddPostFormProps) {
   return (
     <div className="bg-gray-800 min-h-screen flex items-center justify-center">
       <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
-        <h1 className="text-3xl font-bold mb-4 text-center">Share Your Article</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center">Share Your Notes</h1>
 
         {!auth.currentUser && (
           <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
@@ -119,7 +109,7 @@ function AddPostForm(props: AddPostFormProps) {
         <form onSubmit={handleSubmit} className="w-full mx-auto">
           <div className="mb-4">
             <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl text-center">
-              Select Agent:
+              Select Agent
             </label>
             <select
               id="agentSelect"
@@ -169,7 +159,7 @@ function AddPostForm(props: AddPostFormProps) {
 
           <div className="mb-4">
             <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl text-center">
-              Game Title:
+              Game Title
             </label>
             <input
               type="text"
@@ -185,7 +175,7 @@ function AddPostForm(props: AddPostFormProps) {
 
           <div className="mb-4">
             <label htmlFor="postContent" className="block font-semibold mb-2 text-xl text-center">
-              Walkthrough Details:
+              Notes
             </label>
             <textarea
               id="postContent"
@@ -201,7 +191,7 @@ function AddPostForm(props: AddPostFormProps) {
 
           <div className="mb-4">
             <label htmlFor="postVideo" className="block font-semibold mb-2 text-xl text-center">
-              Video URL:
+              Video URL
             </label>
             <input
               type="text"
@@ -220,12 +210,12 @@ function AddPostForm(props: AddPostFormProps) {
             disabled={isSaveButtonDisabled}
             className="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600 cursor-pointer" 
             >
-            Publish Article
+            Publish Notes
           </button>
         </form>
 
         {showSuccessMessage && (
-          <p className="text-green-500 mt-4 text-center">Article published successfully!</p>
+          <p className="text-green-500 mt-4 text-center">Notes published successfully!</p>
         )}
       </section>
     </div>

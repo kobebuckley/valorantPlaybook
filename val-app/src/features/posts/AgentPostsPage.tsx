@@ -4,7 +4,6 @@ import { useSelector, useDispatch, TypedUseSelectorHook } from 'react-redux';
 import YouTube from 'react-youtube';
 
 
-// import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 
@@ -12,36 +11,30 @@ import { ReactionButtons } from './ReactButton';
 import { RootState, AppDispatch } from '../../app/store';
 import { fetchPosts, selectAllPosts } from './postsSlice';
 import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
-import PostDeleteButton from './PostDeleteButton';
-
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const AgentPostsPage: React.FC = () => {
   const { agent } = useParams<{ agent?: string }>();
-  // console.log("Selected Agent:", agent);
 
   const dispatch: AppDispatch = useDispatch();
   const posts = useTypedSelector(selectAllPosts);
   
   
   const postStatus = useTypedSelector((state) => state.posts.status);
-  // console.log("Posts Status:", postStatus);
   
-  const loggedInUser = useSelector(selectLoggedInUser);
-  // console.log('loggedInUser:', loggedInUser);
+  // const loggedInUser = useSelector(selectLoggedInUser);
   
   useEffect(() => {
-    const loggedInUserStr = localStorage.getItem('loggedInUser');
-    if (loggedInUserStr) {
-      const loggedInUser = JSON.parse(loggedInUserStr);
-      dispatch(setLoggedInUser(loggedInUser));
-    }
+    // const loggedInUserStr = localStorage.getItem('loggedInUser');
+    // if (loggedInUserStr) {
+    //   const loggedInUser = JSON.parse(loggedInUserStr);
+    //   dispatch(setLoggedInUser(loggedInUser));
+    // }
     const fetchAgentPosts = async () => {
       if (postStatus === 'idle' && agent) {
         try {
           await dispatch(fetchPosts());
         } catch (error) {
-          // Handle error
         }
       }
     };
@@ -138,12 +131,10 @@ return (
     <h2 className="text-6xl font-bold mb-16 text-white text-center tracking-wider">
     Posts for {agent ? agent.charAt(0).toUpperCase() + agent.slice(1) : ''}
       </h2>
-      {/* <div className="bg-orange-600 flex flex-col justify-center items-center max-w-[1000px]"> */}
         {renderedPosts}
-      {/* </div> */}
     </div>
   </section>
-);
+  );
 };
 
 export default AgentPostsPage;

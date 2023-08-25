@@ -3,22 +3,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
 import { AppDispatch, RootState } from '../../app/store';
-import { User, selectLoggedInUser, setLoggedInUser } from '../users/usersSlice';
 import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
 import { auth, db } from '../../firebase/firebase-config';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
 import PostDeleteButton from './PostDeleteButton';
 
-const postsCollectionRef = collection(db, 'posts');
 
 export const EditPostForm: React.FC = () => {
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const postsCollectionRef = collection(db, 'posts');
   const { currentUser } = useContext(AuthContext);
-  const displayName = currentUser?.displayName || '';
-  const [selectedDisplayName, setSelectedDisplayName] = useState<string>('');
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
@@ -27,7 +22,6 @@ export const EditPostForm: React.FC = () => {
     id ? selectPostById(state, id) : undefined
   );
 
-  console.log("Selected post:", post);
   
   const [title, setTitle] = useState(post?.title || '');
   const [content, setContent] = useState(post?.content || ''); 
@@ -35,7 +29,6 @@ export const EditPostForm: React.FC = () => {
   const [agent, setAgent] = useState(post?.agent || '')
   const [selectedDocData, setSelectedDocData] = useState<any | null>(null);
 
-  console.log("Selected post:", post);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -83,11 +76,6 @@ export const EditPostForm: React.FC = () => {
   }, [dispatch, id, post]);
 
 
-  
-  // console.log('TEST HERE',selectedDocData.id)
-    console.log('The Doc that will be updated',selectedDocData)
-
-  // const postDocRef = doc(db, 'posts', selectedDocData.id);
 
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
   const onVideoUrlChanged = (e: ChangeEvent<HTMLInputElement>) => setVideoUrl(e.target.value);
@@ -127,12 +115,10 @@ export const EditPostForm: React.FC = () => {
           moderated: false,
         };
 
-        const docRef = doc(db, 'posts', selectedDocData.id); // Modify this line
+        const docRef = doc(db, 'posts', selectedDocData.id); 
         await updateDoc(docRef, updatedPostPayload);
         dispatch(postUpdated(updatedPostPayload));
-        console.log('PostDoc', selectedDocData)
         setShowSuccessMessage(true);
-        console.log("SUCCESS");
         navigate('/');
       }
     } catch (error) {
@@ -140,7 +126,6 @@ export const EditPostForm: React.FC = () => {
     }
   };
   
-  // maybe add a delete confirmation to the delete button if not too time intensive
 
   
   return (  
@@ -148,14 +133,14 @@ export const EditPostForm: React.FC = () => {
 
      <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
       <div className="container mx-auto">
-      <h1 className="text-3xl font-bold mb-4 text-center">Edit Your Article</h1>
+      <h1 className="text-3xl font-bold mb-4 text-center">Edit Your Post</h1>
         {currentUser ? (
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                        <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl text-center">
-                {/* Agent: */}
               </label>
               <select
+                required
                 id="agentSelect"
                 name="agentSelect"
                 value={agent}
@@ -200,9 +185,9 @@ export const EditPostForm: React.FC = () => {
             </div>
            <div className="mb-4">
           <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl text-center">
-                {/* Post Title: */}
               </label>
               <input
+                required
                 type="text"
                 id="postTitle"
                 name="postTitle"
@@ -213,9 +198,10 @@ export const EditPostForm: React.FC = () => {
             </div>
             <div className="mb-4">
            <label htmlFor="postContent" className="block font-semibold mb-2 text-xl text-center">
-                Content:
+                Content
               </label>
               <textarea
+                required
                 id="postContent"
                 name="postContent"
                 value={content}
@@ -228,9 +214,10 @@ export const EditPostForm: React.FC = () => {
 
         <div className="mb-4">
                <label htmlFor="postVideo" className="block font-semibold mb-2 text-xl text-center">
-                Video:
+                Video
               </label>
               <input
+                required
                 type="text"
                 id="videoUrlContent"
                 name="videoUrlContent"

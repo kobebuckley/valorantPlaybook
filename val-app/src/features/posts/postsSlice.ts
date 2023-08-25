@@ -1,10 +1,8 @@
 import { createSlice, PayloadAction, nanoid, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
-import { FetchResult, client } from '../../api/client';
 import { collection, getDocs } from '@firebase/firestore';
 import { db } from '../../firebase/firebase-config';
 
-// export type PostStatus = 'pending' | 'approved' | 'rejected' | 'idle' | 'added' | 'succeeded' | 'failed';
 
 export interface Post {
   displayName: string;
@@ -17,14 +15,13 @@ export interface Post {
   agent: string;
   userId: string;
   reactions: { [key: string]: number };
-  // status: PostStatus; // Use the defined type here
 }
 
 
 interface PostsState {
   posts: Post[];
   status: string;
-  adding: string; // 'idle', 'loading', 'adding', 'succeeded', 'failed'
+  adding: string; 
   error: string | null | undefined;
   editingPostId: string | null;
 }
@@ -38,17 +35,16 @@ const initialState: PostsState = {
 };
 
 export const selectAddingStatus = (state: RootState) => state.posts.adding;
-export const selectEditingPostId = (state: RootState) => state.posts.editingPostId;
-
+export const selectEditingPostId = (state: RootState) => state.posts.editingPostId
 
 
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'posts'));
-    console.log('Fetched Docs:', querySnapshot); // Log fetched Docs
+    console.log('Fetched Docs:', querySnapshot); 
 
     const posts: Post[] = querySnapshot.docs.map((doc) => doc.data() as Post);
-    console.log('Fetched Posts:', posts); // Log fetched posts
+    console.log('Fetched Posts:', posts); 
     return posts;
   } catch (error) {
     console.error('Error fetching posts:', error);
@@ -86,7 +82,6 @@ const postsSlice = createSlice({
             agent,
             userId,
             reactions: {},
-            // status: 'pending', 
             moderated: false
           },
         };
@@ -107,22 +102,6 @@ const postsSlice = createSlice({
         existingPost.agent = agent;
       }
     },
-    postApproved(state, action: PayloadAction<string>) {
-      const id = action.payload;
-      const existingPost = state.posts.find(post => post.id == id);
-      // if (existingPost) {
-      //   existingPost.status = 'approved';
-      // }
-    },
-
-    postRejected(state, action: PayloadAction<string>) {
-      const id = action.payload;
-      const existingPost = state.posts.find(post => post.id == id);
-      // if (existingPost) {
-      //   existingPost.status = 'rejected';
-      // }
-    },
-    
     startAddingPost: (state, action: PayloadAction<string>) => {
       state.adding = 'adding';
       state.editingPostId = action.payload;
@@ -159,11 +138,11 @@ export const {
   postAdded,
   postUpdated,
   reactionAdded,
-  postRejected,
-  startAddingPost,
-  finishAddingPost,
-  cancelAddingPost,
-  postApproved, 
+  // postRejected,
+  // startAddingPost,
+  // finishAddingPost,
+  // cancelAddingPost,
+  // postApproved, 
 
 } = postsSlice.actions;
 
@@ -172,9 +151,6 @@ export const selectAllPosts = (state: RootState) => state.posts.posts;
 
 export const selectPostById = (state: RootState, id: string) =>
   state.posts.posts.find((post: Post) => post.id == id);
-
-// export const selectPendingPosts = (state: RootState) =>
-//   state.posts.posts.filter((post: Post) => post.status == 'pending');
 
 
 export default postsSlice.reducer;

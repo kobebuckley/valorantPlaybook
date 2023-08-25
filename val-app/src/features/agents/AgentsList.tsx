@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
-
-// The list of agents are from external api
-
-
 interface Character {
   uuid: string;
   displayName: string;
@@ -114,5 +110,4 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
       </div>
     </section>
   );
-  
-        }
+}

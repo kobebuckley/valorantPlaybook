@@ -1,10 +1,9 @@
-import React, { useContext, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
 import { AgentsList } from './features/agents/AgentsList';
 import AddPostForm from "./features/posts/AddPostForm";
 import { Navbar } from './app/Navbar';
 import { AuthContext } from './context/auth-context';
-import RequireAuth from './components/require-auth';
 import NewLogin from './routes/NewLogin';
 import NewRegister from './routes/NewRegister';
 import AgentPostsPage from './features/posts/AgentPostsPage';
