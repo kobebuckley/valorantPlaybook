@@ -16,7 +16,7 @@ export const EditPostForm: React.FC = () => {
   const { currentUser } = useContext(AuthContext);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
+  const { id } = useParams<{ id: string }>();
 
   const post: Post | undefined = useSelector((state: RootState) =>
     id ? selectPostById(state, id) : undefined
@@ -127,14 +127,15 @@ export const EditPostForm: React.FC = () => {
   };
   
 
-  
+  const isCurrentUserAuthor = currentUser?.uid === post?.userId;
+
   return (  
   <div className="bg-gray-800 min-h-screen flex items-center justify-center">
 
      <section className="mt-16 p-4 bg-gray-700 text-gray-200 rounded shadow-lg mx-auto w-full md:max-w-3xl">
       <div className="container mx-auto">
       <h1 className="text-3xl font-bold mb-4 text-center">Edit Your Post</h1>
-        {currentUser ? (
+        {isCurrentUserAuthor ? (
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-1">
                        <label htmlFor="agentSelect" className="block font-semibold mb-2 text-xl text-center">
@@ -146,7 +147,8 @@ export const EditPostForm: React.FC = () => {
                 value={agent}
                 onChange={onAgentChanged}
                 className="border border-gray-800 rounded p-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500">             
-               <option disabled value="">Select an agent</option>
+              <option disabled value="">Select an agent</option>
+              
               <option value="gekko">Gekko</option>
               <option value="fade">Fade</option>
 
@@ -226,6 +228,7 @@ export const EditPostForm: React.FC = () => {
                 className="border border-gray-800 rounded p-2 mb-2 w-full bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
                       placeholder="Paste video URL here"              />
             </div>
+            
             <div className="mt-4">
               <div className="flex justify-center mt-2 space-x-2">
               <button
@@ -248,7 +251,7 @@ export const EditPostForm: React.FC = () => {
               </div>
           </form>
         ) : (
-          <ErrorModal onClose={() => setShowErrorModal(false)} message={''} />
+          <ErrorModal onClose={() => setShowErrorModal(false)} message={'You must be the author to edit this post'} />
           )}
       </div>
     </section>
