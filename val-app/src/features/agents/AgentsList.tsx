@@ -26,7 +26,6 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
       const response = await fetch('https://valorant-api.com/v1/agents');
       const { data } = await response.json();
 
-      // Filter out duplicate characters and those without a fullPortrait image
       const uniqueCharacters = filterDuplicates(data);
 
       setAllCharacters(uniqueCharacters);
