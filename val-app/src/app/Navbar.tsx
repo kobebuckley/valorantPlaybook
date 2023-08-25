@@ -60,7 +60,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
 
             <Link
               to="/addPost"
-              className="text-2xl font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
+              className="text-2xl py-1 mr-10 font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
             >
               Add Post
             </Link>
@@ -97,7 +97,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <span className="text-white text-2xl mb-2">Hello, {user.displayName}!</span>
             <button
               onClick={handleSignOut}
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 text-lg"
+              className="bg-red-500 text-white ml-8 px-3 py-1 rounded hover:bg-red-700 focus:outline-none focus:ring focus:ring-red-300 text-lg"
             >
               Sign Out
             </button>

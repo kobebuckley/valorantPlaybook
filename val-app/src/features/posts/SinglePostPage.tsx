@@ -78,11 +78,17 @@ const post = posts.find((post) => post.id == decodedId);
         <TimeAgo timestamp={post.date} />
         </div>
     
-        {videoId && (
-          <div className="flex justify-center my-4 max-w-[750px] w-full">
+              {/* {videoId && ( */}
+              <div className=" justify-center my-4 max-w-[750px] hidden lg:block">
             <YouTube videoId={videoId} />
           </div>
-        )}
+          <div className=" justify-center my-4 max-w-[750px] ">
+          <p>Link Here </p>
+          <p className='font-bold underline'>
+            <span>{post.videoUrl}</span>
+          </p>
+          </div>
+        {/* )} */}
               <p className="post-content text-gray-300 text-center max-w-[1250px] w-full">
                 {post.content}</p>
         <div className="mt-2">
