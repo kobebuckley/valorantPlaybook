@@ -136,12 +136,6 @@ export const {
   postAdded,
   postUpdated,
   reactionAdded,
-  // postRejected,
-  // startAddingPost,
-  // finishAddingPost,
-  // cancelAddingPost,
-  // postApproved, 
-
 } = postsSlice.actions;
 
 

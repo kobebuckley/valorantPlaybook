@@ -60,13 +60,10 @@ export const PostDeleteButton: React.FC = () => {
 
         setSelectedDocData(foundSelectedDocData);
         if (foundSelectedDocData) {
-          console.log("Selected Document Data:", foundSelectedDocData);
           return
         } else {
-          console.log("No document with matching ID found.");
         }
       } catch (error) {
-        console.error("Error fetching and logging collection:", error);
       }
     };
 
