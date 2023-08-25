@@ -64,10 +64,10 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
     setFilteredCharacters(filteredCharacters);
   }, [searchQuery, allCharacters]);
 
-  const navigate = useNavigate(); // Get the navigate function from useNavigate
+  const navigate = useNavigate(); 
 
   const handleAgentSelect = (selectedAgent: string) => {
-    const encodedAgent = encodeURIComponent(selectedAgent.toLowerCase()); // Convert the agent name to a URL-friendly format
+    const encodedAgent = encodeURIComponent(selectedAgent.toLowerCase());  //Fix for Kayo written as Kay/o in URL causing errors
     onSelectAgent(selectedAgent.toLowerCase());
     navigate(`/agents/${encodedAgent}`);
   };
@@ -86,7 +86,7 @@ export const AgentsList: React.FC<AgentsListProps> = ({ onSelectAgent }) => {
       </div>
       <div className="max-w-7xl mx-auto mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 justify-items-center">
         {filteredCharacters.map(({ uuid, displayName, description, fullPortrait }) => {
-        const encodedAgent = encodeURIComponent(displayName.toLowerCase()); // Convert the agent name to a URL-friendly format in lowercase
+        const encodedAgent = encodeURIComponent(displayName.toLowerCase()); 
         return (
             <article
               className="rounded-lg overflow-hidden shadow-lg bg-gray-900 text-white transform transition-transform hover:scale-105 hover:z-10 cursor-pointer w-full h-full"

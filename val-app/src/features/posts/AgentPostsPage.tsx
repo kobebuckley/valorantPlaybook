@@ -19,17 +19,9 @@ export const AgentPostsPage: React.FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const posts = useTypedSelector(selectAllPosts);
   
-  
   const postStatus = useTypedSelector((state) => state.posts.status);
-  
-  // const loggedInUser = useSelector(selectLoggedInUser);
-  
+    
   useEffect(() => {
-    // const loggedInUserStr = localStorage.getItem('loggedInUser');
-    // if (loggedInUserStr) {
-    //   const loggedInUser = JSON.parse(loggedInUserStr);
-    //   dispatch(setLoggedInUser(loggedInUser));
-    // }
     const fetchAgentPosts = async () => {
       if (postStatus === 'idle' && agent) {
         try {
@@ -82,7 +74,10 @@ export const AgentPostsPage: React.FC = () => {
   .map((post) => {
     
     const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
-    
+
+
+    const encodedAgent = post.agent.replace('/', '%2F'); //Fix for Kayo written as Kay/o in URL causing errors
+
     return (
       <article className=" bg-gray-700 text-white rounded  p-6 flex flex-col justify-between items-center h-full mb-4  w-full"  key={post.id}>
             <div className="p-6 mb-0 bg-gray-800 text-white rounded shadow-lg flex flex-col justify-between items-center h-full w-full">
@@ -108,13 +103,13 @@ export const AgentPostsPage: React.FC = () => {
         </div>
         <div className="flex justify-center mt-4">
           <Link
-            to={`/posts/${post.agent}/${post.id}`}
+            to={`/posts/${encodedAgent}/${post.id}`} 
             className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
           >
             View Post
           </Link>
           <Link
-            to={`/editPost/${post.agent}/${post.id}`}
+            to={`/editPost/${encodedAgent}/${post.id}`} 
             className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
           >
             Edit Post

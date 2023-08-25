@@ -59,6 +59,9 @@ const post = posts.find((post) => post.id == decodedId);
   }
 
   const videoId = post.videoUrl ? extractVideoId(post.videoUrl) : undefined;
+  
+  const encodedAgent = post.agent.replace('/', '%2F'); //Fix for Kayo written as Kay/o in URL causing errors
+
 
   return (
     <section className="bg-gray-800 py-10 w-full h-full ">
@@ -87,13 +90,7 @@ const post = posts.find((post) => post.id == decodedId);
         </div>
         <div className="flex justify-center mt-4">
           <Link
-            to={`/posts/${post.agent}/${post.id}`}
-            className="button bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg mr-2"
-          >
-            View Post
-          </Link>
-          <Link
-            to={`/editPost/${post.agent}/${post.id}`}
+            to={`/editPost/${encodedAgent}/${post.id}`} // Use encodedAgent instead of post.agent
             className="button bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg"
           >
             Edit Post
