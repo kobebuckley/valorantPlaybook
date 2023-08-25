@@ -1,47 +1,57 @@
-import React from 'react';
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { BrowserRouter as Router, Route, Routes,  } from 'react-router-dom';
 import { AgentsList } from './features/agents/AgentsList';
-import { AddPostForm } from './features/posts/AddPostForm';
-import SinglePostPage from './features/posts/SinglePostPage';
-import { EditPostForm } from './features/posts/EditPostForm';
+import AddPostForm from "./features/posts/AddPostForm";
 import { Navbar } from './app/Navbar';
-import { AgentPostsPage } from './features/posts/AgentPostsPage';
+import { AuthContext } from './context/auth-context';
+import NewLogin from './routes/NewLogin';
+import NewRegister from './routes/NewRegister';
+import AgentPostsPage from './features/posts/AgentPostsPage';
+import SinglePostPage from './features/posts/SinglePostPage';
 
-import './App.css';
+import './App.css'
+import EditPostForm from './features/posts/EditPostForm';
 
 function App() {
+  const { currentUser } = useContext(AuthContext); // Use the AuthContext
+  const isAuth = currentUser !== null;
+  // const navigate = useNavigate();
+
+  console.log('User:', !!currentUser);
+
+  // useEffect(() => {
+  //   if (currentUser) {
+  //     navigate('/profile');
+  //   }
+  // }, [currentUser]);
+
   return (
-    <Router>
-      <Navbar title={'Agents'} />
+    <div>
+      <Navbar title={'The Valorant Playbook'} />
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/posts/:agent/:postId" element={<SinglePostPage />} />
-          <Route path="/editPost/:agent/:postId" element={<EditPostForm />} />
+          <Route path="/login" element={<NewLogin />} />
+          <Route path="/register" element={<NewRegister />} />
+          <Route path="/addPost" element={<AddPostForm isAuth={isAuth} />} />
           <Route path="/agents/:agent" element={<AgentPostsPage />} />
-          {/* <Route path="/agents/" element={<PostsList posts={[]} />} /> */}
-          <Route path="/addPost" element={<AddPostForm />} /> 
+          <Route path="/posts/:agent/:id" element={<SinglePostPage />} />
+          <Route path="/editPost/:agent/:id" element={<EditPostForm   />} />
 
-          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
-    </Router>
+    </div>
   );
 }
 
 function Home() {
   return (
     <React.Fragment>
-      {/* Render the AgentsList component */}
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
         throw new Error('Function not implemented.');
-      } } />
+      }} />
     </React.Fragment>
   );
-}
-
-function NotFound() {
-  return <h1>Page not found</h1>;
 }
 
 export default App;

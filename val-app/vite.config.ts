@@ -17,4 +17,10 @@ export default defineConfig({
     setupFiles: "src/setupTests",
     mockReset: true,
   },
+
+  
+  optimizeDeps: {
+    exclude: ['mock-aws-s3', 'aws-sdk', 'nock']
+  }
+
 })
