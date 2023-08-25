@@ -2,9 +2,6 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
-console.log('API Key:', import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY);
-console.log('Auth Domain:', import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN);
-
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_REACT_APP_FIREBASE_API_KEY,
   authDomain: import.meta.env.VITE_REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -14,13 +11,11 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_REACT_APP_FIREBASE_APP_ID,
 };
 
-console.log('Environment variables:', import.meta.env);
 
 const app = initializeApp(firebaseConfig); 
 export const auth = getAuth(); 
 
 export function getFirebaseConfig() {
-  console.log('Config:', firebaseConfig); 
 
   if (!firebaseConfig || !firebaseConfig.apiKey) {
     throw new Error(
