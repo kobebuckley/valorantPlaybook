@@ -41,10 +41,8 @@ export const selectEditingPostId = (state: RootState) => state.posts.editingPost
 export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
   try {
     const querySnapshot = await getDocs(collection(db, 'posts'));
-    console.log('Fetched Docs:', querySnapshot); 
 
     const posts: Post[] = querySnapshot.docs.map((doc) => doc.data() as Post);
-    console.log('Fetched Posts:', posts); 
     return posts;
   } catch (error) {
     console.error('Error fetching posts:', error);
