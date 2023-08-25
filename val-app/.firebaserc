@@ -1,5 +1,5 @@
 {
   "projects": {
-    "default": "https://valorantplaybook-prod.web.app/"
+    "default": "valorantplaybook-prod"
   }
 }

@@ -42,7 +42,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
             {!user && (
               <Link
                 to="/login" 
-                className="text-2xl font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
+                className="py-1 text-2xl font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
               >
                 Login
               </Link>
@@ -52,18 +52,22 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
             {!user && (
               <Link
                 to="/register"
-                className="text-2xl font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
+                className="text-2xl py-1 font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
               >
                 Register
               </Link>
             )}
-
+          <div className="navContent flex space-x-4">
+         
             <Link
               to="/addPost"
               className="text-2xl py-1 mr-10 font-bold tracking-tight transition-colors duration-300 hover:text-yellow-400"
             >
               Add Post
             </Link>
+          
+
+          </div>
 
             {user && (
               <div className="text-white text-2xl">

@@ -83,9 +83,11 @@ const post = posts.find((post) => post.id == decodedId);
             <YouTube videoId={videoId} />
           </div>
           <div className=" justify-center my-4 max-w-[750px] ">
-          <p>Link Here </p>
+          <p>Link Below </p>
           <p className='font-bold underline'>
-            <span>{post.videoUrl}</span>
+            <a href={post.videoUrl} target="_blank" rel="noopener noreferrer">
+              <span>{post.videoUrl}</span>
+            </a>          
           </p>
           </div>
         {/* )} */}
