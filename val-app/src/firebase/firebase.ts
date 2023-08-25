@@ -5,7 +5,7 @@ import {
   signOut,
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
-  User, // Update the import to include 'User'
+  User,
   NextOrObserver,
   updateProfile
 } from 'firebase/auth';

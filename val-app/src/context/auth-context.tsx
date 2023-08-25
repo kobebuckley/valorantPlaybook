@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const AuthContext = createContext({
-  // "User" comes from firebase auth-public.d.ts
   currentUser: {} as User | null,
   setCurrentUser: (_user:User) => {},
   signOut: () => {}
@@ -28,16 +27,13 @@ export const AuthProvider = ({ children }: Props) => {
     return unsubscribe
   }, [setCurrentUser]);
 
-  // As soon as setting the current user to null, 
-  // the user will be redirected to the home page. 
   const signOut = async () => {
     try {
-      await SignOutUser(); // Wait for sign-out to complete
-      setCurrentUser(null); // Clear the user after successful sign-out
-      navigate('/'); // Redirect after sign-out
+      await SignOutUser(); 
+      setCurrentUser(null); 
+      navigate('/'); 
     } catch (error) {
       console.error('Error signing out:', error);
-      // You can display an error message to the user here
     }
   };
   

@@ -22,8 +22,8 @@ function NewLogin() {
     if (successMessage) {
       const timeout = setTimeout(() => {
         setSuccessMessage('');
-        navigate('/'); // Redirect after success message is shown
-      }, 5000); // Hide success message after 5 seconds
+        navigate('/'); 
+      }, 1000); 
       return () => clearTimeout(timeout);
     }
   }, [successMessage, navigate]);
@@ -66,7 +66,6 @@ function NewLogin() {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="email" className="block font-medium mb-1">
-              {/* Email: */}
             </label>
             <input
               type="email"
@@ -80,7 +79,6 @@ function NewLogin() {
           </div>
           <div className="mb-4">
             <label htmlFor="password" className="block font-medium mb-1">
-              {/* Password: */}
             </label>
             <input
               type="password"

@@ -16,12 +16,11 @@ const firebaseConfig = {
 
 console.log('Environment variables:', import.meta.env);
 
-const app = initializeApp(firebaseConfig); // Initialize the Firebase app
-export const auth = getAuth(); // Get the Firebase Auth instance
-// const firestore = getFirestore(); 
+const app = initializeApp(firebaseConfig); 
+export const auth = getAuth(); 
 
 export function getFirebaseConfig() {
-  console.log('Config:', firebaseConfig); // Log the config object
+  console.log('Config:', firebaseConfig); 
 
   if (!firebaseConfig || !firebaseConfig.apiKey) {
     throw new Error(
@@ -36,4 +35,3 @@ export function getFirebaseConfig() {
 
 export const db = getFirestore(app)
 
-// export { app, auth, }; // Export the Firestore instance

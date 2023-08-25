@@ -2,28 +2,22 @@ import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import YouTube from 'react-youtube';
-// import { PostAuthor } from './PostAuthor';
 import { TimeAgo } from './TimeAgo';
 import { ReactionButtons } from './ReactButton';
 
-//update next
 
 
-import { selectPostById, Post } from './postsSlice';
+
 import { RootState, AppDispatch } from '../../app/store';
 import { fetchPosts, selectAllPosts } from './postsSlice';
 import { selectLoggedInUser, setLoggedInUser } from '../users/usersSlice'; 
-import PostDeleteButton from './PostDeleteButton';
 
 const useTypedSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 
 export const SinglePostPage: React.FC = () => {
   const { agent, id } = useParams<{ agent: string; id: string }>();
-  console.log("Selected id:", id);
-  console.log("URL id:", id);
 
-  console.log("Selected Agent:", agent);
 
   const dispatch: AppDispatch = useDispatch();
 
@@ -38,7 +32,6 @@ export const SinglePostPage: React.FC = () => {
         try {
           await dispatch(fetchPosts());
         } catch (error) {
-          // Handle error
         }
       }
     };
@@ -46,30 +39,14 @@ export const SinglePostPage: React.FC = () => {
     fetchAgentPosts();
   }, [dispatch, agent]);
   
-  // Use the selector and explicitly define the type for the state
-  // const post: Post | undefined = useSelector((state: RootState) =>
-  // id ? selectPostById(state, id) : undefined
-  // );
 
-
-
-  const posts = useTypedSelector(selectAllPosts);
-console.log('The grabbed posts', posts);
+const posts = useTypedSelector(selectAllPosts);
 
 if (posts.length === 0) {
   return <div>Loading...</div>;
 }
 const decodedId = decodeURIComponent(id ?? ''); 
 const post = posts.find((post) => post.id == decodedId);
-
-// console.log("URL id:", id);
-// posts.forEach((post) => {
-//   console.log("Post id:", post.id);
-// });
-
-// console.log('The url id', decodedId); // Use decodedId instead of id
-// console.log('The single post', post);
-
   
   const extractVideoId = (url: string): string | undefined => {
     const videoIdRegex = /(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?/]+)/;
@@ -126,7 +103,6 @@ const post = posts.find((post) => post.id == decodedId);
       </article>
       </section>
     );
-    }
-
+  }
 
 export default SinglePostPage;

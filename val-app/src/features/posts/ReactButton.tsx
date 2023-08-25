@@ -24,15 +24,13 @@ export const ReactionButtons: React.FC<ReactionButtonsProps> = ({ post }) => {
   const { currentUser } = useContext(AuthContext);
   const [selectedDocData, setSelectedDocData] = useState<any | null>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const { id } = useParams<{ id: string }>(); // Only need the ID parameter here
+  const { id } = useParams<{ id: string }>(); 
 
-// console.log("Selected post:", post);
 
-const [reactions, setReactions] = useState(post?.reactions || {}); // Initialize with post.reactions
+const [reactions, setReactions] = useState(post?.reactions || {}); 
 
 useEffect(() => {
   const fetchData = async () => {
-
 
     try {
       const querySnapshot = await getDocs(collection(db, 'posts'));
@@ -45,12 +43,10 @@ useEffect(() => {
           foundSelectedDocData = postRef;
 
         }
-        // console.log("Post Id:", postData.id);
       });
 
       setSelectedDocData(foundSelectedDocData);
       if (foundSelectedDocData) {
-        console.log("Selected Document Data:", foundSelectedDocData);
         return
       } else {
         console.log("No document with matching ID found.");
@@ -88,23 +84,18 @@ useEffect(() => {
           id: post!.id,
           displayName: currentUser?.displayName || '',
           date: timestamp,
-          title: post.title, // Use the local reactions object for these properties
+          title: post.title, 
           content: post.content,
           videoUrl: post.videoUrl,
           agent: post.agent,
           userId: currentUser?.uid || '',
-          reactions: reactions, // Use the updated reactions state
+          reactions: reactions, 
           moderated: post.moderated,
         };
 
         const docRef = doc(db, 'posts', selectedDocData.id);
         await updateDoc(docRef, updatedPostPayload);
-        
-        // dispatch(postUpdated(updatedPostPayload));
-        console.log('Reactions updated in the database:', updatedPostPayload.reactions); // is behind by 1...
-        // console.log('PostDoc', selectedDocData);
 
-        console.log("SUCCESS");
       }
     } catch (error) {
       console.error('Error updating reactions in the database:', error);
@@ -114,20 +105,16 @@ useEffect(() => {
   };
 
   const handleReactionClick = async (reactionName: string) => {
-    // Update the reactions state when a reaction button is clicked
     setReactions((prevReactions) => ({
       ...prevReactions,
       [reactionName]: (prevReactions[reactionName] || 0) + 1,
     }));
   
-    // Dispatch the reaction added action
     dispatch(reactionAdded({ id: post.id, reaction: reactionName }));
   
-    // Wait for a short period (optional) to allow Redux state to update
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Adjust the time if needed
+    await new Promise((resolve) => setTimeout(resolve, 1000)); 
   
-    // Update the database with the new reactions
-    // onUpdatePostClicked();
+ 
   };
   
   useEffect(() => {

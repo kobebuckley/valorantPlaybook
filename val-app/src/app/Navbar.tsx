@@ -24,7 +24,6 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
     }
   };
 
-  console.log("display name is:" + user?.displayName)
 
   return (
     <nav className="bg-indigo-700 py-4 text-white sticky top-0 z-50 font-bold">
