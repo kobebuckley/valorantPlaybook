@@ -104,7 +104,7 @@ export const PostDeleteButton: React.FC = () => {
           moderated: false,
         };
 
-        const docRef = doc(db, 'posts', selectedDocData.id); // Modify this line
+        const docRef = doc(db, 'posts', selectedDocData.id); 
         await deleteDoc(docRef);
         dispatch(postUpdated(updatedPostPayload));
         console.log('PostDoc', selectedDocData)
