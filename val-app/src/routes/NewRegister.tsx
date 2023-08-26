@@ -25,8 +25,8 @@ function NewRegister() {
       const timeout = setTimeout(() => {
         setSuccessMessage('');
         setRegisterError('');
-        navigate('/'); // Navigate to '/' after showing messages
-      }, 3000); // Hide messages after 3 seconds
+        navigate('/'); 
+      }, 3000); 
       return () => clearTimeout(timeout);
     }
   }, [successMessage, registerError, navigate]);

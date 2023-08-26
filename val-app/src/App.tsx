@@ -15,15 +15,6 @@ import EditPostForm from './features/posts/EditPostForm';
 function App() {
   const { currentUser } = useContext(AuthContext); // Use the AuthContext
   const isAuth = currentUser !== null;
-  // const navigate = useNavigate();
-
-  console.log('User:', !!currentUser);
-
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     navigate('/profile');
-  //   }
-  // }, [currentUser]);
 
   return (
     <div>
@@ -48,7 +39,7 @@ function Home() {
   return (
     <React.Fragment>
       <AgentsList onSelectAgent={function (selectedAgent: string): void {
-        throw new Error('Function not implemented.');
+        throw new Error('.');
       }} />
     </React.Fragment>
   );
