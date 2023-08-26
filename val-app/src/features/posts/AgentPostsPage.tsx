@@ -91,11 +91,20 @@ export const AgentPostsPage: React.FC = () => {
         <TimeAgo timestamp={post.date} />
         </div>
 
-        {videoId && (
-          <div className="flex justify-center my-4 max-w-[750px] w-full">
+        {/* {videoId && ( */}
+        <div className=" justify-center my-4 max-w-[750px] hidden lg:block">
             <YouTube videoId={videoId} />
           </div>
-        )}
+          <div className=" justify-center my-4 max-w-[750px] ">
+          <p>Link Below </p>
+          <p className='font-bold underline'>
+            <a href={post.videoUrl} target="_blank" rel="noopener noreferrer">
+              <span>{post.videoUrl}</span>
+            </a>          
+          </p>
+          </div>
+        {/* )} */}
+
               <p className="post-content text-gray-300 text-center max-w-[750px] w-full">
                 {post.content.substring(0, 300)}{post.content.length > 300 ? '...' : ''}</p>
         <div className="mt-2">
