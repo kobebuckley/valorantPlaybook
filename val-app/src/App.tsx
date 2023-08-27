@@ -13,7 +13,7 @@ import './App.css'
 import EditPostForm from './features/posts/EditPostForm';
 
 function App() {
-  const { currentUser } = useContext(AuthContext); // Use the AuthContext
+  const { currentUser } = useContext(AuthContext); 
   const isAuth = currentUser !== null;
 
   return (
