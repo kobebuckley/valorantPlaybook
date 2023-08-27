@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { Post, fetchPosts, postUpdated, selectPostById } from './postsSlice';
 import { AppDispatch, RootState } from '../../app/store';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'; // Import the correct package and functions
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore'; 
 import { auth, db } from '../../firebase/firebase-config';
 import { AuthContext } from '../../context/auth-context';
 import ErrorModal from './ErrorModal';
