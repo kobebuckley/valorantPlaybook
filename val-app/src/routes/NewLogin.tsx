@@ -32,9 +32,7 @@ function NewLogin() {
     event.preventDefault();
 
     try {
-      console.log(`user email is:${email} and password is:${password}`);
       const userCredential = await signInUser(email, password);
-      console.log(`user creds are: ${userCredential}`);
 
       if (userCredential) {
         resetFormFields();
@@ -42,7 +40,6 @@ function NewLogin() {
         setSuccessMessage('Success!');
       }
     } catch (error: any) {
-      console.log('User Sign In Failed', error.message);
       setLoginError('Authentication failed. Please check your credentials.');
       setSuccessMessage('');
     }
