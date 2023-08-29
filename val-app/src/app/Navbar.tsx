@@ -159,7 +159,7 @@ export const Navbar: React.FC<NavbarProps> = ({ title }) => {
             <div className="text-white">
               <Link
                 to="/login"
-                className="hover:text-yellow-400 font-bold text-lg block my-1 mr-9 py-3 text-xl"
+                className="hover:text-yellow-400 font-boldblock my-1 mr-9 py-3 text-xl"
               >
                 Login
               </Link>
