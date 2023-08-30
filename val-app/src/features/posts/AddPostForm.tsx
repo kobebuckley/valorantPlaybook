@@ -7,6 +7,13 @@ import ErrorModal from './ErrorModal';
 import { auth, db } from '../../firebase/firebase-config';
 import { User, setLoggedInUser } from '../users/usersSlice';
 
+
+
+
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import DOMPurify from 'dompurify';
+
 interface AddPostFormProps {
   isAuth: boolean;
 }
@@ -41,6 +48,15 @@ function AddPostForm(props: AddPostFormProps) {
   const onAgentChanged = (e: ChangeEvent<HTMLSelectElement>) => setAgent(e.target.value);
   const onTitleChanged = (e: ChangeEvent<HTMLInputElement>) => setTitle(e.target.value);
 
+
+  const [sanitizedContent, setSanitizedContent] = useState<string>('');
+
+  const onPostTextChanged = (newContent: string) => {
+    setPostText(newContent);
+    const sanitized = DOMPurify.sanitize(newContent);
+    setSanitizedContent(sanitized);
+  };
+
   const createPost = async () => {
     if (!auth.currentUser) {
       return;
@@ -52,7 +68,7 @@ function AddPostForm(props: AddPostFormProps) {
         id: Date.now(), 
         date: timestamp,
         title,
-        content: postText,
+        content: sanitizedContent, 
         videoUrl,
         agent,
         userId: auth.currentUser.uid,
@@ -96,6 +112,14 @@ function AddPostForm(props: AddPostFormProps) {
   const canSave = Boolean(title) && Boolean(postText) && Boolean(videoUrl) && Boolean(agent);
   const isSaveButtonDisabled = !canSave;
 
+  function RenderFormattedContent({ postText }) {
+    const sanitizedContent = DOMPurify.sanitize(postText);
+    return (
+      <div className="rendered-content" dangerouslySetInnerHTML={{ __html: sanitizedContent }} />
+    );
+  }  
+
+ 
  
   return (
     <div className="bg-gray-800 min-h-screen flex items-center justify-center">
@@ -157,7 +181,7 @@ function AddPostForm(props: AddPostFormProps) {
             </select>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-4">  
             <label htmlFor="postTitle" className="block font-semibold mb-2 text-xl text-center">
               Game Title
             </label>
@@ -177,7 +201,13 @@ function AddPostForm(props: AddPostFormProps) {
             <label htmlFor="postContent" className="block font-semibold mb-2 text-xl text-center">
               Notes
             </label>
-            <textarea
+
+            <div>
+  <ReactQuill value={postText} onChange={onPostTextChanged} />
+  <RenderFormattedContent postText={sanitizedContent} /> {/* Render formatted content */}
+</div>
+
+            {/* <textarea
               id="postContent"
               name="postContent"
               value={postText}
@@ -186,7 +216,7 @@ function AddPostForm(props: AddPostFormProps) {
               className="border border-gray-800 rounded p-4 mb-2 w-full h-48 bg-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
               placeholder="Write your article here..."
               >
-            </textarea>
+            </textarea> */}
           </div>
 
           <div className="mb-4">
@@ -221,6 +251,7 @@ function AddPostForm(props: AddPostFormProps) {
     </div>
   );
 }
+
 export default AddPostForm;
 
 
